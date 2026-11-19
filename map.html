@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map &amp; Locations Guide &bull; ViceCityHub.eu</title>
+  <meta name="description" content="Explore key locations across Vice City and the State of Leonida. Airfields, heliports, and secret garages.">
+  <meta name="theme-color" content="#0d1117">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-container">
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="map.html" class="nav-link active">Map &amp; Guides</a>
+        <a href="clips.html" class="nav-link">Clips</a>
+      </nav>
+
+      <div class="header-brand-center">
+        <a href="index.html" aria-label="ViceCityHub Home">
+          <img src="assets/brand/logo.png" alt="ViceCityHub" class="brand-logo-img">
+        </a>
+      </div>
+
+      <div class="header-nav-right">
+        <a href="login.html" class="nav-auth-link">Log in</a>
+        <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
+        <a href="index.html" class="btn-secondary">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="site-main">
+    <div class="page-header-strip">
+      <div>
+        <h1 class="page-title">
+          <i class="fa-solid fa-map-location-dot" style="color: var(--accent-cyan);"></i> Leonida &amp; Vice City Map Guide
+        </h1>
+        <p class="page-desc">
+          Community-mapped districts, fast-travel airstrips, supercar garages, and secret spots.
+        </p>
+      </div>
+    </div>
+
+    <div class="map-container">
+      <div class="map-viewer-card">
+        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80" alt="Leonida State Map Preview" class="map-visual">
+
+        <div class="map-location-list">
+          <div class="map-loc-item">
+            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-pink);"></i> Ocean Beach</h3>
+            <p class="map-loc-desc">Historic art deco district, beachfront boulevard, high-end vehicle spawns.</p>
+          </div>
+          <div class="map-loc-item">
+            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-cyan);"></i> Downtown Vice</h3>
+            <p class="map-loc-desc">Commercial high-rises, Maze Bank towers, executive helicopter pads.</p>
+          </div>
+          <div class="map-loc-item">
+            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-pink);"></i> Starfish Island</h3>
+            <p class="map-loc-desc">Luxury gated mansions, private docks, speedboats, and fortified villas.</p>
+          </div>
+          <div class="map-loc-item">
+            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-cyan);"></i> Grassrivers Swamps</h3>
+            <p class="map-loc-desc">Wild wetland territory, secret airboat hangars, off-road dirt trails.</p>
+          </div>
+          <div class="map-loc-item">
+            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-pink);"></i> Port Gellhorn</h3>
+            <p class="map-loc-desc">Industrial shipping yards, container warehouses, tactical heist setups.</p>
+          </div>
+          <div class="map-loc-item">
+            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-cyan);"></i> Vice City International</h3>
+            <p class="map-loc-desc">Major dual-runway airport, military hangars, private jet terminals.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MOBILE BOTTOM BAR -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="mobile-nav-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Feed</span>
+    </a>
+    <a href="discords.html" class="mobile-nav-item">
+      <i class="fa-brands fa-discord"></i>
+      <span>Discords</span>
+    </a>
+    <a href="map.html" class="mobile-nav-item active">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Map</span>
+    </a>
+    <a href="clips.html" class="mobile-nav-item">
+      <i class="fa-solid fa-film"></i>
+      <span>Clips</span>
+    </a>
+  </nav>
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <img src="assets/brand/logo.png" alt="ViceCityHub" class="drawer-logo-img">
+        <button class="modal-close-btn" id="close-drawer" aria-label="Close Navigation">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <ul class="drawer-links">
+        <li><a href="index.html" class="drawer-link"><i class="fa-solid fa-house"></i> Feed</a></li>
+        <li><a href="discords.html" class="drawer-link"><i class="fa-brands fa-discord"></i> GTA VI Discords</a></li>
+        <li><a href="map.html" class="drawer-link active"><i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides</a></li>
+        <li><a href="clips.html" class="drawer-link"><i class="fa-solid fa-film"></i> Clips</a></li>
+        <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="footer-logo-row">
+          <img src="assets/brand/logo.png" alt="ViceCityHub.eu" class="footer-logo-img">
+        </div>
+        <p class="footer-desc">
+          The premier independent community hub and Discord directory dedicated to Grand Theft Auto VI in Vice City and Leonida.
+        </p>
+        <div class="footer-social-row">
+          <a href="https://discord.gg" target="_blank" rel="noopener noreferrer nofollow" class="footer-social-icon" aria-label="Community Discord">
+            <i class="fa-brands fa-discord"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-cols">
+        <div class="f-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="index.html">Community Feed</a></li>
+            <li><a href="discords.html">GTA VI Discord Servers</a></li>
+            <li><a href="map.html">Map &amp; Locations</a></li>
+            <li><a href="clips.html">4K Clips &amp; Media</a></li>
+          </ul>
+        </div>
+
+        <div class="f-col">
+          <h4>About &amp; Help</h4>
+          <ul>
+            <li><a href="about.html">About ViceCityHub</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="report.html">Report Content / Takedown</a></li>
+          </ul>
+        </div>
+
+        <div class="f-col">
+          <h4>Legal &amp; Policy</h4>
+          <ul>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="cookies.html">Cookie Policy</a></li>
+            <li><a href="dsa.html">Digital Services Act (DSA)</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <p class="footer-disclaimer-text">
+        &copy; 2026 ViceCityHub.eu &bull; All rights reserved. Grand Theft Auto and GTA VI are registered trademarks of Rockstar Games &amp; Take-Two Interactive. Unofficial fan community.
+      </p>
+      <span>vicecityhub.eu</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

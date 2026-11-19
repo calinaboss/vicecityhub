@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ViceCityHub &bull; GTA 6 Community Hub &amp; Discord Servers</title>
-  <meta name="description" content="ViceCityHub.eu - The premier community portal for Grand Theft Auto VI in Vice City & Leonida. Find active GTA 6 Discord servers, share map guides, discussions, and 4K clips.">
+  <title>ViceCityHub &bull; GTA VI's Community</title>
+  <meta name="description" content="ViceCityHub.eu - GTA VI's community hub. Browse discussions, map guides, 4K clips, and find verified GTA 6 Discord servers.">
   <meta name="theme-color" content="#0d1117">
 
   <!-- Favicons -->
@@ -26,215 +26,136 @@
 </head>
 <body>
 
-  <!-- STICKY TOP NAVBAR -->
+  <!-- STICKY TOP NAVBAR (WHATSR-STYLE) -->
   <header class="site-header">
     <div class="header-container">
-      <div class="brand-wrapper">
-        <a href="/" class="brand-logo" aria-label="ViceCityHub Homepage">
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link active">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="map.html" class="nav-link">Map &amp; Guides</a>
+        <a href="clips.html" class="nav-link">Clips</a>
+      </nav>
+
+      <div class="header-brand-center">
+        <a href="index.html" aria-label="ViceCityHub Home">
           <img src="assets/brand/logo.png" alt="ViceCityHub" class="brand-logo-img">
         </a>
       </div>
 
-      <nav aria-label="Primary Navigation">
-        <ul class="nav-links">
-          <li>
-            <a href="#feed" class="nav-link active">
-              <i class="fa-solid fa-house"></i> Feed
-            </a>
-          </li>
-          <li>
-            <a href="#discord-servers" class="nav-link discord-link">
-              <i class="fa-brands fa-discord"></i> GTA VI Discord Servers
-            </a>
-          </li>
-          <li>
-            <a href="#map" class="nav-link">
-              <i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides
-            </a>
-          </li>
-          <li>
-            <a href="#clips" class="nav-link">
-              <i class="fa-solid fa-film"></i> Clips
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="header-actions">
-        <div class="search-box">
-          <i class="fa-solid fa-magnifying-glass search-icon"></i>
-          <input type="text" id="search-input" class="search-input" placeholder="Search hub..." autocomplete="off">
-        </div>
-
-        <button class="btn-primary trigger-new-post" aria-label="Create New Post">
+      <div class="header-nav-right">
+        <a href="login.html" class="nav-auth-link">Log in</a>
+        <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
+        <button class="btn-post trigger-new-post" aria-label="New Post">
           <i class="fa-solid fa-plus"></i> New Post
         </button>
-
-        <button class="btn-discord trigger-add-discord" aria-label="Add Discord Server" style="display: none;">
-          <i class="fa-brands fa-discord"></i> Add Discord
-        </button>
-
-        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation Menu">
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
           <i class="fa-solid fa-bars"></i>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- CENTERED MAIN CONTAINER -->
+  <!-- CENTERED HERO (LOGO + GTA VI'S COMMUNITY + SEARCH BOX) -->
+  <section class="hero-center-section" aria-label="Hero Search">
+    <img src="assets/brand/logo.png" alt="ViceCityHub" class="hero-center-logo">
+    <div class="hero-subtitle">gta VI's community</div>
+
+    <div class="hero-search-wrapper">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" class="search-input" placeholder="Search in the hub..." autocomplete="off">
+        <button class="search-submit-btn" id="search-btn">Search</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CENTERED MAIN CONTENT -->
   <main class="site-main">
-
-    <!-- AUTHENTIC COMMUNITY WELCOME STRIP (NO AI FLUFF) -->
-    <section class="hub-welcome-strip" aria-label="Welcome to ViceCityHub">
-      <div class="hub-welcome-left">
-        <div class="hub-welcome-tag">
-          <i class="fa-solid fa-circle-check"></i> Vice City &amp; Leonida Live
-        </div>
-        <h1 class="hub-welcome-title">
-          The Community Hub for <span>Grand Theft Auto VI</span>
-        </h1>
-        <p class="hub-welcome-desc">
-          Browse player guides, share map discoveries, and find verified GTA VI Discord servers to team up for heists and roleplay.
-        </p>
-      </div>
-
-      <div class="hub-welcome-actions">
-        <button class="btn-discord trigger-add-discord">
-          <i class="fa-brands fa-discord"></i> Submit Discord Server
-        </button>
-        <button class="btn-secondary trigger-new-post">
-          <i class="fa-solid fa-pen-to-square"></i> New Discussion
-        </button>
-      </div>
-    </section>
 
     <!-- HORIZONTAL FILTER CHIPS -->
     <div class="filter-bar" role="tablist" aria-label="Filter discussions by category">
       <button class="filter-chip active" data-category="all" role="tab">
-        <i class="fa-solid fa-fire"></i> All Discussions
-      </button>
-      <button class="filter-chip discord-chip" data-category="discords" role="tab">
-        <i class="fa-brands fa-discord"></i> GTA VI Discords
+        All
       </button>
       <button class="filter-chip" data-category="discussions" role="tab">
-        <i class="fa-solid fa-comments"></i> Discussions
+        Discussions
       </button>
       <button class="filter-chip" data-category="leaks" role="tab">
-        <i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides
+        Map &amp; Guides
       </button>
       <button class="filter-chip" data-category="clips" role="tab">
-        <i class="fa-solid fa-film"></i> Clips &amp; Media
+        Clips &amp; Media
+      </button>
+      <button class="filter-chip" data-category="official" role="tab">
+        Official News
       </button>
     </div>
 
     <!-- MAIN TWO-COLUMN CONTENT GRID -->
     <div class="content-grid">
 
-      <!-- LEFT COLUMN: FEED & DISCORD DIRECTORY -->
-      <div class="main-column-left">
-
-        <!-- COMMUNITY FEED -->
-        <section class="feed-wrapper" aria-label="Community Feed">
-          <div class="feed-container" id="community-feed">
-            <!-- Dynamically populated via assets/js/app.js -->
-          </div>
-        </section>
-
-        <!-- GTA VI DISCORD SERVERS DIRECTORY SECTION -->
-        <section class="discord-servers-section" id="discord-servers-section" style="display: none;" aria-label="GTA VI Discord Servers Directory">
-          <div class="discord-section-header">
-            <div class="discord-header-left">
-              <div class="discord-header-icon">
-                <i class="fa-brands fa-discord"></i>
-              </div>
-              <div>
-                <h2 class="discord-header-title">GTA VI Discord Servers Directory</h2>
-                <p class="discord-header-subtitle">Find dedicated communities for Roleplay, Heists, Italian players, and modding.</p>
-              </div>
-            </div>
-            <button class="btn-discord trigger-add-discord">
-              <i class="fa-solid fa-plus"></i> Add Your Server
-            </button>
-          </div>
-
-          <div class="discord-grid" id="discord-servers-grid">
-            <!-- Populated via assets/js/app.js -->
-          </div>
-        </section>
-
-      </div>
-
-      <!-- RIGHT COLUMN: SIDEBAR (CENTERED, CLEAN) -->
-      <aside class="sidebar-wrapper" aria-label="Community Widgets">
-
-        <!-- GTA VI Discord Server Highlight Widget -->
-        <div class="sidebar-discord-box">
-          <div class="widget-header">
-            <h3 class="widget-title discord-title">
-              <i class="fa-brands fa-discord"></i> Featured Discords
-            </h3>
-            <span class="badge-pill discord-badge">Directory</span>
-          </div>
-          <p>
-            Looking for crew teammates or Italian roleplay servers? Browse our verified community Discord list.
-          </p>
-          <a href="#discord-servers" class="btn-discord" style="width: 100%; justify-content: center;">
-            <i class="fa-solid fa-list-ul"></i> Explore All Discord Servers
-          </a>
+      <!-- LEFT: FEED WITH DISCUSSIONS & NEWS -->
+      <section class="feed-wrapper" aria-label="Community Feed">
+        <div class="feed-container" id="community-feed">
+          <!-- Populated via assets/js/app.js -->
         </div>
+      </section>
 
-        <!-- Trending Discussions Widget -->
+      <!-- RIGHT: CLEAN SIDEBAR (NO HEAVY BOXES / NO SERVER HEALTH) -->
+      <aside class="sidebar-wrapper" aria-label="Sidebar">
+
+        <!-- Discord Directory Quick Link -->
         <div class="widget-card">
           <div class="widget-header">
             <h3 class="widget-title">
-              <i class="fa-solid fa-arrow-trend-up"></i> Trending Now
+              <i class="fa-brands fa-discord" style="color: var(--color-discord);"></i> GTA VI Discords
+            </h3>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 12px;">
+            Join dedicated communities for Roleplay, Heists, and Italian players.
+          </p>
+          <a href="discords.html" class="btn-discord" style="width: 100%; justify-content: center;">
+            Explore Discord Servers
+          </a>
+        </div>
+
+        <!-- Trending Discussions -->
+        <div class="widget-card">
+          <div class="widget-header">
+            <h3 class="widget-title">
+              Trending Topics
             </h3>
           </div>
           <div class="trending-list">
             <a href="#feed" class="trending-item">
               <span class="trending-tag">Downtown Vice</span>
               <span class="trending-title">Best real estate investments for starter cash</span>
-              <span class="trending-stats">
-                <i class="fa-regular fa-comment"></i> 148 replies &bull; 8m ago
-              </span>
+              <span class="trending-stats">148 replies</span>
             </a>
             <a href="#feed" class="trending-item">
               <span class="trending-tag">Grassrivers</span>
-              <span class="trending-title">Location of the hidden airboat hangar in the swamps</span>
-              <span class="trending-stats">
-                <i class="fa-regular fa-comment"></i> 92 replies &bull; 24m ago
-              </span>
+              <span class="trending-title">Hidden airboat hangar in the swamps</span>
+              <span class="trending-stats">92 replies</span>
             </a>
             <a href="#feed" class="trending-item">
-              <span class="trending-tag">Next-Gen Audio</span>
+              <span class="trending-tag">Audio</span>
               <span class="trending-title">3D spatial sound profile setup for headphones</span>
-              <span class="trending-stats">
-                <i class="fa-regular fa-comment"></i> 64 replies &bull; 1h ago
-              </span>
+              <span class="trending-stats">64 replies</span>
             </a>
           </div>
         </div>
 
-        <!-- Community Guidelines Widget -->
+        <!-- Community Rules -->
         <div class="widget-card">
           <div class="widget-header">
             <h3 class="widget-title">
-              <i class="fa-solid fa-shield-halved"></i> Community Rules
+              Guidelines
             </h3>
           </div>
           <ul class="rules-list">
-            <li>
-              <i class="fa-solid fa-check"></i> Respect fellow community members and creators.
-            </li>
-            <li>
-              <i class="fa-solid fa-check"></i> Discord links must be valid and non-malicious.
-            </li>
-            <li>
-              <i class="fa-solid fa-check"></i> No unauthorized cheats or real-money trading.
-            </li>
-            <li>
-              <i class="fa-solid fa-check"></i> Tag story discoveries with appropriate warnings.
-            </li>
+            <li><i class="fa-solid fa-check" style="color: var(--text-dim);"></i> Be respectful to community members.</li>
+            <li><i class="fa-solid fa-check" style="color: var(--text-dim);"></i> No unauthorized cheats or scams.</li>
+            <li><i class="fa-solid fa-check" style="color: var(--text-dim);"></i> Tag story spoilers appropriately.</li>
           </ul>
         </div>
 
@@ -267,7 +188,7 @@
             <option value="discussions">Discussions</option>
             <option value="leaks">Map &amp; Guides</option>
             <option value="clips">Clips &amp; Media</option>
-            <option value="official">Official Hub</option>
+            <option value="official">Official News</option>
           </select>
         </div>
 
@@ -283,7 +204,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn-secondary trigger-close-modal">Cancel</button>
-          <button type="submit" class="btn-primary">
+          <button type="submit" class="btn-post">
             <i class="fa-solid fa-paper-plane"></i> Publish Post
           </button>
         </div>
@@ -291,73 +212,36 @@
     </div>
   </div>
 
-  <!-- SUBMIT DISCORD SERVER MODAL (OWASP SECURED) -->
-  <div class="modal-overlay" id="submit-discord-modal" role="dialog" aria-modal="true" aria-labelledby="modal-discord-title">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h2 class="modal-title" id="modal-discord-title" style="color: var(--color-discord);">
-          <i class="fa-brands fa-discord"></i> Submit GTA VI Discord Server
-        </h2>
-        <button class="modal-close-btn trigger-close-modal" aria-label="Close Modal">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <form id="new-discord-form" class="modal-form">
-        <div class="form-group">
-          <label for="discord-name-input" class="form-label">Server Name</label>
-          <input type="text" id="discord-name-input" class="form-input" placeholder="e.g. Vice City Roleplay Italy" required maxlength="60">
-        </div>
-
-        <div class="form-group">
-          <label for="discord-url-input" class="form-label">Discord Invite Link</label>
-          <input type="url" id="discord-url-input" class="form-input input-discord" placeholder="https://discord.gg/yourcode" required pattern="https://(discord\.gg|discord\.com/invite)/.+" title="Must be a valid Discord invite link (https://discord.gg/... or https://discord.com/invite/...)">
-          <span class="form-help-text">Only official https://discord.gg/ or https://discord.com/invite/ URLs are accepted for security.</span>
-        </div>
-
-        <div class="form-group">
-          <label for="discord-category-select" class="form-label">Server Type</label>
-          <select id="discord-category-select" class="form-select" required>
-            <option value="roleplay">Roleplay (RP)</option>
-            <option value="italian">Italian Community</option>
-            <option value="heists">Heists &amp; LFG (Looking for Group)</option>
-            <option value="general">General Community</option>
-            <option value="modding">Modding &amp; Mapping</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="discord-desc-input" class="form-label">Short Description</label>
-          <textarea id="discord-desc-input" class="form-textarea" placeholder="Describe your server rules, activities, and target audience..." required maxlength="280"></textarea>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-secondary trigger-close-modal">Cancel</button>
-          <button type="submit" class="btn-discord">
-            <i class="fa-solid fa-check"></i> Submit for Listing
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- IMAGE LIGHTBOX MODAL -->
-  <div class="lightbox-overlay" id="lightbox-modal" role="dialog" aria-modal="true">
-    <div class="lightbox-content">
-      <button class="lightbox-close-btn" id="close-lightbox" aria-label="Close Lightbox">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-      <img id="lightbox-img" class="lightbox-image" src="" alt="Media Preview">
-    </div>
-  </div>
-
   <!-- TOAST NOTIFICATION -->
   <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
-    <i class="fa-solid fa-circle-check toast-icon"></i>
-    <span id="toast-text">Action completed successfully</span>
+    <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
+    <span id="toast-text">Action completed</span>
   </div>
 
-  <!-- MOBILE SLIDE-OUT DRAWER -->
+  <!-- MOBILE BOTTOM BAR -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="mobile-nav-item active">
+      <i class="fa-solid fa-house"></i>
+      <span>Feed</span>
+    </a>
+    <a href="discords.html" class="mobile-nav-item">
+      <i class="fa-brands fa-discord"></i>
+      <span>Discords</span>
+    </a>
+    <button class="mobile-nav-item highlight trigger-new-post" aria-label="New Post">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+    <a href="map.html" class="mobile-nav-item">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Map</span>
+    </a>
+    <a href="clips.html" class="mobile-nav-item">
+      <i class="fa-solid fa-film"></i>
+      <span>Clips</span>
+    </a>
+  </nav>
+
+  <!-- MOBILE DRAWER -->
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-panel">
       <div class="drawer-header">
@@ -367,62 +251,19 @@
         </button>
       </div>
       <ul class="drawer-links">
-        <li>
-          <a href="#feed" class="drawer-link active">
-            <i class="fa-solid fa-house"></i> Feed
-          </a>
-        </li>
-        <li>
-          <a href="#discord-servers" class="drawer-link" style="color: #8a96ff;">
-            <i class="fa-brands fa-discord"></i> GTA VI Discords
-          </a>
-        </li>
-        <li>
-          <a href="#map" class="drawer-link">
-            <i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides
-          </a>
-        </li>
-        <li>
-          <a href="#clips" class="drawer-link">
-            <i class="fa-solid fa-film"></i> Clips
-          </a>
-        </li>
+        <li><a href="index.html" class="drawer-link active"><i class="fa-solid fa-house"></i> Feed</a></li>
+        <li><a href="discords.html" class="drawer-link"><i class="fa-brands fa-discord"></i> GTA VI Discords</a></li>
+        <li><a href="map.html" class="drawer-link"><i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides</a></li>
+        <li><a href="clips.html" class="drawer-link"><i class="fa-solid fa-film"></i> Clips</a></li>
+        <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
       </ul>
-      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-        <button class="btn-discord trigger-add-discord" style="width: 100%; justify-content: center;">
-          <i class="fa-brands fa-discord"></i> Add Discord
-        </button>
-        <button class="btn-primary trigger-new-post" style="width: 100%; justify-content: center;">
-          <i class="fa-solid fa-plus"></i> New Post
-        </button>
-      </div>
+      <button class="btn-post trigger-new-post" style="width: 100%; justify-content: center; margin-top: auto;">
+        <i class="fa-solid fa-plus"></i> New Post
+      </button>
     </div>
   </div>
 
-  <!-- MOBILE BOTTOM BAR (PERFECT FOR PHONES) -->
-  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
-    <a href="#feed" class="mobile-nav-item active">
-      <i class="fa-solid fa-house"></i>
-      <span>Feed</span>
-    </a>
-    <a href="#discord-servers" class="mobile-nav-item discord-tab">
-      <i class="fa-brands fa-discord"></i>
-      <span>Discords</span>
-    </a>
-    <button class="mobile-nav-item highlight trigger-new-post" aria-label="Create New Post">
-      <i class="fa-solid fa-plus"></i>
-    </button>
-    <a href="#map" class="mobile-nav-item">
-      <i class="fa-solid fa-map-location-dot"></i>
-      <span>Map</span>
-    </a>
-    <a href="#clips" class="mobile-nav-item">
-      <i class="fa-solid fa-film"></i>
-      <span>Clips</span>
-    </a>
-  </nav>
-
-  <!-- WHATSR-STYLE COMPREHENSIVE FOOTER (ALL LEGAL SECTIONS & NOTES) -->
+  <!-- FOOTER (WHATSR-STYLE, NO WIFI ICON) -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-brand">
@@ -430,43 +271,35 @@
           <img src="assets/brand/logo.png" alt="ViceCityHub.eu" class="footer-logo-img">
         </div>
         <p class="footer-desc">
-          The premier independent community hub and Discord directory dedicated to Grand Theft Auto VI in Vice City and the State of Leonida.
+          The premier independent community hub and Discord directory dedicated to Grand Theft Auto VI in Vice City and Leonida.
         </p>
         <div class="footer-social-row">
           <a href="https://discord.gg" target="_blank" rel="noopener noreferrer nofollow" class="footer-social-icon" aria-label="Community Discord">
             <i class="fa-brands fa-discord"></i>
           </a>
-          <a href="#feed" class="footer-social-icon" aria-label="Feed">
-            <i class="fa-solid fa-rss"></i>
-          </a>
         </div>
       </div>
 
       <div class="footer-cols">
-        <!-- Explore -->
         <div class="f-col">
           <h4>Explore</h4>
           <ul>
-            <li><a href="#feed">Community Feed</a></li>
-            <li><a href="#discord-servers">GTA VI Discord Servers</a></li>
-            <li><a href="#map">Map &amp; Locations</a></li>
-            <li><a href="#clips">4K Clips &amp; Media</a></li>
-            <li><a href="#" class="trigger-add-discord">Submit Your Discord</a></li>
+            <li><a href="index.html">Community Feed</a></li>
+            <li><a href="discords.html">GTA VI Discord Servers</a></li>
+            <li><a href="map.html">Map &amp; Locations</a></li>
+            <li><a href="clips.html">4K Clips &amp; Media</a></li>
           </ul>
         </div>
 
-        <!-- Company & Support -->
         <div class="f-col">
           <h4>About &amp; Help</h4>
           <ul>
             <li><a href="about.html">About ViceCityHub</a></li>
             <li><a href="faq.html">FAQ</a></li>
             <li><a href="report.html">Report Content / Takedown</a></li>
-            <li><a href="https://discord.gg" target="_blank" rel="noopener noreferrer nofollow"><i class="fa-brands fa-discord"></i> Discord Server</a></li>
           </ul>
         </div>
 
-        <!-- Legal (TUTTE LE NOTE LEGALI COME WHATSR) -->
         <div class="f-col">
           <h4>Legal &amp; Policy</h4>
           <ul>
@@ -474,7 +307,6 @@
             <li><a href="privacy.html">Privacy Policy</a></li>
             <li><a href="cookies.html">Cookie Policy</a></li>
             <li><a href="dsa.html">Digital Services Act (DSA)</a></li>
-            <li><a href="report.html">Notice &amp; Action</a></li>
           </ul>
         </div>
       </div>
@@ -482,13 +314,12 @@
 
     <div class="footer-bottom-bar">
       <p class="footer-disclaimer-text">
-        &copy; 2026 ViceCityHub.eu &bull; All rights reserved. Grand Theft Auto, GTA VI, Vice City, and related logos and trademarks are registered trademarks of Take-Two Interactive Software, Inc. and Rockstar Games. ViceCityHub.eu is an independent fan community website and is not affiliated with, endorsed by, or sponsored by Rockstar Games or Take-Two Interactive Software.
+        &copy; 2026 ViceCityHub.eu &bull; All rights reserved. Grand Theft Auto and GTA VI are registered trademarks of Rockstar Games &amp; Take-Two Interactive. Unofficial fan community.
       </p>
       <span>vicecityhub.eu</span>
     </div>
   </footer>
 
-  <!-- App Script -->
   <script src="assets/js/app.js"></script>
 </body>
 </html>

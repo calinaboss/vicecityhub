@@ -1,49 +1,40 @@
 /**
- * VICECITYHUB.EU - Community Hub & Discord Directory Controller
- * Modern vanilla JS - zero dependencies, zero emojis, OWASP secured.
+ * VICECITYHUB.EU - Master Client-side Controller
+ * Modular, vanilla JavaScript - OWASP compliant, zero emojis.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Elements
-  const filterChips = document.querySelectorAll('.filter-chip');
-  const feedContainer = document.getElementById('community-feed');
-  const discordSection = document.getElementById('discord-servers-section');
-  const discordGrid = document.getElementById('discord-servers-grid');
-  const searchInput = document.getElementById('search-input');
-  
-  // Modals
-  const newPostModal = document.getElementById('create-post-modal');
-  const newDiscordModal = document.getElementById('submit-discord-modal');
-  const openPostModalBtns = document.querySelectorAll('.trigger-new-post');
-  const openDiscordModalBtns = document.querySelectorAll('.trigger-add-discord');
-  const closeModalBtns = document.querySelectorAll('.trigger-close-modal');
-  
-  // Forms
-  const postForm = document.getElementById('new-post-form');
-  const discordForm = document.getElementById('new-discord-form');
-  
-  // Toast & Lightbox
+  // Common Elements
   const toast = document.getElementById('toast-notification');
   const toastText = document.getElementById('toast-text');
-  const lightbox = document.getElementById('lightbox-modal');
-  const lightboxImg = document.getElementById('lightbox-img');
-  const closeLightboxBtn = document.getElementById('close-lightbox');
-  
-  // Mobile Drawer
   const mobileMenuBtn = document.getElementById('mobile-menu-toggle');
   const mobileDrawer = document.getElementById('mobile-drawer');
   const closeDrawerBtn = document.getElementById('close-drawer');
 
-  // OWASP URL Sanitizer & Validator for Discord Invites
-  const DISCORD_INVITE_REGEX = /^https:\/\/(discord\.gg\/[a-zA-Z0-9_-]{2,32}|discord\.com\/invite\/[a-zA-Z0-9_-]{2,32})$/;
+  // Modals
+  const postModal = document.getElementById('create-post-modal');
+  const discordModal = document.getElementById('submit-discord-modal');
+  const clipModal = document.getElementById('post-clip-modal');
+  const openPostModalBtns = document.querySelectorAll('.trigger-new-post');
+  const openDiscordModalBtns = document.querySelectorAll('.trigger-add-discord');
+  const openClipModalBtns = document.querySelectorAll('.trigger-post-clip');
+  const closeModalBtns = document.querySelectorAll('.trigger-close-modal');
 
-  function isValidDiscordInvite(url) {
-    if (!url || typeof url !== 'string') return false;
-    const cleanUrl = url.trim();
-    if (cleanUrl.length > 80) return false;
-    return DISCORD_INVITE_REGEX.test(cleanUrl);
-  }
+  // Forms
+  const postForm = document.getElementById('new-post-form');
+  const discordForm = document.getElementById('new-discord-form');
+  const clipForm = document.getElementById('new-clip-form');
 
+  // Page Specific Elements
+  const feedContainer = document.getElementById('community-feed');
+  const filterChips = document.querySelectorAll('.filter-chip');
+  const searchInput = document.getElementById('search-input');
+  const searchBtn = document.getElementById('search-btn');
+  const discordGrid = document.getElementById('discords-page-grid');
+  const discordSearchInput = document.getElementById('discord-search-input');
+  const clipsGrid = document.getElementById('clips-page-grid');
+
+  // Helper Escape HTML
   function escapeHtml(str) {
     if (!str) return '';
     return String(str)
@@ -52,459 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
-  }
-
-  // Initial Curated GTA VI Discord Servers
-  let discordServers = [
-    {
-      id: 'dc-1',
-      name: 'Vice City Roleplay (VCRP)',
-      tag: 'Roleplay',
-      category: 'roleplay',
-      inviteUrl: 'https://discord.gg/viceroleplay',
-      members: '14,800 Members',
-      iconClass: 'fa-masks-theater',
-      desc: 'The premier text and voice roleplay server set in Vice City & Leonida. Whitelisted police, emergency, cartel, and civilian careers.'
-    },
-    {
-      id: 'dc-2',
-      name: 'GTA VI Italian Community',
-      tag: 'Italian Community',
-      category: 'italian',
-      inviteUrl: 'https://discord.gg/gta6italia',
-      members: '8,450 Members',
-      iconClass: 'fa-globe',
-      desc: 'Il principale server Discord italiano dedicato a Grand Theft Auto VI. Organizzazione sessioni serali, trucchi, ritrovi e canali vocali dedicati.'
-    },
-    {
-      id: 'dc-3',
-      name: 'Leonida Heists & Speedruns',
-      tag: 'Heists & LFG',
-      category: 'heists',
-      inviteUrl: 'https://discord.gg/leonidaheists',
-      members: '6,200 Members',
-      iconClass: 'fa-crosshairs',
-      desc: 'Competitive group for high-stakes raid coordination, world-record speedrunning routes, and finding experienced co-op teammates.'
-    },
-    {
-      id: 'dc-4',
-      name: 'Vice City Modding & Mapping',
-      tag: 'Modding & Tools',
-      category: 'modding',
-      inviteUrl: 'https://discord.gg/vicemodding',
-      members: '9,120 Members',
-      iconClass: 'fa-screwdriver-wrench',
-      desc: 'Technical hub for engine research, coordinate tracking, asset datamining, and collaborative interactive map development.'
-    }
-  ];
-
-  // Initial Posts Data (No Crews, Authentic Discussions)
-  let posts = [
-    {
-      id: 'post-1',
-      category: 'official',
-      categoryLabel: 'Official Hub',
-      categoryIcon: 'fa-bullhorn',
-      pinned: true,
-      author: 'ViceCityHub Staff',
-      username: 'admin',
-      badge: 'Official Staff',
-      badgeClass: 'mod',
-      time: '1 hour ago',
-      avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&auto=format&fit=crop&q=80',
-      title: 'Grand Theft Auto VI is officially released worldwide. Welcome to Vice City!',
-      text: 'The wait is finally over! Vice City and Leonida are live. Use ViceCityHub to discuss locations, share your favorite moments, and discover GTA VI Discord servers. Please read the community guidelines before posting.',
-      media: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?w=1200&auto=format&fit=crop&q=80',
-      mediaType: 'Launch Showcase',
-      likes: 1248,
-      isLiked: false,
-      bookmarks: 342,
-      isBookmarked: false,
-      comments: [
-        { author: 'TommyV_86', time: '45m ago', text: 'Lighting across Ocean Drive at sunset looks incredible.' },
-        { author: 'Lucia_Driver', time: '20m ago', text: 'Handling model on classic sports cars feels so responsive.' }
-      ]
-    },
-    {
-      id: 'post-2',
-      category: 'leaks',
-      categoryLabel: 'Map & Guides',
-      categoryIcon: 'fa-map-location-dot',
-      pinned: false,
-      author: 'Cartographer_VC',
-      username: 'vice_carto',
-      badge: 'Verified Guide',
-      badgeClass: 'verified',
-      time: '2 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
-      title: 'Full Leonida State Map Breakdown: High-End Vehicle Spawns & Heliports',
-      text: 'Here is our consolidated map guide covering Port Gellhorn, Vice Beach, and Grassrivers. We are compiling confirmed supercar garages and private airstrips for fast travel across the state.',
-      media: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80',
-      mediaType: 'Map Overlay Preview',
-      likes: 673,
-      isLiked: false,
-      bookmarks: 189,
-      isBookmarked: false,
-      comments: [
-        { author: 'SpeedDemon99', time: '1h ago', text: 'Can confirm the helicopter spawn on the Starfish Island helipad.' }
-      ]
-    },
-    {
-      id: 'post-3',
-      category: 'clips',
-      categoryLabel: 'Clips & Media',
-      categoryIcon: 'fa-film',
-      pinned: false,
-      author: 'NeonRacer_XX',
-      username: 'neon_racer',
-      badge: 'Verified',
-      badgeClass: 'verified',
-      time: '3 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&auto=format&fit=crop&q=80',
-      title: 'Cruising Ocean Drive at 3 AM during a thunderstorm',
-      text: 'The wet asphalt puddles and neon light bounce along the strip are mind-blowing. Check out this still capture from my 4K stream.',
-      media: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1200&auto=format&fit=crop&q=80',
-      mediaType: '4K Ultra Quality Capture',
-      likes: 894,
-      isLiked: false,
-      bookmarks: 211,
-      isBookmarked: false,
-      comments: [
-        { author: 'RayTracer', time: '2h ago', text: 'Best looking weather engine in gaming history.' }
-      ]
-    },
-    {
-      id: 'post-4',
-      category: 'discussions',
-      categoryLabel: 'Discussions',
-      categoryIcon: 'fa-comments',
-      pinned: false,
-      author: 'RetroGamer88',
-      username: 'retrogamer',
-      badge: '',
-      badgeClass: '',
-      time: '4 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1628157582853-a796fa650a6a?w=100&auto=format&fit=crop&q=80',
-      title: 'What radio station is everyone listening to on your first roadtrip?',
-      text: 'Flash FM returns along with Wave 103 and several brand new hip hop, synth, and Latin radio stations. Share your favorite tracks and DJ moments so far.',
-      media: null,
-      likes: 421,
-      isLiked: false,
-      bookmarks: 67,
-      isBookmarked: false,
-      comments: [
-        { author: 'FlashFM_Fan', time: '3h ago', text: 'Flash FM forever. The 80s pop tracks hit just as good today.' }
-      ]
-    }
-  ];
-
-  let currentCategory = 'all';
-
-  // Render Post Card HTML
-  function renderPostCard(post) {
-    const isPinnedClass = post.pinned ? 'pinned' : '';
-    const pinBadge = post.pinned ? `
-      <span class="badge-pill mod" style="margin-right: 6px;">
-        <i class="fa-solid fa-thumbtack"></i> Pinned
-      </span>
-    ` : '';
-
-    const badgeHtml = post.badge ? `
-      <span class="badge-pill ${post.badgeClass}">${post.badge}</span>
-    ` : '';
-
-    const mediaHtml = post.media ? `
-      <div class="post-media-container" data-src="${escapeHtml(post.media)}">
-        <img src="${escapeHtml(post.media)}" alt="${escapeHtml(post.title)}" loading="lazy">
-        <div class="media-badge-overlay">
-          <i class="fa-solid fa-expand"></i> ${escapeHtml(post.mediaType || 'View Media')}
-        </div>
-      </div>
-    ` : '';
-
-    const commentsHtml = post.comments.map(c => `
-      <div class="single-comment">
-        <div class="single-comment-meta">
-          <span class="author">${escapeHtml(c.author)}</span>
-          <span class="time">${escapeHtml(c.time)}</span>
-        </div>
-        <p class="single-comment-text">${escapeHtml(c.text)}</p>
-      </div>
-    `).join('');
-
-    return `
-      <article class="post-card ${isPinnedClass}" data-id="${post.id}" data-category="${post.category}">
-        <div class="post-header">
-          <div class="post-author-box">
-            <img class="post-avatar" src="${escapeHtml(post.avatar)}" alt="${escapeHtml(post.author)}">
-            <div class="post-author-info">
-              <div class="author-name-row">
-                ${pinBadge}
-                <span class="author-username">${escapeHtml(post.author)}</span>
-                ${badgeHtml}
-              </div>
-              <span class="post-timestamp">${escapeHtml(post.time)} &bull; @${escapeHtml(post.username)}</span>
-            </div>
-          </div>
-          <span class="post-category-tag">
-            <i class="fa-solid ${post.categoryIcon}"></i> ${escapeHtml(post.categoryLabel)}
-          </span>
-        </div>
-
-        <h2 class="post-title">${escapeHtml(post.title)}</h2>
-        <p class="post-text">${escapeHtml(post.text)}</p>
-
-        ${mediaHtml}
-
-        <div class="post-footer">
-          <div class="post-actions-group">
-            <button class="action-btn btn-like ${post.isLiked ? 'active-like' : ''}" data-id="${post.id}">
-              <i class="${post.isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i>
-              <span class="like-count">${post.likes}</span>
-            </button>
-            <button class="action-btn btn-comments-toggle" data-id="${post.id}">
-              <i class="fa-regular fa-comment"></i>
-              <span class="comment-count">${post.comments.length}</span>
-            </button>
-            <button class="action-btn btn-share" data-id="${post.id}">
-              <i class="fa-solid fa-share-nodes"></i>
-              <span>Share</span>
-            </button>
-          </div>
-          <button class="action-btn btn-bookmark ${post.isBookmarked ? 'active-bookmark' : ''}" data-id="${post.id}">
-            <i class="${post.isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
-          </button>
-        </div>
-
-        <!-- Comments Drawer -->
-        <div class="post-comments-drawer" id="comments-${post.id}">
-          <div class="comment-input-row">
-            <input type="text" class="comment-input-field" placeholder="Write a comment..." maxlength="280">
-            <button class="comment-submit-btn" data-id="${post.id}">Post</button>
-          </div>
-          <div class="comments-list" id="comments-list-${post.id}">
-            ${commentsHtml}
-          </div>
-        </div>
-      </article>
-    `;
-  }
-
-  // Render Discord Server Card HTML (Secured with rel and strict escaping)
-  function renderDiscordCard(server) {
-    return `
-      <div class="discord-card">
-        <div class="discord-card-top">
-          <div class="discord-server-icon">
-            <i class="fa-solid ${server.iconClass || 'fa-users'}"></i>
-          </div>
-          <div class="discord-server-meta">
-            <h3 class="discord-server-name">${escapeHtml(server.name)}</h3>
-            <span class="discord-server-tag">${escapeHtml(server.tag)}</span>
-          </div>
-        </div>
-        <p class="discord-server-desc">${escapeHtml(server.desc)}</p>
-        <div class="discord-card-footer">
-          <span class="discord-members-count">
-            <i class="fa-solid fa-user-group"></i> ${escapeHtml(server.members)}
-          </span>
-          <a href="${escapeHtml(server.inviteUrl)}" target="_blank" rel="noopener noreferrer nofollow" class="btn-join-discord">
-            <i class="fa-brands fa-discord"></i> Join
-          </a>
-        </div>
-      </div>
-    `;
-  }
-
-  // Render Discord Servers
-  function renderDiscordGrid() {
-    if (!discordGrid) return;
-    const query = (searchInput.value || '').toLowerCase().trim();
-    const filtered = discordServers.filter(s => {
-      return !query || 
-        s.name.toLowerCase().includes(query) || 
-        s.tag.toLowerCase().includes(query) || 
-        s.desc.toLowerCase().includes(query);
-    });
-
-    if (filtered.length === 0) {
-      discordGrid.innerHTML = `
-        <div class="widget-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
-          <i class="fa-brands fa-discord" style="font-size: 2.2rem; color: var(--color-discord); margin-bottom: 12px;"></i>
-          <h4 style="font-size: 1.05rem; margin-bottom: 6px;">No Discord servers found</h4>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">
-            Be the first to list your GTA VI Discord community!
-          </p>
-          <button class="btn-discord trigger-add-discord">
-            <i class="fa-solid fa-plus"></i> Submit Discord Server
-          </button>
-        </div>
-      `;
-      return;
-    }
-
-    discordGrid.innerHTML = filtered.map(renderDiscordCard).join('');
-  }
-
-  // Render Feed
-  function renderFeed() {
-    if (!feedContainer) return;
-    const searchQuery = (searchInput.value || '').toLowerCase().trim();
-    const filtered = posts.filter(post => {
-      const matchCat = currentCategory === 'all' || post.category === currentCategory;
-      const matchSearch = !searchQuery || 
-        post.title.toLowerCase().includes(searchQuery) || 
-        post.text.toLowerCase().includes(searchQuery) ||
-        post.author.toLowerCase().includes(searchQuery);
-      return matchCat && matchSearch;
-    });
-
-    if (filtered.length === 0) {
-      feedContainer.innerHTML = `
-        <div class="widget-card" style="text-align: center; padding: 48px 20px;">
-          <i class="fa-solid fa-comments" style="font-size: 2.2rem; color: var(--text-dim); margin-bottom: 12px;"></i>
-          <h3 style="font-size: 1.1rem; margin-bottom: 6px;">No discussions found</h3>
-          <p style="color: var(--text-muted); font-size: 0.86rem; max-width: 340px; margin: 0 auto 16px;">
-            Try another search term or start a new discussion.
-          </p>
-          <button class="btn-primary trigger-new-post">
-            <i class="fa-solid fa-plus"></i> New Post
-          </button>
-        </div>
-      `;
-      return;
-    }
-
-    feedContainer.innerHTML = filtered.map(renderPostCard).join('');
-  }
-
-  // Switch View between Feed & Discord Section
-  function updateView(category) {
-    currentCategory = category;
-    if (category === 'discords') {
-      if (feedContainer) feedContainer.parentElement.style.display = 'none';
-      if (discordSection) {
-        discordSection.style.display = 'flex';
-        renderDiscordGrid();
-      }
-    } else {
-      if (feedContainer) {
-        feedContainer.parentElement.style.display = 'block';
-        renderFeed();
-      }
-      if (discordSection) discordSection.style.display = 'none';
-    }
-  }
-
-  // Filter Chips Switching
-  filterChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      filterChips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      const cat = chip.dataset.category || 'all';
-      updateView(cat);
-    });
-  });
-
-  // Global Search
-  if (searchInput) {
-    searchInput.addEventListener('input', () => {
-      if (currentCategory === 'discords') {
-        renderDiscordGrid();
-      } else {
-        renderFeed();
-      }
-    });
-  }
-
-  // Feed Interaction Delegation
-  if (feedContainer) {
-    feedContainer.addEventListener('click', (e) => {
-      // Like / Upvote
-      const likeBtn = e.target.closest('.btn-like');
-      if (likeBtn) {
-        const postId = likeBtn.dataset.id;
-        const targetPost = posts.find(p => p.id === postId);
-        if (targetPost) {
-          targetPost.isLiked = !targetPost.isLiked;
-          targetPost.likes += targetPost.isLiked ? 1 : -1;
-          renderFeed();
-          showToast(targetPost.isLiked ? 'Upvoted discussion' : 'Upvote removed');
-        }
-        return;
-      }
-
-      // Bookmark
-      const bookmarkBtn = e.target.closest('.btn-bookmark');
-      if (bookmarkBtn) {
-        const postId = bookmarkBtn.dataset.id;
-        const targetPost = posts.find(p => p.id === postId);
-        if (targetPost) {
-          targetPost.isBookmarked = !targetPost.isBookmarked;
-          renderFeed();
-          showToast(targetPost.isBookmarked ? 'Saved to bookmarks' : 'Removed from bookmarks');
-        }
-        return;
-      }
-
-      // Toggle Comments
-      const commentsToggleBtn = e.target.closest('.btn-comments-toggle');
-      if (commentsToggleBtn) {
-        const postId = commentsToggleBtn.dataset.id;
-        const drawer = document.getElementById(`comments-${postId}`);
-        if (drawer) drawer.classList.toggle('open');
-        return;
-      }
-
-      // Post Comment
-      const commentSubmitBtn = e.target.closest('.comment-submit-btn');
-      if (commentSubmitBtn) {
-        const postId = commentSubmitBtn.dataset.id;
-        const drawer = document.getElementById(`comments-${postId}`);
-        const input = drawer.querySelector('.comment-input-field');
-        const text = (input.value || '').trim();
-        if (!text) return;
-
-        const targetPost = posts.find(p => p.id === postId);
-        if (targetPost) {
-          targetPost.comments.unshift({
-            author: 'You',
-            time: 'Just now',
-            text: text
-          });
-          input.value = '';
-          renderFeed();
-          const updatedDrawer = document.getElementById(`comments-${postId}`);
-          if (updatedDrawer) updatedDrawer.classList.add('open');
-          showToast('Comment published');
-        }
-        return;
-      }
-
-      // Share Link
-      const shareBtn = e.target.closest('.btn-share');
-      if (shareBtn) {
-        const postId = shareBtn.dataset.id;
-        const shareUrl = `${window.location.origin}/#${postId}`;
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          showToast('Link copied to clipboard');
-        }).catch(() => {
-          showToast('Link ready to share');
-        });
-        return;
-      }
-
-      // Media Lightbox
-      const mediaContainer = e.target.closest('.post-media-container');
-      if (mediaContainer) {
-        const src = mediaContainer.dataset.src;
-        if (src) {
-          lightboxImg.src = src;
-          lightbox.classList.add('open');
-        }
-        return;
-      }
-    });
   }
 
   // Toast Function
@@ -518,30 +56,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2800);
   }
 
-  // Modals Open/Close
-  function openModal(modal) {
-    if (!modal) return;
-    modal.classList.add('open');
+  // Modal Controllers
+  function openModal(m) {
+    if (!m) return;
+    m.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
 
-  function closeModal(modal) {
-    if (!modal) return;
-    modal.classList.remove('open');
+  function closeModal(m) {
+    if (!m) return;
+    m.classList.remove('open');
     document.body.style.overflow = '';
   }
 
-  openPostModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(newPostModal)));
-  openDiscordModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(newDiscordModal)));
+  openPostModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(postModal)));
+  openDiscordModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(discordModal)));
+  openClipModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(clipModal)));
 
   closeModalBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      closeModal(newPostModal);
-      closeModal(newDiscordModal);
+      closeModal(postModal);
+      closeModal(discordModal);
+      closeModal(clipModal);
     });
   });
 
-  [newPostModal, newDiscordModal].forEach(m => {
+  [postModal, discordModal, clipModal].forEach(m => {
     if (!m) return;
     m.addEventListener('click', (e) => {
       if (e.target === m) closeModal(m);
@@ -550,33 +90,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      closeModal(newPostModal);
-      closeModal(newDiscordModal);
-      if (lightbox && lightbox.classList.contains('open')) closeLightbox();
+      closeModal(postModal);
+      closeModal(discordModal);
+      closeModal(clipModal);
       if (mobileDrawer && mobileDrawer.classList.contains('open')) closeDrawer();
     }
   });
 
-  // Lightbox
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    lightboxImg.src = '';
-  }
-  if (closeLightboxBtn) closeLightboxBtn.addEventListener('click', closeLightbox);
-  if (lightbox) {
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
-    });
-  }
-
   // Mobile Drawer
   function openDrawer() {
-    mobileDrawer.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    if (mobileDrawer) {
+      mobileDrawer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
   }
   function closeDrawer() {
-    mobileDrawer.classList.remove('open');
-    document.body.style.overflow = '';
+    if (mobileDrawer) {
+      mobileDrawer.classList.remove('open');
+      document.body.style.overflow = '';
+    }
   }
   if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openDrawer);
   if (closeDrawerBtn) closeDrawerBtn.addEventListener('click', closeDrawer);
@@ -586,7 +118,281 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // New Post Submission
+  // ==========================================
+  // FEED & DISCUSSIONS (index.html)
+  // ==========================================
+  let posts = [
+    {
+      id: 'post-1',
+      category: 'official',
+      categoryLabel: 'Official News',
+      pinned: true,
+      author: 'ViceCityHub Staff',
+      username: 'admin',
+      badge: 'Official',
+      badgeClass: 'mod',
+      time: '1 hour ago',
+      avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&auto=format&fit=crop&q=80',
+      title: 'Grand Theft Auto VI is live worldwide. Welcome to Vice City!',
+      text: 'Vice City and the state of Leonida are officially open. Share your map routes, hidden weapon caches, and discover community Discord servers below.',
+      media: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?w=1200&auto=format&fit=crop&q=80',
+      likes: 1248,
+      isLiked: false,
+      bookmarks: 342,
+      isBookmarked: false,
+      comments: [
+        { author: 'TommyV_86', time: '45m ago', text: 'Ocean Beach lighting at sunset is unbelievable.' },
+        { author: 'Lucia_Driver', time: '20m ago', text: 'Physics and car handling feel super grounded.' }
+      ]
+    },
+    {
+      id: 'post-2',
+      category: 'leaks',
+      categoryLabel: 'Map & Guides',
+      pinned: false,
+      author: 'Cartographer_VC',
+      username: 'vice_carto',
+      badge: 'Verified',
+      badgeClass: 'verified',
+      time: '2 hours ago',
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
+      title: 'Full Leonida State Map Breakdown: High-End Vehicle Spawns & Heliports',
+      text: 'Consolidated map guide covering Port Gellhorn, Vice Beach, and Grassrivers. In this thread we are compiling all confirmed supercar garages and private airstrips.',
+      media: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80',
+      likes: 673,
+      isLiked: false,
+      bookmarks: 189,
+      isBookmarked: false,
+      comments: [
+        { author: 'SpeedDemon99', time: '1h ago', text: 'Confirmed helicopter spawn on the Starfish Island helipad.' }
+      ]
+    },
+    {
+      id: 'post-3',
+      category: 'clips',
+      categoryLabel: 'Clips & Media',
+      pinned: false,
+      author: 'NeonRacer_XX',
+      username: 'neon_racer',
+      badge: 'Verified',
+      badgeClass: 'verified',
+      time: '3 hours ago',
+      avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&auto=format&fit=crop&q=80',
+      title: 'Cruising Ocean Drive at 3 AM with thunderstorm reflections',
+      text: 'The wet asphalt puddles and neon light reflections along the strip look incredible in 4K.',
+      media: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1200&auto=format&fit=crop&q=80',
+      likes: 894,
+      isLiked: false,
+      bookmarks: 211,
+      isBookmarked: false,
+      comments: [
+        { author: 'RayTracer', time: '2h ago', text: 'Weather engine is top tier.' }
+      ]
+    },
+    {
+      id: 'post-4',
+      category: 'discussions',
+      categoryLabel: 'Discussions',
+      pinned: false,
+      author: 'RetroGamer88',
+      username: 'retrogamer',
+      badge: '',
+      badgeClass: '',
+      time: '4 hours ago',
+      avatar: 'https://images.unsplash.com/photo-1628157582853-a796fa650a6a?w=100&auto=format&fit=crop&q=80',
+      title: 'What radio station is everyone listening to on your first roadtrip?',
+      text: 'Flash FM returns along with Wave 103 and brand new hip hop, synth, and Latin radio stations. What are your favorite tracks so far?',
+      media: null,
+      likes: 421,
+      isLiked: false,
+      bookmarks: 67,
+      isBookmarked: false,
+      comments: [
+        { author: 'FlashFM_Fan', time: '3h ago', text: 'Flash FM 80s pop tracks hit just as good today.' }
+      ]
+    }
+  ];
+
+  let currentCategory = 'all';
+
+  function renderPostCard(post) {
+    const isPinnedClass = post.pinned ? 'pinned' : '';
+    const pinBadge = post.pinned ? `<span class="badge-pill mod" style="margin-right: 6px;"><i class="fa-solid fa-thumbtack"></i> Pinned</span>` : '';
+    const badgeHtml = post.badge ? `<span class="badge-pill ${post.badgeClass}">${post.badge}</span>` : '';
+    const mediaHtml = post.media ? `
+      <div class="post-media-container">
+        <img src="${escapeHtml(post.media)}" alt="${escapeHtml(post.title)}" loading="lazy">
+      </div>
+    ` : '';
+
+    const commentsHtml = post.comments.map(c => `
+      <div class="single-comment">
+        <div class="single-comment-meta">
+          <span class="author">${escapeHtml(c.author)}</span> &bull; <span>${escapeHtml(c.time)}</span>
+        </div>
+        <p class="single-comment-text">${escapeHtml(c.text)}</p>
+      </div>
+    `).join('');
+
+    return `
+      <article class="post-card ${isPinnedClass}" data-id="${post.id}">
+        <div class="post-header">
+          <div class="post-author-box">
+            <img class="post-avatar" src="${escapeHtml(post.avatar)}" alt="${escapeHtml(post.author)}">
+            <div class="post-author-info">
+              <div class="author-name-row">
+                ${pinBadge}
+                <span class="author-username">${escapeHtml(post.author)}</span>
+                ${badgeHtml}
+              </div>
+              <span class="post-timestamp">${escapeHtml(post.time)} &bull; @${escapeHtml(post.username)}</span>
+            </div>
+          </div>
+          <span class="post-category-tag">${escapeHtml(post.categoryLabel)}</span>
+        </div>
+
+        <h2 class="post-title">${escapeHtml(post.title)}</h2>
+        <p class="post-text">${escapeHtml(post.text)}</p>
+
+        ${mediaHtml}
+
+        <div class="post-footer">
+          <div class="post-actions-group">
+            <button class="action-btn btn-like ${post.isLiked ? 'active-like' : ''}" data-id="${post.id}">
+              <i class="${post.isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i>
+              <span>${post.likes}</span>
+            </button>
+            <button class="action-btn btn-comments-toggle" data-id="${post.id}">
+              <i class="fa-regular fa-comment"></i>
+              <span>${post.comments.length}</span>
+            </button>
+            <button class="action-btn btn-share" data-id="${post.id}">
+              <i class="fa-solid fa-share-nodes"></i> Share
+            </button>
+          </div>
+          <button class="action-btn btn-bookmark ${post.isBookmarked ? 'active-bookmark' : ''}" data-id="${post.id}">
+            <i class="${post.isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+          </button>
+        </div>
+
+        <div class="post-comments-drawer" id="comments-${post.id}">
+          <div class="comment-input-row">
+            <input type="text" class="comment-input-field" placeholder="Write a comment..." maxlength="280">
+            <button class="comment-submit-btn" data-id="${post.id}">Post</button>
+          </div>
+          <div class="comments-list" id="comments-list-${post.id}">
+            ${commentsHtml}
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderFeed() {
+    if (!feedContainer) return;
+    const query = (searchInput?.value || '').toLowerCase().trim();
+    const filtered = posts.filter(post => {
+      const matchCat = currentCategory === 'all' || post.category === currentCategory;
+      const matchSearch = !query || 
+        post.title.toLowerCase().includes(query) || 
+        post.text.toLowerCase().includes(query) ||
+        post.author.toLowerCase().includes(query);
+      return matchCat && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+      feedContainer.innerHTML = `
+        <div class="widget-card" style="text-align: center; padding: 40px 20px;">
+          <h3 style="font-size: 1.05rem; margin-bottom: 6px;">No discussions found</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 14px;">Try searching for another topic or create a new discussion.</p>
+          <button class="btn-post trigger-new-post">Create Discussion</button>
+        </div>
+      `;
+      return;
+    }
+
+    feedContainer.innerHTML = filtered.map(renderPostCard).join('');
+  }
+
+  if (filterChips.length > 0) {
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        filterChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentCategory = chip.dataset.category || 'all';
+        renderFeed();
+      });
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', renderFeed);
+  }
+  if (searchBtn) {
+    searchBtn.addEventListener('click', renderFeed);
+  }
+
+  if (feedContainer) {
+    feedContainer.addEventListener('click', (e) => {
+      const likeBtn = e.target.closest('.btn-like');
+      if (likeBtn) {
+        const p = posts.find(item => item.id === likeBtn.dataset.id);
+        if (p) {
+          p.isLiked = !p.isLiked;
+          p.likes += p.isLiked ? 1 : -1;
+          renderFeed();
+        }
+        return;
+      }
+
+      const bookmarkBtn = e.target.closest('.btn-bookmark');
+      if (bookmarkBtn) {
+        const p = posts.find(item => item.id === bookmarkBtn.dataset.id);
+        if (p) {
+          p.isBookmarked = !p.isBookmarked;
+          renderFeed();
+          showToast(p.isBookmarked ? 'Saved to bookmarks' : 'Removed from bookmarks');
+        }
+        return;
+      }
+
+      const commentsToggle = e.target.closest('.btn-comments-toggle');
+      if (commentsToggle) {
+        const drawer = document.getElementById(`comments-${commentsToggle.dataset.id}`);
+        if (drawer) drawer.classList.toggle('open');
+        return;
+      }
+
+      const commentSubmit = e.target.closest('.comment-submit-btn');
+      if (commentSubmit) {
+        const drawer = document.getElementById(`comments-${commentSubmit.dataset.id}`);
+        const input = drawer.querySelector('.comment-input-field');
+        const val = (input.value || '').trim();
+        if (!val) return;
+        const p = posts.find(item => item.id === commentSubmit.dataset.id);
+        if (p) {
+          p.comments.unshift({ author: 'You', time: 'Just now', text: val });
+          input.value = '';
+          renderFeed();
+          const updatedDrawer = document.getElementById(`comments-${p.id}`);
+          if (updatedDrawer) updatedDrawer.classList.add('open');
+          showToast('Comment published');
+        }
+        return;
+      }
+
+      const shareBtn = e.target.closest('.btn-share');
+      if (shareBtn) {
+        navigator.clipboard.writeText(`${window.location.origin}/#${shareBtn.dataset.id}`).then(() => {
+          showToast('Link copied to clipboard');
+        });
+        return;
+      }
+    });
+
+    renderFeed();
+  }
+
   if (postForm) {
     postForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -595,26 +401,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const text = document.getElementById('post-content-input').value.trim();
       const media = document.getElementById('post-media-input').value.trim();
 
-      if (!title || !text) {
-        showToast('Please provide a title and content.');
-        return;
-      }
-
       const catMap = {
-        discussions: { label: 'Discussions', icon: 'fa-comments' },
-        official: { label: 'Official Hub', icon: 'fa-bullhorn' },
-        leaks: { label: 'Map & Guides', icon: 'fa-map-location-dot' },
-        clips: { label: 'Clips & Media', icon: 'fa-film' }
+        discussions: 'Discussions',
+        leaks: 'Map & Guides',
+        clips: 'Clips & Media',
+        official: 'Official News'
       };
 
-      const newPostObj = {
+      const newPost = {
         id: `post-${Date.now()}`,
         category: category,
-        categoryLabel: catMap[category]?.label || 'Discussions',
-        categoryIcon: catMap[category]?.icon || 'fa-comments',
+        categoryLabel: catMap[category] || 'Discussions',
         pinned: false,
-        author: 'ViceResident',
-        username: 'viceresident',
+        author: 'Player_VI',
+        username: 'playervi',
         badge: 'Member',
         badgeClass: 'verified',
         time: 'Just now',
@@ -622,7 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
         title: title,
         text: text,
         media: media || null,
-        mediaType: media ? 'Community Image' : null,
         likes: 1,
         isLiked: true,
         bookmarks: 0,
@@ -630,15 +429,100 @@ document.addEventListener('DOMContentLoaded', () => {
         comments: []
       };
 
-      posts.unshift(newPostObj);
-      closeModal(newPostModal);
+      posts.unshift(newPost);
+      closeModal(postModal);
       postForm.reset();
-      updateView('all');
+      renderFeed();
       showToast('Discussion published successfully!');
     });
   }
 
-  // Submit Discord Server (OWASP Validated)
+  // ==========================================
+  // DISCORD DIRECTORY (discords.html)
+  // ==========================================
+  const DISCORD_REGEX = /^https:\/\/(discord\.gg\/[a-zA-Z0-9_-]{2,32}|discord\.com\/invite\/[a-zA-Z0-9_-]{2,32})$/;
+
+  let discordServers = [
+    {
+      id: 'dc-1',
+      name: 'Vice City Roleplay (VCRP)',
+      tag: 'Roleplay',
+      inviteUrl: 'https://discord.gg/viceroleplay',
+      members: '14,800 Members',
+      desc: 'The premier text and voice roleplay server set in Vice City & Leonida. Whitelisted police, cartel, and civilian careers.'
+    },
+    {
+      id: 'dc-2',
+      name: 'GTA VI Italian Community',
+      tag: 'Italian Community',
+      inviteUrl: 'https://discord.gg/gta6italia',
+      members: '8,450 Members',
+      desc: 'Il principale server Discord italiano dedicato a GTA VI. Organizzazione sessioni serali, ritrovi e canali vocali dedicati.'
+    },
+    {
+      id: 'dc-3',
+      name: 'Leonida Heists & Speedruns',
+      tag: 'Heists & LFG',
+      inviteUrl: 'https://discord.gg/leonidaheists',
+      members: '6,200 Members',
+      desc: 'Coordinated heist groups, speedrun routes, and verified high-tier players.'
+    },
+    {
+      id: 'dc-4',
+      name: 'Vice City Modding & Tools',
+      tag: 'Modding & Mapping',
+      inviteUrl: 'https://discord.gg/vicemodding',
+      members: '9,120 Members',
+      desc: 'Technical hub for engine research, coordinate tracking, asset datamining, and map development.'
+    }
+  ];
+
+  function renderDiscords() {
+    if (!discordGrid) return;
+    const query = (discordSearchInput?.value || '').toLowerCase().trim();
+    const filtered = discordServers.filter(s => {
+      return !query || s.name.toLowerCase().includes(query) || s.tag.toLowerCase().includes(query) || s.desc.toLowerCase().includes(query);
+    });
+
+    if (filtered.length === 0) {
+      discordGrid.innerHTML = `
+        <div class="widget-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
+          <p style="color: var(--text-muted); margin-bottom: 12px;">No Discord servers matching your query.</p>
+          <button class="btn-discord trigger-add-discord">Submit Your Discord</button>
+        </div>
+      `;
+      return;
+    }
+
+    discordGrid.innerHTML = filtered.map(s => `
+      <div class="discord-item-card">
+        <div>
+          <div class="discord-item-header">
+            <div class="discord-avatar-box">
+              <i class="fa-brands fa-discord"></i>
+            </div>
+            <div>
+              <h3 class="discord-name">${escapeHtml(s.name)}</h3>
+              <span class="discord-tag">${escapeHtml(s.tag)}</span>
+            </div>
+          </div>
+          <p class="discord-desc">${escapeHtml(s.desc)}</p>
+        </div>
+        <div class="discord-footer">
+          <span class="discord-count"><i class="fa-solid fa-users"></i> ${escapeHtml(s.members)}</span>
+          <a href="${escapeHtml(s.inviteUrl)}" target="_blank" rel="noopener noreferrer nofollow" class="btn-discord" style="height: 34px; padding: 0 12px; font-size: 0.8rem;">
+            Join Server
+          </a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (discordGrid) {
+    renderDiscords();
+    if (discordSearchInput) discordSearchInput.addEventListener('input', renderDiscords);
+  }
+
   if (discordForm) {
     discordForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -647,68 +531,107 @@ document.addEventListener('DOMContentLoaded', () => {
       const category = document.getElementById('discord-category-select').value;
       const desc = document.getElementById('discord-desc-input').value.trim();
 
-      // OWASP Strict Validation
-      if (!name || name.length > 60) {
-        showToast('Server name is required (max 60 characters).');
+      if (!DISCORD_REGEX.test(inviteUrl)) {
+        showToast('Invalid Discord invite! Must be https://discord.gg/... or https://discord.com/invite/...');
         return;
       }
 
-      if (!isValidDiscordInvite(inviteUrl)) {
-        showToast('Invalid invite link! Must be https://discord.gg/... or https://discord.com/invite/...');
-        return;
-      }
-
-      if (!desc || desc.length > 280) {
-        showToast('Description is required (max 280 characters).');
-        return;
-      }
-
-      const catLabelMap = {
-        roleplay: { tag: 'Roleplay', icon: 'fa-masks-theater' },
-        italian: { tag: 'Italian Community', icon: 'fa-globe' },
-        heists: { tag: 'Heists & LFG', icon: 'fa-crosshairs' },
-        general: { tag: 'General Community', icon: 'fa-users' },
-        modding: { tag: 'Modding & Tools', icon: 'fa-screwdriver-wrench' }
+      const catMap = {
+        roleplay: 'Roleplay',
+        italian: 'Italian Community',
+        heists: 'Heists & LFG',
+        general: 'General Community',
+        modding: 'Modding & Mapping'
       };
 
-      const newServer = {
+      discordServers.unshift({
         id: `dc-${Date.now()}`,
         name: name,
-        tag: catLabelMap[category]?.tag || 'Community',
-        category: category,
+        tag: catMap[category] || 'Community',
         inviteUrl: inviteUrl,
         members: 'Just Added',
-        iconClass: catLabelMap[category]?.icon || 'fa-users',
         desc: desc
-      };
-
-      discordServers.unshift(newServer);
-      closeModal(newDiscordModal);
-      discordForm.reset();
-      
-      // Switch to discords view and toast
-      filterChips.forEach(c => {
-        c.classList.toggle('active', c.dataset.category === 'discords');
       });
-      updateView('discords');
-      showToast('Discord server submitted successfully!');
+
+      closeModal(discordModal);
+      discordForm.reset();
+      renderDiscords();
+      showToast('Discord server listed successfully!');
     });
   }
 
-  // Handle Hash Navigation
-  function handleHash() {
-    const hash = window.location.hash;
-    if (hash === '#discord-servers') {
-      filterChips.forEach(c => {
-        c.classList.toggle('active', c.dataset.category === 'discords');
-      });
-      updateView('discords');
+  // ==========================================
+  // CLIPS SHOWCASE (clips.html)
+  // ==========================================
+  let clips = [
+    {
+      id: 'clip-1',
+      title: 'Night Drift down Ocean Beach in 4K',
+      author: 'Speedy_VC',
+      views: '3.4k views',
+      thumb: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1000&auto=format&fit=crop&q=80',
+      time: '2 hours ago'
+    },
+    {
+      id: 'clip-2',
+      title: 'Helicopter Escape from Grassrivers Swamp Outpost',
+      author: 'TacticalPilot',
+      views: '1.8k views',
+      thumb: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1000&auto=format&fit=crop&q=80',
+      time: '5 hours ago'
+    },
+    {
+      id: 'clip-3',
+      title: 'Insane Stunt Jump off the Downtown Highway Ramp',
+      author: 'ViceJumper',
+      views: '5.1k views',
+      thumb: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?w=1000&auto=format&fit=crop&q=80',
+      time: '1 day ago'
     }
-  }
-  window.addEventListener('hashchange', handleHash);
-  if (window.location.hash === '#discord-servers') handleHash();
+  ];
 
-  // Initial Render
-  renderFeed();
-  renderDiscordGrid();
+  function renderClips() {
+    if (!clipsGrid) return;
+    clipsGrid.innerHTML = clips.map(c => `
+      <div class="clip-card">
+        <div class="clip-thumb-wrap" onclick="alert('Viewing clip: ${escapeHtml(c.title)}')">
+          <img src="${escapeHtml(c.thumb)}" alt="${escapeHtml(c.title)}" loading="lazy">
+          <div class="clip-play-badge"><i class="fa-solid fa-play"></i></div>
+        </div>
+        <div class="clip-body">
+          <h3 class="clip-title">${escapeHtml(c.title)}</h3>
+          <div class="clip-meta">
+            <span>By @${escapeHtml(c.author)}</span>
+            <span>${escapeHtml(c.views)} &bull; ${escapeHtml(c.time)}</span>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (clipsGrid) {
+    renderClips();
+  }
+
+  if (clipForm) {
+    clipForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = document.getElementById('clip-title-input').value.trim();
+      const thumb = document.getElementById('clip-thumb-input').value.trim();
+
+      clips.unshift({
+        id: `clip-${Date.now()}`,
+        title: title,
+        author: 'You',
+        views: '1 view',
+        thumb: thumb || 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1000&auto=format&fit=crop&q=80',
+        time: 'Just now'
+      });
+
+      closeModal(clipModal);
+      clipForm.reset();
+      renderClips();
+      showToast('Clip posted to community!');
+    });
+  }
 });
