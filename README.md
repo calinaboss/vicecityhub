@@ -29,6 +29,33 @@ ViceCityHub is a modern, sleek, and high-performance gaming community platform b
 
 ---
 
+## 📁 Project Structure
+```text
+vicecityhub/
+├── assets/
+│   ├── brand/               # Official brand assets (logo, favicons, app icons)
+│   │   ├── logo.png         # Scaled & optimized vector-sharp navbar/footer logo
+│   │   ├── LOGOvihub.png    # Original high-res logo with text
+│   │   ├── favicon-32x32.png# Standard web browser tab icon
+│   │   ├── favicon-192x192.png # High-DPI Android/PWA app icon
+│   │   ├── apple-touch-icon.png # iOS home screen icon
+│   │   └── favicon.png      # Original 2000x2000 brand asset
+│   ├── css/
+│   │   └── style.css        # Clean dark theme & Vice City neon CSS
+│   └── js/
+│       └── app.js           # Modular vanilla JavaScript feed controller
+├── brand/                   # Dedicated brand folder (source assets mirror)
+├── docs/                    # Design guides & documentation
+│   └── COMMUNITY_HUB_STYLE_GUIDE.txt
+├── index.html               # Main Community Hub HTML5 entry
+├── _headers                 # Cloudflare Pages strict security headers & cache policies
+├── _redirects               # Cloudflare Pages routing rules
+├── favicon.ico              # Root favicon fallback
+├── robots.txt               # SEO & web crawler configuration
+├── .gitignore
+└── README.md
+```
+
 ## 🚀 Deployment to Cloudflare Pages
 1. Push this repository to GitHub:
    ```bash
