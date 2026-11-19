@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>State of Leonida Interactive Map &bull; ViceCityHub.eu</title>
-  <meta name="description" content="Official ViceCityHub interactive map of Leonida and Vice City for Grand Theft Auto VI. Drag, zoom, and explore 3,400+ landmarks, shops, strip clubs, and secrets.">
+  <meta name="description" content="ViceCityHub interactive map of Leonida and Vice City for Grand Theft Auto VI. Drag, zoom, and explore 3,400+ landmarks, shops, strip clubs, and secrets.">
   <meta name="theme-color" content="#0d1117">
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -22,14 +22,13 @@
       --border-color: #30363d;
       --accent-pink: #ff2a85;
       --accent-cyan: #00d2ff;
-      --accent-gold: #eab308;
+      --accent-gold: #fbbf24;
       --accent-purple: #c084fc;
       --accent-green: #10b981;
       --accent-red: #ef4444;
       --text-main: #f0f6fc;
       --text-muted: #8b949e;
       --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-      --font-display: 'Teko', sans-serif;
     }
 
     * {
@@ -57,7 +56,7 @@
       position: relative;
     }
 
-    /* TOP BAR */
+    /* TOP HEADER */
     .map-header {
       height: 56px;
       background: var(--bg-surface);
@@ -74,7 +73,7 @@
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       text-decoration: none;
       color: var(--text-main);
       font-weight: 700;
@@ -88,17 +87,11 @@
       font-size: 18px;
     }
 
-    .brand-sub {
-      color: var(--text-muted);
-      font-weight: 500;
-      font-size: 13px;
-    }
-
     /* SEARCH BAR */
     .search-wrapper {
       position: relative;
       flex: 1;
-      max-width: 480px;
+      max-width: 440px;
     }
 
     .search-input-box {
@@ -110,6 +103,7 @@
       padding: 0 12px;
       height: 36px;
       gap: 8px;
+      transition: border-color 0.15s ease;
     }
 
     .search-input-box:focus-within {
@@ -145,7 +139,7 @@
       border-radius: 6px;
       max-height: 280px;
       overflow-y: auto;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
       display: none;
       z-index: 2000;
     }
@@ -277,20 +271,56 @@
     .filter-chip.active[data-cat="safehouse"] { border-color: var(--accent-gold); color: var(--accent-gold); }
     .filter-chip.active[data-cat="easteregg"] { border-color: #ec4899; color: #f472b6; }
 
-    /* MAP CANVAS */
-    #map {
+    /* MAP CONTAINER WITH PALM BACKGROUND */
+    .map-viewport-wrapper {
+      position: relative;
       flex: 1;
       width: 100%;
       height: 100%;
-      background: #06090e;
+      overflow: hidden;
     }
 
-    /* LEAFLET CUSTOM OVERRIDES */
+    #map {
+      width: 100%;
+      height: 100%;
+      background-color: #0d1117;
+      background-image: linear-gradient(rgba(13, 17, 23, 0.72), rgba(13, 17, 23, 0.82)), url('images/map-bg.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
     .leaflet-container {
-      background: #06090e !important;
+      background: transparent !important;
       font-family: var(--font-main) !important;
     }
 
+    /* GTA VI FLOATING WATERMARK LOGO TOP RIGHT */
+    .map-vi-logo {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 1000;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(13, 17, 23, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 6px 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+    }
+
+    .map-vi-logo img {
+      height: 38px;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 2px 8px rgba(255, 42, 133, 0.35));
+    }
+
+    /* LEAFLET ZOOM BAR */
     .leaflet-bar {
       border: 1px solid var(--border-color) !important;
       border-radius: 6px !important;
@@ -312,48 +342,13 @@
       color: var(--accent-pink) !important;
     }
 
-    /* MARKER STYLING */
-    .custom-marker {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.8);
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-
-    .custom-marker:hover {
-      transform: scale(1.3);
-      z-index: 1000 !important;
-    }
-
-    .marker-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 2px solid #ffffff;
-    }
-
-    .marker-pin {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 2px solid #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: #ffffff;
-    }
-
     /* POPUP STYLING */
     .leaflet-popup-content-wrapper {
       background: var(--bg-surface) !important;
       color: var(--text-main) !important;
       border: 1px solid var(--border-color) !important;
       border-radius: 8px !important;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
       padding: 0 !important;
     }
 
@@ -365,6 +360,7 @@
     .leaflet-popup-content {
       margin: 14px !important;
       line-height: 1.4 !important;
+      min-width: 200px;
     }
 
     .popup-badge {
@@ -491,10 +487,11 @@
 
     /* MOBILE ADJUSTMENTS */
     @media (max-width: 768px) {
-      .brand-sub { display: none; }
-      .search-wrapper { max-width: 220px; }
+      .search-wrapper { max-width: 180px; }
       .btn-text-desktop { display: none; }
-      .map-hud-bar { bottom: 8px; left: 8px; font-size: 11px; padding: 4px 8px; }
+      .map-vi-logo { top: 8px; right: 8px; padding: 4px 8px; }
+      .map-vi-logo img { height: 26px; }
+      .map-hud-bar { bottom: 8px; left: 8px; font-size: 10px; padding: 4px 8px; gap: 8px; }
     }
   </style>
 </head>
@@ -507,7 +504,6 @@
       <a href="../map.html" class="brand-section" title="Return to ViceCityHub">
         <i class="fa-solid fa-map-location-dot brand-logo-icon"></i>
         <span>VICECITYHUB</span>
-        <span class="brand-sub">&bull; Leonida Map</span>
       </a>
 
       <!-- SEARCH BAR -->
@@ -581,26 +577,34 @@
       </button>
     </nav>
 
-    <!-- MAP CONTAINER -->
-    <div id="map"></div>
+    <!-- MAP VIEWPORT WITH FLOATING GTA VI LOGO -->
+    <div class="map-viewport-wrapper">
+      <div id="map"></div>
 
-    <!-- HUD BAR -->
-    <div class="map-hud-bar">
-      <div class="hud-coords">
-        COORDS: <span id="hud-coords-text">X: 0.0  |  Y: 0.0</span>
+      <!-- FLOATING GTA VI LOGO (TOP RIGHT OF MAP) -->
+      <div class="map-vi-logo" title="Grand Theft Auto VI">
+        <img src="images/vi-logo.webp" alt="GTA VI Logo">
       </div>
-      <div class="hud-visible-count">
-        LANDMARKS: <span id="hud-count-text">0</span>
+
+      <!-- HUD BAR -->
+      <div class="map-hud-bar">
+        <div class="hud-coords">
+          COORDS: <span id="hud-coords-text">X: 0.0  |  Y: 0.0</span>
+        </div>
+        <div class="hud-visible-count">
+          LANDMARKS: <span id="hud-count-text">0</span>
+        </div>
       </div>
+
+      <!-- TOAST NOTICE -->
+      <div id="map-toast" class="toast-notice"></div>
     </div>
-
-    <!-- TOAST NOTICE -->
-    <div id="map-toast" class="toast-notice"></div>
 
   </div>
 
-  <!-- LEAFLET SCRIPT -->
+  <!-- LEAFLET & EMBEDDED LANDMARK DATA -->
   <script src="leaflet/leaflet.js"></script>
+  <script src="data/landmarks.js"></script>
 
   <script>
     (function() {
@@ -608,20 +612,20 @@
 
       // CATEGORY CONFIGURATION
       const CAT_CONFIG = {
-        stripclub: { label: 'Strip Club', color: '#ff2a85', icon: 'fa-venus', priority: 1 },
-        nightlife: { label: 'Nightclub / Bar', color: '#c084fc', icon: 'fa-martini-glass', priority: 1 },
-        weapons: { label: 'Weapons / Ammu-Nation', color: '#ef4444', icon: 'fa-gun', priority: 1 },
-        safehouse: { label: 'Safehouse', color: '#f59e0b', icon: 'fa-house-chimney', priority: 1 },
-        police: { label: 'Police Station / Jail', color: '#3b82f6', icon: 'fa-shield-halved', priority: 1 },
-        hospital: { label: 'Hospital / Medical', color: '#10b981', icon: 'fa-truck-medical', priority: 1 },
-        gas: { label: 'Gas / Mod Shop', color: '#d97706', icon: 'fa-gas-pump', priority: 2 },
-        easteregg: { label: 'Easter Egg / Movie Ref', color: '#ec4899', icon: 'fa-skull', priority: 1 },
-        hotel: { label: 'Hotel & Resort', color: '#00d2ff', icon: 'fa-hotel', priority: 2 },
-        shops: { label: 'Retail & Store', color: '#38bdf8', icon: 'fa-bag-shopping', priority: 3 },
-        food: { label: 'Restaurant & Diner', color: '#fb923c', icon: 'fa-utensils', priority: 3 },
-        transport: { label: 'Airport & Transit', color: '#0ea5e9', icon: 'fa-plane-departure', priority: 2 },
-        enterable: { label: 'Enterable Interior', color: '#a78bfa', icon: 'fa-door-open', priority: 4 },
-        general: { label: 'Identified Landmark', color: '#94a3b8', icon: 'fa-location-dot', priority: 5 }
+        stripclub: { label: 'Strip Club', color: '#ff2a85', icon: 'fa-venus', priority: 1, radius: 8 },
+        nightlife: { label: 'Nightclub / Bar', color: '#c084fc', icon: 'fa-martini-glass', priority: 1, radius: 8 },
+        weapons: { label: 'Weapons / Ammu-Nation', color: '#ef4444', icon: 'fa-gun', priority: 1, radius: 8 },
+        safehouse: { label: 'Safehouse', color: '#fbbf24', icon: 'fa-house-chimney', priority: 1, radius: 8 },
+        police: { label: 'Police Station / Jail', color: '#3b82f6', icon: 'fa-shield-halved', priority: 1, radius: 8 },
+        hospital: { label: 'Hospital / Medical', color: '#10b981', icon: 'fa-truck-medical', priority: 1, radius: 8 },
+        gas: { label: 'Gas / Mod Shop', color: '#f97316', icon: 'fa-gas-pump', priority: 2, radius: 7 },
+        easteregg: { label: 'Easter Egg / Movie Ref', color: '#ec4899', icon: 'fa-skull', priority: 1, radius: 8 },
+        hotel: { label: 'Hotel & Resort', color: '#00d2ff', icon: 'fa-hotel', priority: 2, radius: 7 },
+        shops: { label: 'Retail & Store', color: '#38bdf8', icon: 'fa-bag-shopping', priority: 3, radius: 6 },
+        food: { label: 'Restaurant & Diner', color: '#fb923c', icon: 'fa-utensils', priority: 3, radius: 6 },
+        transport: { label: 'Airport & Transit', color: '#14b8a6', icon: 'fa-plane-departure', priority: 2, radius: 7 },
+        enterable: { label: 'Enterable Interior', color: '#818cf8', icon: 'fa-door-open', priority: 4, radius: 5 },
+        general: { label: 'Identified Landmark', color: '#94a3b8', icon: 'fa-location-dot', priority: 5, radius: 5 }
       };
 
       // 1. INITIALIZE LEAFLET MAP
@@ -631,10 +635,11 @@
       const map = L.map('map', {
         crs: L.CRS.Simple,
         minZoom: -2,
-        maxZoom: 2,
+        maxZoom: 3,
         zoomSnap: 0.25,
         zoomDelta: 0.5,
         attributionControl: false,
+        preferCanvas: true,
         maxBounds: [[-1000, -1000], [MAP_SIZE + 1000, MAP_SIZE + 1000]],
         maxBoundsViscosity: 0.8
       });
@@ -645,9 +650,9 @@
         alt: 'Leonida Basemap'
       }).addTo(map);
 
-      // Default view: Center on Vice City (approx X: 8000, Y: 5400)
+      // Default view: Center on Vice City (approx X: 8200, Y: 5400)
       function centerViceCity() {
-        map.setView([5400, 8200], 0);
+        map.setView([5400, 8200], -0.25);
       }
       centerViceCity();
 
@@ -678,7 +683,6 @@
         }, 2200);
       }
 
-      // Copy coordinates to clipboard
       window.copyCoords = function(wx, wy) {
         const text = 'X: ' + wx + ', Y: ' + wy;
         if (navigator.clipboard) {
@@ -691,32 +695,9 @@
       };
 
       // 4. LOAD & RENDER LANDMARKS
-      let allLandmarks = [];
+      let allLandmarks = window.LEONIDA_LANDMARKS || [];
       let activeCategory = 'all';
       const markersLayer = L.layerGroup().addTo(map);
-
-      function createMarkerIcon(item) {
-        const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
-        const isPriority = conf.priority <= 2;
-
-        if (isPriority) {
-          return L.divIcon({
-            className: 'custom-marker',
-            html: '<div class="marker-pin" style="background: ' + conf.color + ';"><i class="fa-solid ' + conf.icon + '"></i></div>',
-            iconSize: [26, 26],
-            iconAnchor: [13, 13],
-            popupAnchor: [0, -14]
-          });
-        } else {
-          return L.divIcon({
-            className: 'custom-marker',
-            html: '<div class="marker-dot" style="background: ' + conf.color + ';"></div>',
-            iconSize: [12, 12],
-            iconAnchor: [6, 6],
-            popupAnchor: [0, -8]
-          });
-        }
-      }
 
       function buildPopupContent(item) {
         const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
@@ -752,28 +733,27 @@
 
       function renderMarkers() {
         markersLayer.clearLayers();
-        const currentZoom = map.getZoom();
 
         const filtered = allLandmarks.filter(item => {
-          if (activeCategory === 'all') {
-            // At low zoom, prioritize key spots to keep framerate ultra smooth
-            if (currentZoom < -0.5) {
-              const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
-              return conf.priority <= 2;
-            }
-            return true;
-          }
+          if (activeCategory === 'all') return true;
           return item.cat === activeCategory;
         });
 
         filtered.forEach(item => {
-          // Leaflet CRS.Simple: lat = MAP_SIZE - py, lng = px
           const lat = MAP_SIZE - item.py;
           const lng = item.px;
+          const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
 
-          const marker = L.marker([lat, lng], {
-            icon: createMarkerIcon(item),
-            title: item.name
+          const isSelectedCat = activeCategory !== 'all';
+          const radius = isSelectedCat ? (conf.radius + 2) : conf.radius;
+
+          const marker = L.circleMarker([lat, lng], {
+            radius: radius,
+            fillColor: conf.color,
+            color: '#ffffff',
+            weight: isSelectedCat ? 2 : 1.5,
+            opacity: 0.95,
+            fillOpacity: 0.9
           });
 
           marker.bindPopup(buildPopupContent(item));
@@ -786,25 +766,22 @@
         }
       }
 
-      // Re-render when zooming to adjust LOD
-      map.on('zoomend', function() {
-        if (activeCategory === 'all') {
-          renderMarkers();
-        }
-      });
+      // If landmarks weren't loaded synchronously, fetch from JSON
+      if (allLandmarks.length === 0) {
+        fetch('data/landmarks.json')
+          .then(res => res.json())
+          .then(data => {
+            allLandmarks = data;
+            renderMarkers();
+          })
+          .catch(err => {
+            console.error('Failed to load landmarks:', err);
+          });
+      } else {
+        renderMarkers();
+      }
 
-      // 5. FETCH DATA
-      fetch('data/landmarks.json')
-        .then(res => res.json())
-        .then(data => {
-          allLandmarks = data;
-          renderMarkers();
-        })
-        .catch(err => {
-          console.error('Failed to load landmarks:', err);
-        });
-
-      // 6. FILTER CHIP INTERACTIONS
+      // 5. FILTER CHIP INTERACTIONS
       const filterChips = document.querySelectorAll('.filter-chip');
       filterChips.forEach(chip => {
         chip.addEventListener('click', function() {
@@ -812,10 +789,19 @@
           this.classList.add('active');
           activeCategory = this.getAttribute('data-cat');
           renderMarkers();
+
+          // If a specific category was clicked, zoom to fit those markers
+          if (activeCategory !== 'all') {
+            const catMatches = allLandmarks.filter(l => l.cat === activeCategory);
+            if (catMatches.length > 0) {
+              const boundsList = catMatches.map(m => [MAP_SIZE - m.py, m.px]);
+              map.flyToBounds(boundsList, { maxZoom: 1.5, padding: [60, 60], duration: 1 });
+            }
+          }
         });
       });
 
-      // 7. REAL-TIME SEARCH AUTOCOMPLETE
+      // 6. REAL-TIME SEARCH AUTOCOMPLETE
       const searchInput = document.getElementById('map-search-input');
       const searchDropdown = document.getElementById('search-dropdown');
 
@@ -857,7 +843,6 @@
           searchDropdown.classList.add('open');
         });
 
-        // Click search result to zoom and open popup
         searchDropdown.addEventListener('click', function(e) {
           const itemEl = e.target.closest('.search-result-item');
           if (!itemEl) return;
@@ -868,7 +853,7 @@
             searchInput.value = target.name;
             const lat = MAP_SIZE - target.py;
             const lng = target.px;
-            map.flyTo([lat, lng], 1, { duration: 1.2 });
+            map.flyTo([lat, lng], 1.25, { duration: 1.2 });
 
             setTimeout(() => {
               markersLayer.eachLayer(m => {
@@ -876,11 +861,10 @@
                   m.openPopup();
                 }
               });
-            }, 1200);
+            }, 1250);
           }
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
           if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
             searchDropdown.classList.remove('open');
@@ -888,7 +872,7 @@
         });
       }
 
-      // 8. CONTROLS
+      // 7. CONTROLS
       const resetBtn = document.getElementById('btn-reset-view');
       if (resetBtn) {
         resetBtn.addEventListener('click', centerViceCity);
