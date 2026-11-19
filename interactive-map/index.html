@@ -655,18 +655,18 @@
       // 1. INITIALIZE LEAFLET MAP
       const MAP_SIZE = 10000;
       const fullBounds = [[0, 0], [MAP_SIZE, MAP_SIZE]];
-      // Clamped island boundaries: prevents scrolling into the black void
-      const islandBounds = [[1000, 2200], [8800, 9900]];
+      const islandBounds = [[-1500, -500], [11500, 11500]];
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
-        minZoom: -1.2,
-        maxZoom: 2.5,
-        zoomSnap: 0.2,
-        zoomDelta: 0.4,
+        minZoom: -3.0,
+        maxZoom: 3.0,
+        zoomSnap: 0.1,
+        zoomDelta: 0.3,
         attributionControl: false,
         maxBounds: islandBounds,
-        maxBoundsViscosity: 1.0
+        maxBoundsViscosity: 0.7,
+        scrollWheelZoom: true
       });
 
       // Basemap overlay
@@ -675,8 +675,16 @@
         alt: 'Leonida Basemap'
       }).addTo(map);
 
-      // Initial view: Fits entire State of Leonida into frame cleanly!
-      map.fitBounds([[1400, 2400], [8600, 9800]], { padding: [15, 15] });
+      // Open with full State of Leonida visible at a glance
+      map.setView([5000, 6000], -2.0);
+
+      // Prevent iframe auto-focus from scrolling or jumping parent page
+      const mapContainer = map.getContainer();
+      mapContainer.tabIndex = -1;
+      mapContainer.style.outline = 'none';
+      mapContainer.addEventListener('focus', function(e) {
+        e.preventDefault();
+      }, true);
 
       // 2. HUD COORDINATES
       const hudCoords = document.getElementById('hud-coords-text');
