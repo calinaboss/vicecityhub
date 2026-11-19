@@ -430,24 +430,27 @@ img {
 .feed-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
+  border-top: 1px solid var(--border-color);
 }
 
 .post-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 18px 20px;
-  transition: var(--transition);
-  /* NO translateY lifting / NO neon drop shadows */
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 16px 8px;
+  transition: background-color 0.15s ease;
+  /* Twitter-style flat message flow */
 }
 
 .post-card:hover {
-  border-color: var(--text-dim);
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 .post-card.pinned {
   border-left: 3px solid var(--accent-pink);
+  background: rgba(255, 42, 133, 0.02);
 }
 
 .post-header {
