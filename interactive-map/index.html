@@ -1,27 +1,911 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b202c" />
-    <meta name="description" content="Explore an approximate community map of Leonida, inspect cited location evidence and keep personal favorites, notes and collections in your browser.">
-    <link rel="icon" type="image/svg+xml" href="/interactive-map/favicon.svg" />
-    <title>GTA 6 Leonida Atlas: Interactive Community Map</title>
-    <script type="module" crossorigin src="/interactive-map/assets/index-CjJGueeH.js"></script>
-    <link rel="modulepreload" crossorigin href="/interactive-map/assets/jsx-runtime-DyZJNswf.js">
-    <link rel="modulepreload" crossorigin href="/interactive-map/assets/gtadb-mx_UyCIg.js">
-    <link rel="modulepreload" crossorigin href="/interactive-map/assets/leonida-coordinates-CXGuqbYF.js">
-    <link rel="modulepreload" crossorigin href="/interactive-map/assets/leonida-evidence-BTSqoURv.js">
-    <link rel="modulepreload" crossorigin href="/interactive-map/assets/public-path-80QdDwOa.js">
-    <link rel="stylesheet" crossorigin href="/interactive-map/assets/index-CwbeIiBn.css">
-  <meta name="robots" content="index, follow">
-<meta property="og:type" content="website">
-<meta property="og:title" content="GTA 6 Leonida Atlas: Interactive Community Map">
-<meta property="og:description" content="Explore an approximate community map of Leonida, inspect cited location evidence and keep personal favorites, notes and collections in your browser.">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GTA 6 Leonida Atlas: Interactive Community Map">
-<meta name="twitter:description" content="Explore an approximate community map of Leonida, inspect cited location evidence and keep personal favorites, notes and collections in your browser.">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>State of Leonida Interactive Map &bull; ViceCityHub.eu</title>
+  <meta name="description" content="Official ViceCityHub interactive map of Leonida and Vice City for Grand Theft Auto VI. Drag, zoom, and explore 3,400+ landmarks, shops, strip clubs, and secrets.">
+  <meta name="theme-color" content="#0d1117">
 
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="leaflet/leaflet.css">
+
+  <style>
+    :root {
+      --bg-dark: #0d1117;
+      --bg-surface: #161b22;
+      --bg-elevated: #21262d;
+      --border-color: #30363d;
+      --accent-pink: #ff2a85;
+      --accent-cyan: #00d2ff;
+      --accent-gold: #eab308;
+      --accent-purple: #c084fc;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+      --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-display: 'Teko', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* APP LAYOUT */
+    .map-app-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    /* TOP BAR */
+    .map-header {
+      height: 56px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      gap: 12px;
+      z-index: 1000;
+      flex-shrink: 0;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .brand-logo-icon {
+      color: var(--accent-pink);
+      font-size: 18px;
+    }
+
+    .brand-sub {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    /* SEARCH BAR */
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      max-width: 480px;
+    }
+
+    .search-input-box {
+      display: flex;
+      align-items: center;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0 12px;
+      height: 36px;
+      gap: 8px;
+    }
+
+    .search-input-box:focus-within {
+      border-color: var(--accent-cyan);
+    }
+
+    .search-input-box i {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      font-family: var(--font-main);
+      font-size: 13px;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-dropdown {
+      position: absolute;
+      top: 42px;
+      left: 0;
+      right: 0;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      max-height: 280px;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      display: none;
+      z-index: 2000;
+    }
+
+    .search-dropdown.open {
+      display: block;
+    }
+
+    .search-result-item {
+      padding: 10px 14px;
+      border-bottom: 1px solid #21262d;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: background 0.15s ease;
+    }
+
+    .search-result-item:hover {
+      background: var(--bg-elevated);
+    }
+
+    .search-result-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .search-result-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ACTIONS */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .map-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 0 12px;
+      height: 34px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .map-btn:hover {
+      border-color: var(--accent-pink);
+      background: var(--bg-elevated);
+    }
+
+    .map-btn-primary {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      color: #ffffff;
+    }
+
+    .map-btn-primary:hover {
+      background: #e02374;
+      border-color: #e02374;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      height: 44px;
+      background: #11151c;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      z-index: 999;
+      flex-shrink: 0;
+    }
+
+    .filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 14px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .filter-chip:hover {
+      color: var(--text-main);
+      border-color: #484f58;
+    }
+
+    .filter-chip.active {
+      background: var(--bg-elevated);
+      color: var(--text-main);
+      border-color: var(--accent-cyan);
+    }
+
+    .filter-chip.active[data-cat="stripclub"] { border-color: var(--accent-pink); color: var(--accent-pink); }
+    .filter-chip.active[data-cat="nightlife"] { border-color: var(--accent-purple); color: var(--accent-purple); }
+    .filter-chip.active[data-cat="weapons"] { border-color: var(--accent-red); color: var(--accent-red); }
+    .filter-chip.active[data-cat="police"] { border-color: #3b82f6; color: #60a5fa; }
+    .filter-chip.active[data-cat="hospital"] { border-color: var(--accent-green); color: var(--accent-green); }
+    .filter-chip.active[data-cat="safehouse"] { border-color: var(--accent-gold); color: var(--accent-gold); }
+    .filter-chip.active[data-cat="easteregg"] { border-color: #ec4899; color: #f472b6; }
+
+    /* MAP CANVAS */
+    #map {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      background: #06090e;
+    }
+
+    /* LEAFLET CUSTOM OVERRIDES */
+    .leaflet-container {
+      background: #06090e !important;
+      font-family: var(--font-main) !important;
+    }
+
+    .leaflet-bar {
+      border: 1px solid var(--border-color) !important;
+      border-radius: 6px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+      overflow: hidden;
+    }
+
+    .leaflet-bar a {
+      background-color: var(--bg-surface) !important;
+      color: var(--text-main) !important;
+      border-bottom: 1px solid var(--border-color) !important;
+      width: 34px !important;
+      height: 34px !important;
+      line-height: 34px !important;
+    }
+
+    .leaflet-bar a:hover {
+      background-color: var(--bg-elevated) !important;
+      color: var(--accent-pink) !important;
+    }
+
+    /* MARKER STYLING */
+    .custom-marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .custom-marker:hover {
+      transform: scale(1.3);
+      z-index: 1000 !important;
+    }
+
+    .marker-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+    }
+
+    .marker-pin {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #ffffff;
+    }
+
+    /* POPUP STYLING */
+    .leaflet-popup-content-wrapper {
+      background: var(--bg-surface) !important;
+      color: var(--text-main) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 8px !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+      padding: 0 !important;
+    }
+
+    .leaflet-popup-tip {
+      background: var(--bg-surface) !important;
+      border: 1px solid var(--border-color) !important;
+    }
+
+    .leaflet-popup-content {
+      margin: 14px !important;
+      line-height: 1.4 !important;
+    }
+
+    .popup-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .popup-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .popup-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .popup-row strong {
+      color: var(--text-main);
+    }
+
+    .popup-coords-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--accent-cyan);
+      margin-top: 10px;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 4px;
+      transition: color 0.15s ease;
+    }
+
+    .copy-btn:hover {
+      color: var(--text-main);
+    }
+
+    .popup-submit-link {
+      display: block;
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-top: 1px solid var(--border-color);
+      padding-top: 8px;
+    }
+
+    .popup-submit-link:hover {
+      color: var(--accent-pink);
+    }
+
+    /* HUD BOTTOM BAR */
+    .map-hud-bar {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      background: rgba(22, 27, 34, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 12px;
+      font-family: monospace;
+      color: var(--text-muted);
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .hud-coords span {
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .hud-visible-count span {
+      color: var(--accent-pink);
+      font-weight: 600;
+    }
+
+    /* TOAST */
+    .toast-notice {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--accent-cyan);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      display: none;
+      z-index: 3000;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+    }
+
+    /* MOBILE ADJUSTMENTS */
+    @media (max-width: 768px) {
+      .brand-sub { display: none; }
+      .search-wrapper { max-width: 220px; }
+      .btn-text-desktop { display: none; }
+      .map-hud-bar { bottom: 8px; left: 8px; font-size: 11px; padding: 4px 8px; }
+    }
+  </style>
 </head>
-  <body><div id="root"><main class="project-page" aria-labelledby="atlas-introduction-title"><header class="project-header"><span class="project-brand">LEONIDA ATLAS</span></header><div class="project-layout"><nav class="project-navigation" aria-label="Project pages"><a href="/interactive-map/about">About the GTA 6 Leonida Atlas</a><a href="/interactive-map/documentation">How to Use the GTA 6 Leonida Atlas</a><a href="/interactive-map/credits">Yanis v16 and Leonida Atlas Credits</a><a href="/interactive-map/contributing">Contributing to the Leonida Atlas</a><a href="/interactive-map/changelog">Leonida Atlas Release History</a><a href="/interactive-map/licenses">Leonida Atlas Code and Content Licenses</a></nav><article class="project-article"><p class="project-eyebrow">INDEPENDENT COMMUNITY PROJECT</p><h1 id="atlas-introduction-title">GTA 6 Leonida Atlas</h1><p class="project-lead">Explore an approximate community map of Leonida, inspect cited location evidence and keep personal favorites, notes and collections in your browser.</p><h2>Sources and approximate geography</h2><p>The map uses Yanis v16 cartography and GTADB landmark records. Community-estimated positions are distinct from official Rockstar location evidence. This is not an official map, and absent coverage remains unknown.</p><p><a href="/interactive-map/documentation">Read the map guide and evidence labels</a> <!-- -->or<!-- --> <a href="/interactive-map/credits">inspect the map sources and attribution</a>.</p><h2>Your personal atlas</h2><p>The interactive map opens with JavaScript. Explore as a guest, save favorites, write notes and organize collections locally in this browser. An optional 3D reconstruction uses the same approximate coordinate frame.</p><p><a href="/interactive-map/?view=3d">Open the optional 3D explorer</a></p></article></div></main></div><noscript>Leonida Atlas needs JavaScript to display the interactive map. Public map attribution: GTADB / Map GTA contributors, CC BY 4.0.</noscript></body>
+<body>
+
+  <div class="map-app-container">
+
+    <!-- TOP HEADER -->
+    <header class="map-header">
+      <a href="../map.html" class="brand-section" title="Return to ViceCityHub">
+        <i class="fa-solid fa-map-location-dot brand-logo-icon"></i>
+        <span>VICECITYHUB</span>
+        <span class="brand-sub">&bull; Leonida Map</span>
+      </a>
+
+      <!-- SEARCH BAR -->
+      <div class="search-wrapper">
+        <div class="search-input-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="map-search-input" class="search-input" placeholder="Search 3,400+ landmarks, clubs, roads..." autocomplete="off">
+        </div>
+        <div class="search-dropdown" id="search-dropdown"></div>
+      </div>
+
+      <!-- HEADER ACTIONS -->
+      <div class="header-actions">
+        <button id="btn-reset-view" class="map-btn" title="Center on Vice City">
+          <i class="fa-solid fa-crosshairs"></i>
+          <span class="btn-text-desktop">Vice City</span>
+        </button>
+        <button id="btn-toggle-fullscreen" class="map-btn" title="Toggle Fullscreen">
+          <i class="fa-solid fa-expand"></i>
+        </button>
+        <a href="mailto:info@vicecityhub.eu?subject=New%20Landmark%20Submission" class="map-btn map-btn-primary">
+          <i class="fa-solid fa-plus"></i>
+          <span class="btn-text-desktop">Submit Spot</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- HORIZONTAL FILTER BAR -->
+    <nav class="filter-bar" aria-label="Category Filters">
+      <button class="filter-chip active" data-cat="all">
+        <i class="fa-solid fa-layer-group"></i> All Landmarks
+      </button>
+      <button class="filter-chip" data-cat="stripclub">
+        <i class="fa-solid fa-venus"></i> Strip Clubs
+      </button>
+      <button class="filter-chip" data-cat="nightlife">
+        <i class="fa-solid fa-martini-glass"></i> Nightclubs &amp; Bars
+      </button>
+      <button class="filter-chip" data-cat="easteregg">
+        <i class="fa-solid fa-skull"></i> Easter Eggs &amp; Pop Culture
+      </button>
+      <button class="filter-chip" data-cat="weapons">
+        <i class="fa-solid fa-gun"></i> Weapons
+      </button>
+      <button class="filter-chip" data-cat="safehouse">
+        <i class="fa-solid fa-house-chimney"></i> Safehouses
+      </button>
+      <button class="filter-chip" data-cat="police">
+        <i class="fa-solid fa-shield-halved"></i> Police
+      </button>
+      <button class="filter-chip" data-cat="hospital">
+        <i class="fa-solid fa-truck-medical"></i> Hospitals
+      </button>
+      <button class="filter-chip" data-cat="gas">
+        <i class="fa-solid fa-gas-pump"></i> Gas &amp; Mod Shops
+      </button>
+      <button class="filter-chip" data-cat="hotel">
+        <i class="fa-solid fa-hotel"></i> Hotels &amp; Motels
+      </button>
+      <button class="filter-chip" data-cat="shops">
+        <i class="fa-solid fa-bag-shopping"></i> Shops &amp; Retail
+      </button>
+      <button class="filter-chip" data-cat="food">
+        <i class="fa-solid fa-utensils"></i> Diners &amp; Food
+      </button>
+      <button class="filter-chip" data-cat="transport">
+        <i class="fa-solid fa-plane-departure"></i> Airports &amp; Transit
+      </button>
+      <button class="filter-chip" data-cat="enterable">
+        <i class="fa-solid fa-door-open"></i> Enterable Interiors
+      </button>
+    </nav>
+
+    <!-- MAP CONTAINER -->
+    <div id="map"></div>
+
+    <!-- HUD BAR -->
+    <div class="map-hud-bar">
+      <div class="hud-coords">
+        COORDS: <span id="hud-coords-text">X: 0.0  |  Y: 0.0</span>
+      </div>
+      <div class="hud-visible-count">
+        LANDMARKS: <span id="hud-count-text">0</span>
+      </div>
+    </div>
+
+    <!-- TOAST NOTICE -->
+    <div id="map-toast" class="toast-notice"></div>
+
+  </div>
+
+  <!-- LEAFLET SCRIPT -->
+  <script src="leaflet/leaflet.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // CATEGORY CONFIGURATION
+      const CAT_CONFIG = {
+        stripclub: { label: 'Strip Club', color: '#ff2a85', icon: 'fa-venus', priority: 1 },
+        nightlife: { label: 'Nightclub / Bar', color: '#c084fc', icon: 'fa-martini-glass', priority: 1 },
+        weapons: { label: 'Weapons / Ammu-Nation', color: '#ef4444', icon: 'fa-gun', priority: 1 },
+        safehouse: { label: 'Safehouse', color: '#f59e0b', icon: 'fa-house-chimney', priority: 1 },
+        police: { label: 'Police Station / Jail', color: '#3b82f6', icon: 'fa-shield-halved', priority: 1 },
+        hospital: { label: 'Hospital / Medical', color: '#10b981', icon: 'fa-truck-medical', priority: 1 },
+        gas: { label: 'Gas / Mod Shop', color: '#d97706', icon: 'fa-gas-pump', priority: 2 },
+        easteregg: { label: 'Easter Egg / Movie Ref', color: '#ec4899', icon: 'fa-skull', priority: 1 },
+        hotel: { label: 'Hotel & Resort', color: '#00d2ff', icon: 'fa-hotel', priority: 2 },
+        shops: { label: 'Retail & Store', color: '#38bdf8', icon: 'fa-bag-shopping', priority: 3 },
+        food: { label: 'Restaurant & Diner', color: '#fb923c', icon: 'fa-utensils', priority: 3 },
+        transport: { label: 'Airport & Transit', color: '#0ea5e9', icon: 'fa-plane-departure', priority: 2 },
+        enterable: { label: 'Enterable Interior', color: '#a78bfa', icon: 'fa-door-open', priority: 4 },
+        general: { label: 'Identified Landmark', color: '#94a3b8', icon: 'fa-location-dot', priority: 5 }
+      };
+
+      // 1. INITIALIZE LEAFLET MAP
+      const MAP_SIZE = 10000;
+      const bounds = [[0, 0], [MAP_SIZE, MAP_SIZE]];
+
+      const map = L.map('map', {
+        crs: L.CRS.Simple,
+        minZoom: -2,
+        maxZoom: 2,
+        zoomSnap: 0.25,
+        zoomDelta: 0.5,
+        attributionControl: false,
+        maxBounds: [[-1000, -1000], [MAP_SIZE + 1000, MAP_SIZE + 1000]],
+        maxBoundsViscosity: 0.8
+      });
+
+      // Add high-resolution basemap overlay
+      const basemap = L.imageOverlay('images/basemap.webp', bounds, {
+        interactive: false,
+        alt: 'Leonida Basemap'
+      }).addTo(map);
+
+      // Default view: Center on Vice City (approx X: 8000, Y: 5400)
+      function centerViceCity() {
+        map.setView([5400, 8200], 0);
+      }
+      centerViceCity();
+
+      // 2. HUD COORDINATES
+      const hudCoords = document.getElementById('hud-coords-text');
+      const hudCount = document.getElementById('hud-count-text');
+
+      map.on('mousemove', function(e) {
+        const px = e.latlng.lng;
+        const py = MAP_SIZE - e.latlng.lat;
+        // Transform pixel to game world coordinates:
+        const wx = ((px * 4) - 32000) / 2;
+        const wy = ((py * 4) - 24000) / -2;
+        if (hudCoords) {
+          hudCoords.textContent = 'X: ' + wx.toFixed(1) + '  |  Y: ' + wy.toFixed(1);
+        }
+      });
+
+      // 3. TOAST HELPER
+      function showToast(msg) {
+        const toast = document.getElementById('map-toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => {
+          toast.style.display = 'none';
+        }, 2200);
+      }
+
+      // Copy coordinates to clipboard
+      window.copyCoords = function(wx, wy) {
+        const text = 'X: ' + wx + ', Y: ' + wy;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast('Coordinates copied: ' + text);
+          });
+        } else {
+          showToast('Coordinates: ' + text);
+        }
+      };
+
+      // 4. LOAD & RENDER LANDMARKS
+      let allLandmarks = [];
+      let activeCategory = 'all';
+      const markersLayer = L.layerGroup().addTo(map);
+
+      function createMarkerIcon(item) {
+        const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
+        const isPriority = conf.priority <= 2;
+
+        if (isPriority) {
+          return L.divIcon({
+            className: 'custom-marker',
+            html: '<div class="marker-pin" style="background: ' + conf.color + ';"><i class="fa-solid ' + conf.icon + '"></i></div>',
+            iconSize: [26, 26],
+            iconAnchor: [13, 13],
+            popupAnchor: [0, -14]
+          });
+        } else {
+          return L.divIcon({
+            className: 'custom-marker',
+            html: '<div class="marker-dot" style="background: ' + conf.color + ';"></div>',
+            iconSize: [12, 12],
+            iconAnchor: [6, 6],
+            popupAnchor: [0, -8]
+          });
+        }
+      }
+
+      function buildPopupContent(item) {
+        const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
+        return `
+          <div>
+            <span class="popup-badge" style="background: ${conf.color}22; color: ${conf.color}; border: 1px solid ${conf.color}55;">
+              <i class="fa-solid ${conf.icon}"></i> ${conf.label}
+            </span>
+            <div class="popup-title">${escapeHtml(item.name)}</div>
+            ${item.inGameAddr ? `<div class="popup-row"><strong>In-Game Area:</strong> <span>${escapeHtml(item.inGameAddr)}</span></div>` : ''}
+            ${item.realAddr ? `<div class="popup-row"><strong>Real-World Match:</strong> <span>${escapeHtml(item.realAddr)}</span></div>` : ''}
+            <div class="popup-coords-box">
+              <span>X: ${item.wx} &bull; Y: ${item.wy}</span>
+              <button class="copy-btn" onclick="copyCoords(${item.wx}, ${item.wy})" title="Copy coordinates">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+            <a href="mailto:info@vicecityhub.eu?subject=Update%20Spot%20${encodeURIComponent(item.id)}" class="popup-submit-link">
+              <i class="fa-solid fa-pen-to-square"></i> Submit correction / info to info@vicecityhub.eu
+            </a>
+          </div>
+        `;
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function renderMarkers() {
+        markersLayer.clearLayers();
+        const currentZoom = map.getZoom();
+
+        const filtered = allLandmarks.filter(item => {
+          if (activeCategory === 'all') {
+            // At low zoom, prioritize key spots to keep framerate ultra smooth
+            if (currentZoom < -0.5) {
+              const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
+              return conf.priority <= 2;
+            }
+            return true;
+          }
+          return item.cat === activeCategory;
+        });
+
+        filtered.forEach(item => {
+          // Leaflet CRS.Simple: lat = MAP_SIZE - py, lng = px
+          const lat = MAP_SIZE - item.py;
+          const lng = item.px;
+
+          const marker = L.marker([lat, lng], {
+            icon: createMarkerIcon(item),
+            title: item.name
+          });
+
+          marker.bindPopup(buildPopupContent(item));
+          marker.itemData = item;
+          markersLayer.addLayer(marker);
+        });
+
+        if (hudCount) {
+          hudCount.textContent = filtered.length + ' / ' + allLandmarks.length;
+        }
+      }
+
+      // Re-render when zooming to adjust LOD
+      map.on('zoomend', function() {
+        if (activeCategory === 'all') {
+          renderMarkers();
+        }
+      });
+
+      // 5. FETCH DATA
+      fetch('data/landmarks.json')
+        .then(res => res.json())
+        .then(data => {
+          allLandmarks = data;
+          renderMarkers();
+        })
+        .catch(err => {
+          console.error('Failed to load landmarks:', err);
+        });
+
+      // 6. FILTER CHIP INTERACTIONS
+      const filterChips = document.querySelectorAll('.filter-chip');
+      filterChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+          filterChips.forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          activeCategory = this.getAttribute('data-cat');
+          renderMarkers();
+        });
+      });
+
+      // 7. REAL-TIME SEARCH AUTOCOMPLETE
+      const searchInput = document.getElementById('map-search-input');
+      const searchDropdown = document.getElementById('search-dropdown');
+
+      if (searchInput && searchDropdown) {
+        searchInput.addEventListener('input', function() {
+          const query = this.value.trim().toLowerCase();
+          if (query.length < 2) {
+            searchDropdown.classList.remove('open');
+            searchDropdown.innerHTML = '';
+            return;
+          }
+
+          const matches = allLandmarks.filter(l => {
+            return (l.name && l.name.toLowerCase().includes(query)) ||
+                   (l.realAddr && l.realAddr.toLowerCase().includes(query)) ||
+                   (l.inGameAddr && l.inGameAddr.toLowerCase().includes(query)) ||
+                   (l.cat && l.cat.toLowerCase().includes(query));
+          }).slice(0, 10);
+
+          if (matches.length === 0) {
+            searchDropdown.innerHTML = '<div style="padding: 12px; font-size: 12px; color: var(--text-muted); text-align: center;">No matching locations found</div>';
+            searchDropdown.classList.add('open');
+            return;
+          }
+
+          searchDropdown.innerHTML = matches.map(m => {
+            const conf = CAT_CONFIG[m.cat] || CAT_CONFIG.general;
+            return `
+              <div class="search-result-item" data-id="${m.id}">
+                <div class="search-result-title">
+                  <i class="fa-solid ${conf.icon}" style="color: ${conf.color}; margin-right: 6px;"></i>
+                  ${escapeHtml(m.name)}
+                </div>
+                <div class="search-result-subtitle">${escapeHtml(m.inGameAddr || m.realAddr || conf.label)}</div>
+              </div>
+            `;
+          }).join('');
+
+          searchDropdown.classList.add('open');
+        });
+
+        // Click search result to zoom and open popup
+        searchDropdown.addEventListener('click', function(e) {
+          const itemEl = e.target.closest('.search-result-item');
+          if (!itemEl) return;
+          const id = itemEl.getAttribute('data-id');
+          const target = allLandmarks.find(l => l.id === id);
+          if (target) {
+            searchDropdown.classList.remove('open');
+            searchInput.value = target.name;
+            const lat = MAP_SIZE - target.py;
+            const lng = target.px;
+            map.flyTo([lat, lng], 1, { duration: 1.2 });
+
+            setTimeout(() => {
+              markersLayer.eachLayer(m => {
+                if (m.itemData && m.itemData.id === target.id) {
+                  m.openPopup();
+                }
+              });
+            }, 1200);
+          }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+            searchDropdown.classList.remove('open');
+          }
+        });
+      }
+
+      // 8. CONTROLS
+      const resetBtn = document.getElementById('btn-reset-view');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', centerViceCity);
+      }
+
+      const fsBtn = document.getElementById('btn-toggle-fullscreen');
+      if (fsBtn) {
+        fsBtn.addEventListener('click', function() {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+          } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        });
+      }
+
+    })();
+  </script>
+</body>
 </html>
