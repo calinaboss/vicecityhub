@@ -28,6 +28,7 @@
         <a href="index.html" class="nav-link">Feed</a>
         <a href="discords.html" class="nav-link active">GTA VI Discords</a>
         <a href="map.html" class="nav-link">Map &amp; Guides</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
         <a href="clips.html" class="nav-link">Clips</a>
       </nav>
 
@@ -62,17 +63,45 @@
       </button>
     </div>
 
-    <!-- Search / Filter Row -->
-    <div style="margin-bottom: 24px;">
-      <div class="search-box" style="max-width: 480px;">
+    <!-- Search & Country / Type Filter Row -->
+    <div class="discord-filter-row">
+      <div class="search-box" style="flex: 1; min-width: 260px;">
         <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="discord-search-input" class="search-input" placeholder="Search servers by name or tag (Roleplay, Italian, Heists)...">
+        <input type="text" id="discord-search-input" class="search-input" placeholder="Search servers by name or keyword...">
       </div>
+
+      <select id="discord-country-filter" class="filter-select">
+        <option value="all">All Countries</option>
+        <option value="it">Italy (IT)</option>
+        <option value="intl">International / English (US/UK)</option>
+        <option value="es">Spain / Hispanic (ES)</option>
+        <option value="de">Germany (DE)</option>
+        <option value="fr">France (FR)</option>
+      </select>
+
+      <select id="discord-type-filter" class="filter-select">
+        <option value="all">All Server Types</option>
+        <option value="roleplay">Roleplay (RP)</option>
+        <option value="heists">Heists &amp; LFG</option>
+        <option value="modding">Modding &amp; Mapping</option>
+        <option value="general">General Community</option>
+      </select>
     </div>
 
     <!-- Discords Grid -->
     <div class="discords-grid" id="discords-page-grid">
       <!-- Generated via JS -->
+    </div>
+
+    <!-- Submission Notice -->
+    <div class="map-submit-callout" style="margin-top: 24px;">
+      <div>
+        <strong>Want your server verified or promoted?</strong>
+        <span> Submit via the form or email <strong>info@vicecityhub.eu</strong> and our team will review it.</span>
+      </div>
+      <a href="mailto:info@vicecityhub.eu?subject=Discord%20Server%20Verification">
+        <i class="fa-solid fa-envelope"></i> Contact info@vicecityhub.eu
+      </a>
     </div>
   </main>
 
@@ -168,6 +197,7 @@
         <li><a href="index.html" class="drawer-link"><i class="fa-solid fa-house"></i> Feed</a></li>
         <li><a href="discords.html" class="drawer-link active"><i class="fa-brands fa-discord"></i> GTA VI Discords</a></li>
         <li><a href="map.html" class="drawer-link"><i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides</a></li>
+        <li><a href="cheats.html" class="drawer-link"><i class="fa-solid fa-gamepad"></i> Cheats</a></li>
         <li><a href="clips.html" class="drawer-link"><i class="fa-solid fa-film"></i> Clips</a></li>
         <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
       </ul>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Map &amp; Locations Guide &bull; ViceCityHub.eu</title>
-  <meta name="description" content="Explore key locations across Vice City and the State of Leonida. Airfields, heliports, and secret garages.">
+  <title>Leonida Interactive Map &bull; ViceCityHub.eu</title>
+  <meta name="description" content="Interactive map of Leonida and Vice City for Grand Theft Auto VI. Discover easter eggs, shops, strip clubs, and secrets.">
   <meta name="theme-color" content="#0d1117">
 
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
@@ -15,11 +15,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- STICKY TOP NAVBAR -->
   <header class="site-header">
     <div class="header-container">
       <span class="mobile-brand-title">VICECITYHUB</span>
@@ -28,6 +29,7 @@
         <a href="index.html" class="nav-link">Feed</a>
         <a href="discords.html" class="nav-link">GTA VI Discords</a>
         <a href="map.html" class="nav-link active">Map &amp; Guides</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
         <a href="clips.html" class="nav-link">Clips</a>
       </nav>
 
@@ -51,44 +53,56 @@
     <div class="page-header-strip">
       <div>
         <h1 class="page-title">
-          <i class="fa-solid fa-map-location-dot" style="color: var(--accent-cyan);"></i> Leonida &amp; Vice City Map Guide
+          <i class="fa-solid fa-map-location-dot" style="color: var(--accent-cyan);"></i> State of Leonida Interactive Map
         </h1>
         <p class="page-desc">
-          Community-mapped districts, fast-travel airstrips, supercar garages, and secret spots.
+          Drag, zoom, and explore points of interest across Vice City, Grassrivers, and Port Gellhorn.
         </p>
       </div>
+      <a href="mailto:info@vicecityhub.eu?subject=New%20Map%20Location%20Submission" class="btn-secondary">
+        <i class="fa-solid fa-envelope"></i> Submit Spot (info@vicecityhub.eu)
+      </a>
     </div>
 
-    <div class="map-container">
-      <div class="map-viewer-card">
-        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80" alt="Leonida State Map Preview" class="map-visual">
-
-        <div class="map-location-list">
-          <div class="map-loc-item">
-            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-pink);"></i> Ocean Beach</h3>
-            <p class="map-loc-desc">Historic art deco district, beachfront boulevard, high-end vehicle spawns.</p>
-          </div>
-          <div class="map-loc-item">
-            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-cyan);"></i> Downtown Vice</h3>
-            <p class="map-loc-desc">Commercial high-rises, Maze Bank towers, executive helicopter pads.</p>
-          </div>
-          <div class="map-loc-item">
-            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-pink);"></i> Starfish Island</h3>
-            <p class="map-loc-desc">Luxury gated mansions, private docks, speedboats, and fortified villas.</p>
-          </div>
-          <div class="map-loc-item">
-            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-cyan);"></i> Grassrivers Swamps</h3>
-            <p class="map-loc-desc">Wild wetland territory, secret airboat hangars, off-road dirt trails.</p>
-          </div>
-          <div class="map-loc-item">
-            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-pink);"></i> Port Gellhorn</h3>
-            <p class="map-loc-desc">Industrial shipping yards, container warehouses, tactical heist setups.</p>
-          </div>
-          <div class="map-loc-item">
-            <h3 class="map-loc-title"><i class="fa-solid fa-location-dot" style="color: var(--accent-cyan);"></i> Vice City International</h3>
-            <p class="map-loc-desc">Major dual-runway airport, military hangars, private jet terminals.</p>
-          </div>
+    <!-- Map & POI Controls -->
+    <div class="map-interactive-container">
+      <div class="map-controls-bar">
+        <div class="map-poi-pills">
+          <button class="poi-pill active" data-poi="all">
+            <i class="fa-solid fa-layer-group"></i> All Markers
+          </button>
+          <button class="poi-pill" data-poi="easter">
+            <i class="fa-solid fa-skull"></i> Easter Eggs
+          </button>
+          <button class="poi-pill" data-poi="nightlife">
+            <i class="fa-solid fa-champagne-glasses"></i> Strip Clubs &amp; Nightlife
+          </button>
+          <button class="poi-pill" data-poi="shops">
+            <i class="fa-solid fa-cart-shopping"></i> Stores &amp; Ammu-Nation
+          </button>
+          <button class="poi-pill" data-poi="secrets">
+            <i class="fa-solid fa-crosshairs"></i> Secrets &amp; Garages
+          </button>
+          <button class="poi-pill" data-poi="airstrips">
+            <i class="fa-solid fa-plane"></i> Airstrips &amp; Helipads
+          </button>
         </div>
+      </div>
+
+      <!-- Leaflet Map Container -->
+      <div class="map-viewport-frame">
+        <div id="leonida-leaflet-map"></div>
+      </div>
+
+      <!-- Submission Callout -->
+      <div class="map-submit-callout">
+        <div>
+          <strong>Found an Easter Egg, secret weapon, or hidden location?</strong>
+          <span> Send coordinates or screenshots to <strong>info@vicecityhub.eu</strong> and our moderators will verify and add it.</span>
+        </div>
+        <a href="mailto:info@vicecityhub.eu?subject=Map%20Coordinate%20Submission">
+          <i class="fa-solid fa-paper-plane"></i> Send via Email
+        </a>
       </div>
     </div>
   </main>
@@ -106,6 +120,10 @@
     <a href="map.html" class="mobile-nav-item active">
       <i class="fa-solid fa-map-location-dot"></i>
       <span>Map</span>
+    </a>
+    <a href="cheats.html" class="mobile-nav-item">
+      <i class="fa-solid fa-gamepad"></i>
+      <span>Cheats</span>
     </a>
     <a href="clips.html" class="mobile-nav-item">
       <i class="fa-solid fa-film"></i>
@@ -126,6 +144,7 @@
         <li><a href="index.html" class="drawer-link"><i class="fa-solid fa-house"></i> Feed</a></li>
         <li><a href="discords.html" class="drawer-link"><i class="fa-brands fa-discord"></i> GTA VI Discords</a></li>
         <li><a href="map.html" class="drawer-link active"><i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides</a></li>
+        <li><a href="cheats.html" class="drawer-link"><i class="fa-solid fa-gamepad"></i> Cheats</a></li>
         <li><a href="clips.html" class="drawer-link"><i class="fa-solid fa-film"></i> Clips</a></li>
         <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
       </ul>
@@ -155,7 +174,8 @@
           <ul>
             <li><a href="index.html">Community Feed</a></li>
             <li><a href="discords.html">GTA VI Discord Servers</a></li>
-            <li><a href="map.html">Map &amp; Locations</a></li>
+            <li><a href="map.html">Interactive Map</a></li>
+            <li><a href="cheats.html">Cheat Codes</a></li>
             <li><a href="clips.html">4K Clips &amp; Media</a></li>
           </ul>
         </div>
@@ -166,6 +186,7 @@
             <li><a href="about.html">About ViceCityHub</a></li>
             <li><a href="faq.html">FAQ</a></li>
             <li><a href="report.html">Report Content / Takedown</a></li>
+            <li><a href="mailto:info@vicecityhub.eu">info@vicecityhub.eu</a></li>
           </ul>
         </div>
 
@@ -189,6 +210,7 @@
     </div>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

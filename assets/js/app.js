@@ -1,6 +1,7 @@
 /**
  * VICECITYHUB.EU - Master Client-side Controller
  * Modular, vanilla JavaScript - OWASP compliant, zero emojis.
+ * Supports: Clean text feed, Interactive Leaflet Leonida map, GTA VI Cheats, and Discord filters.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,14 +26,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const discordForm = document.getElementById('new-discord-form');
   const clipForm = document.getElementById('new-clip-form');
 
-  // Page Specific Elements
+  // Page-specific containers
   const feedContainer = document.getElementById('community-feed');
   const filterChips = document.querySelectorAll('.filter-chip');
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
+
   const discordGrid = document.getElementById('discords-page-grid');
   const discordSearchInput = document.getElementById('discord-search-input');
+  const discordCountryFilter = document.getElementById('discord-country-filter');
+  const discordTypeFilter = document.getElementById('discord-type-filter');
+
+  const cheatsGrid = document.getElementById('cheats-list-grid');
+  const cheatSearchInput = document.getElementById('cheat-search-input');
+  const platformPills = document.querySelectorAll('[data-platform]');
+
   const clipsGrid = document.getElementById('clips-page-grid');
+  const leafletMapContainer = document.getElementById('leonida-leaflet-map');
+  const poiPills = document.querySelectorAll('[data-poi]');
 
   // Helper Escape HTML
   function escapeHtml(str) {
@@ -119,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // FEED & DISCUSSIONS (index.html)
+  // 1. CLEAN TEXT-ONLY FEED (index.html)
   // ==========================================
   let posts = [
     {
@@ -133,16 +144,15 @@ document.addEventListener('DOMContentLoaded', () => {
       badgeClass: 'mod',
       time: '1 hour ago',
       avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&auto=format&fit=crop&q=80',
-      title: 'Grand Theft Auto VI is live worldwide. Welcome to Vice City!',
-      text: 'Vice City and the state of Leonida are officially open. Share your map routes, hidden weapon caches, and discover community Discord servers below.',
-      media: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?w=1200&auto=format&fit=crop&q=80',
+      title: 'Grand Theft Auto VI is live worldwide. Welcome to Vice City & Leonida!',
+      text: 'The journey begins across Ocean Drive, Grassrivers, and Port Gellhorn. Share your discoveries, map coordinates, and find active community Discord servers. For submissions, contact info@vicecityhub.eu.',
       likes: 1248,
       isLiked: false,
       bookmarks: 342,
       isBookmarked: false,
       comments: [
         { author: 'TommyV_86', time: '45m ago', text: 'Ocean Beach lighting at sunset is unbelievable.' },
-        { author: 'Lucia_Driver', time: '20m ago', text: 'Physics and car handling feel super grounded.' }
+        { author: 'Lucia_Driver', time: '20m ago', text: 'Handling model on sports cars feels super responsive.' }
       ]
     },
     {
@@ -156,41 +166,18 @@ document.addEventListener('DOMContentLoaded', () => {
       badgeClass: 'verified',
       time: '2 hours ago',
       avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
-      title: 'Full Leonida State Map Breakdown: High-End Vehicle Spawns & Heliports',
-      text: 'Consolidated map guide covering Port Gellhorn, Vice Beach, and Grassrivers. In this thread we are compiling all confirmed supercar garages and private airstrips.',
-      media: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&auto=format&fit=crop&q=80',
+      title: 'Leonida State Map Breakdown: Supercar Spawns & Heliports',
+      text: 'We are mapping all confirmed private airstrips and vehicle garages across the state. Check out the new interactive map on our site to explore the locations.',
       likes: 673,
       isLiked: false,
       bookmarks: 189,
       isBookmarked: false,
       comments: [
-        { author: 'SpeedDemon99', time: '1h ago', text: 'Confirmed helicopter spawn on the Starfish Island helipad.' }
+        { author: 'SpeedDemon99', time: '1h ago', text: 'Confirmed the helicopter spawn on Starfish Island.' }
       ]
     },
     {
       id: 'post-3',
-      category: 'clips',
-      categoryLabel: 'Clips & Media',
-      pinned: false,
-      author: 'NeonRacer_XX',
-      username: 'neon_racer',
-      badge: 'Verified',
-      badgeClass: 'verified',
-      time: '3 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&auto=format&fit=crop&q=80',
-      title: 'Cruising Ocean Drive at 3 AM with thunderstorm reflections',
-      text: 'The wet asphalt puddles and neon light reflections along the strip look incredible in 4K.',
-      media: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1200&auto=format&fit=crop&q=80',
-      likes: 894,
-      isLiked: false,
-      bookmarks: 211,
-      isBookmarked: false,
-      comments: [
-        { author: 'RayTracer', time: '2h ago', text: 'Weather engine is top tier.' }
-      ]
-    },
-    {
-      id: 'post-4',
       category: 'discussions',
       categoryLabel: 'Discussions',
       pinned: false,
@@ -198,17 +185,37 @@ document.addEventListener('DOMContentLoaded', () => {
       username: 'retrogamer',
       badge: '',
       badgeClass: '',
-      time: '4 hours ago',
+      time: '3 hours ago',
       avatar: 'https://images.unsplash.com/photo-1628157582853-a796fa650a6a?w=100&auto=format&fit=crop&q=80',
       title: 'What radio station is everyone listening to on your first roadtrip?',
-      text: 'Flash FM returns along with Wave 103 and brand new hip hop, synth, and Latin radio stations. What are your favorite tracks so far?',
-      media: null,
+      text: 'Flash FM returns along with Wave 103 and several brand new synth, rap, and Latin radio stations. Share your favorite tracks so far!',
       likes: 421,
       isLiked: false,
       bookmarks: 67,
       isBookmarked: false,
       comments: [
-        { author: 'FlashFM_Fan', time: '3h ago', text: 'Flash FM 80s pop tracks hit just as good today.' }
+        { author: 'FlashFM_Fan', time: '2h ago', text: 'Flash FM 80s pop tracks hit just as good today.' }
+      ]
+    },
+    {
+      id: 'post-4',
+      category: 'clips',
+      categoryLabel: 'Clips & Media',
+      pinned: false,
+      author: 'NeonRacer_XX',
+      username: 'neon_racer',
+      badge: 'Verified',
+      badgeClass: 'verified',
+      time: '4 hours ago',
+      avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&auto=format&fit=crop&q=80',
+      title: 'Night drift down Ocean Beach during a heavy thunderstorm',
+      text: 'The wet asphalt reflections and dynamic lightning strikes make nighttime pursuits in Vice City look like a cinematic movie.',
+      likes: 894,
+      isLiked: false,
+      bookmarks: 211,
+      isBookmarked: false,
+      comments: [
+        { author: 'RayTracer', time: '3h ago', text: 'Weather engine is next level.' }
       ]
     }
   ];
@@ -219,11 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const isPinnedClass = post.pinned ? 'pinned' : '';
     const pinBadge = post.pinned ? `<span class="badge-pill mod" style="margin-right: 6px;"><i class="fa-solid fa-thumbtack"></i> Pinned</span>` : '';
     const badgeHtml = post.badge ? `<span class="badge-pill ${post.badgeClass}">${post.badge}</span>` : '';
-    const mediaHtml = post.media ? `
-      <div class="post-media-container">
-        <img src="${escapeHtml(post.media)}" alt="${escapeHtml(post.title)}" loading="lazy">
-      </div>
-    ` : '';
 
     const commentsHtml = post.comments.map(c => `
       <div class="single-comment">
@@ -253,8 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <h2 class="post-title">${escapeHtml(post.title)}</h2>
         <p class="post-text">${escapeHtml(post.text)}</p>
-
-        ${mediaHtml}
 
         <div class="post-footer">
           <div class="post-actions-group">
@@ -325,12 +325,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (searchInput) {
-    searchInput.addEventListener('input', renderFeed);
-  }
-  if (searchBtn) {
-    searchBtn.addEventListener('click', renderFeed);
-  }
+  if (searchInput) searchInput.addEventListener('input', renderFeed);
+  if (searchBtn) searchBtn.addEventListener('click', renderFeed);
 
   if (feedContainer) {
     feedContainer.addEventListener('click', (e) => {
@@ -399,7 +395,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const title = document.getElementById('post-title-input').value.trim();
       const category = document.getElementById('post-category-select').value;
       const text = document.getElementById('post-content-input').value.trim();
-      const media = document.getElementById('post-media-input').value.trim();
 
       const catMap = {
         discussions: 'Discussions',
@@ -421,7 +416,6 @@ document.addEventListener('DOMContentLoaded', () => {
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
         title: title,
         text: text,
-        media: media || null,
         likes: 1,
         isLiked: true,
         bookmarks: 0,
@@ -438,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // DISCORD DIRECTORY (discords.html)
+  // 2. DISCORD DIRECTORY & FILTERS (discords.html)
   // ==========================================
   const DISCORD_REGEX = /^https:\/\/(discord\.gg\/[a-zA-Z0-9_-]{2,32}|discord\.com\/invite\/[a-zA-Z0-9_-]{2,32})$/;
 
@@ -447,6 +441,9 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 'dc-1',
       name: 'Vice City Roleplay (VCRP)',
       tag: 'Roleplay',
+      category: 'roleplay',
+      country: 'intl',
+      countryLabel: 'International',
       inviteUrl: 'https://discord.gg/viceroleplay',
       members: '14,800 Members',
       desc: 'The premier text and voice roleplay server set in Vice City & Leonida. Whitelisted police, cartel, and civilian careers.'
@@ -455,6 +452,9 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 'dc-2',
       name: 'GTA VI Italian Community',
       tag: 'Italian Community',
+      category: 'roleplay',
+      country: 'it',
+      countryLabel: 'Italy',
       inviteUrl: 'https://discord.gg/gta6italia',
       members: '8,450 Members',
       desc: 'Il principale server Discord italiano dedicato a GTA VI. Organizzazione sessioni serali, ritrovi e canali vocali dedicati.'
@@ -463,31 +463,65 @@ document.addEventListener('DOMContentLoaded', () => {
       id: 'dc-3',
       name: 'Leonida Heists & Speedruns',
       tag: 'Heists & LFG',
+      category: 'heists',
+      country: 'intl',
+      countryLabel: 'International',
       inviteUrl: 'https://discord.gg/leonidaheists',
       members: '6,200 Members',
       desc: 'Coordinated heist groups, speedrun routes, and verified high-tier players.'
     },
     {
       id: 'dc-4',
+      name: 'GTA 6 Espana & Latam',
+      tag: 'Spanish Community',
+      category: 'general',
+      country: 'es',
+      countryLabel: 'Spain / Latam',
+      inviteUrl: 'https://discord.gg/gta6es',
+      members: '5,300 Members',
+      desc: 'Comunidad hispanohablante de GTA 6 para organizar partidas, noticias y servidores de rol.'
+    },
+    {
+      id: 'dc-5',
       name: 'Vice City Modding & Tools',
       tag: 'Modding & Mapping',
+      category: 'modding',
+      country: 'intl',
+      countryLabel: 'International',
       inviteUrl: 'https://discord.gg/vicemodding',
       members: '9,120 Members',
       desc: 'Technical hub for engine research, coordinate tracking, asset datamining, and map development.'
+    },
+    {
+      id: 'dc-6',
+      name: 'GTA VI Deutschland',
+      tag: 'German Community',
+      category: 'general',
+      country: 'de',
+      countryLabel: 'Germany',
+      inviteUrl: 'https://discord.gg/gta6de',
+      members: '3,800 Members',
+      desc: 'Die deutsche GTA 6 Community fuer Crews, Heists und Rollenspiel.'
     }
   ];
 
   function renderDiscords() {
     if (!discordGrid) return;
     const query = (discordSearchInput?.value || '').toLowerCase().trim();
+    const selCountry = discordCountryFilter?.value || 'all';
+    const selType = discordTypeFilter?.value || 'all';
+
     const filtered = discordServers.filter(s => {
-      return !query || s.name.toLowerCase().includes(query) || s.tag.toLowerCase().includes(query) || s.desc.toLowerCase().includes(query);
+      const matchQuery = !query || s.name.toLowerCase().includes(query) || s.tag.toLowerCase().includes(query) || s.desc.toLowerCase().includes(query);
+      const matchCountry = selCountry === 'all' || s.country === selCountry;
+      const matchType = selType === 'all' || s.category === selType;
+      return matchQuery && matchCountry && matchType;
     });
 
     if (filtered.length === 0) {
       discordGrid.innerHTML = `
         <div class="widget-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
-          <p style="color: var(--text-muted); margin-bottom: 12px;">No Discord servers matching your query.</p>
+          <p style="color: var(--text-muted); margin-bottom: 12px;">No Discord servers matching your filters.</p>
           <button class="btn-discord trigger-add-discord">Submit Your Discord</button>
         </div>
       `;
@@ -503,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div>
               <h3 class="discord-name">${escapeHtml(s.name)}</h3>
-              <span class="discord-tag">${escapeHtml(s.tag)}</span>
+              <span class="discord-tag">${escapeHtml(s.tag)} &bull; ${escapeHtml(s.countryLabel)}</span>
             </div>
           </div>
           <p class="discord-desc">${escapeHtml(s.desc)}</p>
@@ -521,6 +555,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (discordGrid) {
     renderDiscords();
     if (discordSearchInput) discordSearchInput.addEventListener('input', renderDiscords);
+    if (discordCountryFilter) discordCountryFilter.addEventListener('change', renderDiscords);
+    if (discordTypeFilter) discordTypeFilter.addEventListener('change', renderDiscords);
   }
 
   if (discordForm) {
@@ -548,6 +584,9 @@ document.addEventListener('DOMContentLoaded', () => {
         id: `dc-${Date.now()}`,
         name: name,
         tag: catMap[category] || 'Community',
+        category: category,
+        country: category === 'italian' ? 'it' : 'intl',
+        countryLabel: category === 'italian' ? 'Italy' : 'International',
         inviteUrl: inviteUrl,
         members: 'Just Added',
         desc: desc
@@ -561,7 +600,303 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // CLIPS SHOWCASE (clips.html)
+  // 3. GTA VI CHEAT CODES (cheats.html)
+  // ==========================================
+  const cheatsData = [
+    {
+      id: 'cheat-1',
+      title: 'Max Health & Armor',
+      category: 'playstation',
+      platform: 'PS5',
+      desc: 'Restores full player health and gives 100% body armor.',
+      code: 'XXXX-HEALTH-XXXX (L1, R1, SQUARE, XXXX)'
+    },
+    {
+      id: 'cheat-2',
+      title: 'Lower Wanted Level',
+      category: 'playstation',
+      platform: 'PS5',
+      desc: 'Removes one star from your active police wanted level.',
+      code: 'XXXX-WANTED-MINUS (R1, R1, CIRCLE, XXXX)'
+    },
+    {
+      id: 'cheat-3',
+      title: 'Raise Wanted Level',
+      category: 'playstation',
+      platform: 'PS5',
+      desc: 'Adds one star to your wanted level to initiate police pursuits.',
+      code: 'XXXX-WANTED-PLUS (R1, R1, CIRCLE, XXXX)'
+    },
+    {
+      id: 'cheat-4',
+      title: 'Spawn Attack Helicopter',
+      category: 'playstation',
+      platform: 'PS5',
+      desc: 'Instantly spawns a military attack chopper equipped with rockets.',
+      code: 'XXXX-CHOPPER-XXXX (CIRCLE, CIRCLE, L1, XXXX)'
+    },
+    {
+      id: 'cheat-5',
+      title: 'Super Jump & Fast Sprint',
+      category: 'xbox',
+      platform: 'Xbox',
+      desc: 'Allows the character to sprint at high speeds and jump 10 meters high.',
+      code: 'XXXX-SPRINT-JUMP (Y, RB, RT, XXXX)'
+    },
+    {
+      id: 'cheat-6',
+      title: 'Flaming Bullets & Explosive Ammo',
+      category: 'xbox',
+      platform: 'Xbox',
+      desc: 'All firearms ignite targets and cause explosive concussive damage on impact.',
+      code: 'XXXX-FLAME-AMMO (LB, RB, X, XXXX)'
+    },
+    {
+      id: 'cheat-7',
+      title: 'Spawn Supercar (Grotti Cheetah)',
+      category: 'xbox',
+      platform: 'Xbox',
+      desc: 'Spawns a top-tier exotic sports vehicle right in front of you.',
+      code: 'XXXX-SPAWN-SUPER (RT, LB, B, XXXX)'
+    },
+    {
+      id: 'cheat-8',
+      title: 'Change Weather: Thunderstorm',
+      category: 'phone',
+      platform: 'Cell Phone',
+      desc: 'Toggles between heavy Vice City tropical storms, fog, and clear sunset.',
+      code: '1-999-XXXX-THUNDER'
+    },
+    {
+      id: 'cheat-9',
+      title: 'Slow Motion Aiming (Dead Eye Mode)',
+      category: 'phone',
+      platform: 'Cell Phone',
+      desc: 'Slows down time when drawing your weapon to line up precise headshots.',
+      code: '1-999-XXXX-DEADEYE'
+    },
+    {
+      id: 'cheat-10',
+      title: 'Moon Gravity Physics',
+      category: 'phone',
+      platform: 'Cell Phone',
+      desc: 'Drastically reduces gravity for vehicles and player ragdolls.',
+      code: '1-999-XXXX-GRAVITY'
+    }
+  ];
+
+  let currentPlatform = 'all';
+
+  function renderCheats() {
+    if (!cheatsGrid) return;
+    const query = (cheatSearchInput?.value || '').toLowerCase().trim();
+    const filtered = cheatsData.filter(c => {
+      const matchPlatform = currentPlatform === 'all' || c.category === currentPlatform;
+      const matchQuery = !query || c.title.toLowerCase().includes(query) || c.desc.toLowerCase().includes(query);
+      return matchPlatform && matchQuery;
+    });
+
+    if (filtered.length === 0) {
+      cheatsGrid.innerHTML = `
+        <div class="widget-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
+          <p style="color: var(--text-muted); margin-bottom: 8px;">No cheat codes found.</p>
+          <span style="font-size: 0.8rem; color: var(--text-dim);">Know a working code? Email info@vicecityhub.eu</span>
+        </div>
+      `;
+      return;
+    }
+
+    cheatsGrid.innerHTML = filtered.map(c => `
+      <div class="cheat-card">
+        <div>
+          <div class="cheat-header">
+            <h3 class="cheat-title">${escapeHtml(c.title)}</h3>
+            <span class="cheat-platform-badge">${escapeHtml(c.platform)}</span>
+          </div>
+          <p class="cheat-desc">${escapeHtml(c.desc)}</p>
+        </div>
+        <div class="cheat-code-box">
+          <span class="cheat-code-text">${escapeHtml(c.code)}</span>
+          <button class="cheat-copy-btn btn-copy-cheat" data-code="${escapeHtml(c.code)}" title="Copy Cheat">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (cheatsGrid) {
+    renderCheats();
+
+    if (cheatSearchInput) cheatSearchInput.addEventListener('input', renderCheats);
+
+    platformPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        platformPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentPlatform = pill.dataset.platform || 'all';
+        renderCheats();
+      });
+    });
+
+    cheatsGrid.addEventListener('click', (e) => {
+      const copyBtn = e.target.closest('.btn-copy-cheat');
+      if (copyBtn) {
+        const code = copyBtn.dataset.code;
+        navigator.clipboard.writeText(code).then(() => {
+          showToast('Cheat code copied to clipboard!');
+        });
+      }
+    });
+  }
+
+  // ==========================================
+  // 4. LEAFLET INTERACTIVE LEONIDA MAP (map.html)
+  // ==========================================
+  if (leafletMapContainer && typeof L !== 'undefined') {
+    // Coordinate dimensions
+    const mapWidth = 3000;
+    const mapHeight = 2200;
+
+    // Use Leaflet Simple CRS for gaming map
+    const map = L.map('leonida-leaflet-map', {
+      crs: L.CRS.Simple,
+      minZoom: -1,
+      maxZoom: 2,
+      zoomSnap: 0.5,
+      attributionControl: false
+    });
+
+    const bounds = [[0, 0], [mapHeight, mapWidth]];
+
+    // Map base background layer (Dark coordinate canvas with Leonida mapping base)
+    const mapImage = L.imageOverlay('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&auto=format&fit=crop&q=80', bounds).addTo(map);
+
+    map.fitBounds(bounds);
+
+    // Points of Interest (POI) Database
+    const pois = [
+      {
+        id: 'poi-1',
+        title: 'Starfish Island Gated Mansion',
+        category: 'easter',
+        catLabel: 'Easter Egg',
+        markerClass: 'marker-easter',
+        icon: 'fa-skull',
+        coords: [1420, 1850],
+        desc: 'Reconstructed luxury mansion referencing the classic Tommy Vercetti estate, complete with helicopter pad.'
+      },
+      {
+        id: 'poi-2',
+        title: 'The Malibu Club & Strip Strip',
+        category: 'nightlife',
+        catLabel: 'Strip Club & Nightlife',
+        markerClass: 'marker-nightlife',
+        icon: 'fa-champagne-glasses',
+        coords: [1260, 2180],
+        desc: 'Ocean Drive premier nightlife venue, neon lighting, dance floor and VIP rooms.'
+      },
+      {
+        id: 'poi-3',
+        title: 'Vice Beach Ammu-Nation & Shooting Range',
+        category: 'shops',
+        catLabel: 'Stores & Ammu-Nation',
+        markerClass: 'marker-shops',
+        icon: 'fa-cart-shopping',
+        coords: [1100, 2250],
+        desc: 'Fully stocked weapon store with underground indoor firing range for weapon challenges.'
+      },
+      {
+        id: 'poi-4',
+        title: 'Grassrivers Hidden Airboat Hangar',
+        category: 'secrets',
+        catLabel: 'Secrets & Garages',
+        markerClass: 'marker-secrets',
+        icon: 'fa-crosshairs',
+        coords: [800, 920],
+        desc: 'Secluded wetland outpost housing specialized swamp airboats and rare weapon pickups.'
+      },
+      {
+        id: 'poi-5',
+        title: 'Port Gellhorn Industrial Strip',
+        category: 'secrets',
+        catLabel: 'Secrets & Garages',
+        markerClass: 'marker-secrets',
+        icon: 'fa-crosshairs',
+        coords: [500, 600],
+        desc: 'Shipping container yard and chop shop garage used in smuggling operations.'
+      },
+      {
+        id: 'poi-6',
+        title: 'Escobar International Airport (Runways & Helipad)',
+        category: 'airstrips',
+        catLabel: 'Airstrips & Helipads',
+        markerClass: 'marker-airstrips',
+        icon: 'fa-plane',
+        coords: [950, 1420],
+        desc: 'Dual runway international airfield with commercial jet and executive jet spawn points.'
+      },
+      {
+        id: 'poi-7',
+        title: 'Downtown Helipad Rooftop',
+        category: 'airstrips',
+        catLabel: 'Airstrips & Helipads',
+        markerClass: 'marker-airstrips',
+        icon: 'fa-plane',
+        coords: [1680, 1620],
+        desc: 'Skyscraper roof landing zone providing immediate high-altitude parachute and helicopter access.'
+      }
+    ];
+
+    let markerLayerGroup = L.layerGroup().addTo(map);
+
+    function renderMapMarkers(filterCat = 'all') {
+      markerLayerGroup.clearLayers();
+
+      pois.forEach(poi => {
+        if (filterCat !== 'all' && poi.category !== filterCat) return;
+
+        const iconHtml = `<div class="custom-poi-marker ${poi.markerClass}"><i class="fa-solid ${poi.icon}"></i></div>`;
+        const customIcon = L.divIcon({
+          html: iconHtml,
+          className: 'custom-leaflet-poi',
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+          popupAnchor: [0, -18]
+        });
+
+        const marker = L.marker(poi.coords, { icon: customIcon });
+
+        const popupContent = `
+          <div>
+            <div class="map-popup-category">${escapeHtml(poi.catLabel)}</div>
+            <h4 class="map-popup-title">${escapeHtml(poi.title)}</h4>
+            <p class="map-popup-desc">${escapeHtml(poi.desc)}</p>
+            <div style="margin-top: 8px; font-size: 0.72rem; color: var(--text-dim); border-top: 1px solid var(--border-color); padding-top: 4px;">
+              Report or update spot: info@vicecityhub.eu
+            </div>
+          </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        markerLayerGroup.addLayer(marker);
+      });
+    }
+
+    renderMapMarkers('all');
+
+    poiPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        poiPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const cat = pill.dataset.poi || 'all';
+        renderMapMarkers(cat);
+      });
+    });
+  }
+
+  // ==========================================
+  // 5. CLIPS SHOWCASE (clips.html)
   // ==========================================
   let clips = [
     {

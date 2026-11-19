@@ -919,6 +919,328 @@ img {
   color: var(--text-dim);
 }
 
+/* ==========================================================================
+   INTERACTIVE MAP (LEAFLET) & POI FILTERS
+   ========================================================================== */
+.map-interactive-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.map-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+}
+
+.map-poi-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.poi-pill {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+}
+
+.poi-pill:hover {
+  color: var(--text-main);
+  border-color: var(--text-dim);
+}
+
+.poi-pill.active {
+  background: var(--text-main);
+  color: var(--bg-body);
+  border-color: var(--text-main);
+}
+
+.map-viewport-frame {
+  width: 100%;
+  height: 620px;
+  background: #090d12;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+}
+
+#leonida-leaflet-map {
+  width: 100%;
+  height: 100%;
+  background: #090d12;
+}
+
+/* Leaflet Dark Theme Adjustments */
+.leaflet-bar {
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-sm) !important;
+  overflow: hidden;
+  box-shadow: none !important;
+}
+
+.leaflet-bar a {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: var(--bg-surface-elevated) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+  padding: 4px;
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-surface) !important;
+}
+
+.leaflet-popup-content {
+  margin: 10px 12px !important;
+  line-height: 1.45 !important;
+}
+
+.map-popup-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.map-popup-category {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-pink);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.map-popup-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.map-submit-callout {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
+.map-submit-callout strong {
+  color: var(--text-main);
+}
+
+.map-submit-callout a {
+  color: var(--accent-pink);
+  font-weight: 600;
+}
+
+/* Custom Leaflet Marker Icons */
+.custom-poi-marker {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.85rem;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.marker-easter { background: #9333ea; }
+.marker-shops { background: #2563eb; }
+.marker-nightlife { background: #ff2a85; }
+.marker-secrets { background: #eab308; color: #000; }
+.marker-airstrips { background: #00d2ff; color: #000; }
+
+/* ==========================================================================
+   CHEATS DIRECTORY (cheats.html)
+   ========================================================================== */
+.cheats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cheats-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+}
+
+.cheats-platform-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cheats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.cheat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: var(--transition);
+}
+
+.cheat-card:hover {
+  border-color: var(--text-dim);
+}
+
+.cheat-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.cheat-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.cheat-platform-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  background: var(--bg-surface-elevated);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.cheat-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+.cheat-code-box {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cheat-code-text {
+  font-family: monospace, Courier, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-pink);
+  letter-spacing: 1px;
+  word-break: break-all;
+}
+
+.cheat-copy-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 4px;
+  min-height: 36px;
+}
+
+.cheat-copy-btn:hover {
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   DISCORDS COUNTRY & TYPE FILTERS
+   ========================================================================== */
+.discord-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-select {
+  height: 40px;
+  padding: 0 32px 0 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.86rem;
+  font-weight: 600;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+  min-height: 44px;
+}
+
+.filter-select option {
+  background: var(--bg-surface);
+  color: var(--text-main);
+}
+
+.filter-select:focus {
+  border-color: var(--color-discord);
+}
+
 /* Map Guide View */
 .map-container {
   display: flex;

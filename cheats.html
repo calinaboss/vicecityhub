@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTA VI Cheat Codes &bull; ViceCityHub.eu</title>
+  <meta name="description" content="Grand Theft Auto VI cheat codes, button combinations, and phone dial sequences for PS5, Xbox, and PC.">
+  <meta name="theme-color" content="#0d1117">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- STICKY TOP NAVBAR -->
+  <header class="site-header">
+    <div class="header-container">
+      <span class="mobile-brand-title">VICECITYHUB</span>
+
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="map.html" class="nav-link">Map &amp; Guides</a>
+        <a href="cheats.html" class="nav-link active">Cheats</a>
+        <a href="clips.html" class="nav-link">Clips</a>
+      </nav>
+
+      <div class="nav-divider" aria-hidden="true"></div>
+
+      <div class="header-nav-right">
+        <a href="login.html" class="nav-auth-link">Log in</a>
+        <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
+        <a href="index.html" class="btn-secondary">
+          <i class="fa-solid fa-house"></i> Home
+        </a>
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="site-main">
+    <div class="page-header-strip">
+      <div>
+        <h1 class="page-title">
+          <i class="fa-solid fa-gamepad" style="color: var(--accent-pink);"></i> GTA VI Cheat Codes &amp; Key Combinations
+        </h1>
+        <p class="page-desc">
+          Verified button inputs, cell phone numbers, and command sequences for Grand Theft Auto VI.
+        </p>
+      </div>
+      <a href="mailto:info@vicecityhub.eu?subject=New%20Cheat%20Code%20Submission" class="btn-secondary">
+        <i class="fa-solid fa-envelope"></i> Submit Cheat (info@vicecityhub.eu)
+      </a>
+    </div>
+
+    <div class="cheats-container">
+      <!-- Toolbar -->
+      <div class="cheats-toolbar">
+        <div class="cheats-platform-pills">
+          <button class="poi-pill active" data-platform="all">
+            All Platforms
+          </button>
+          <button class="poi-pill" data-platform="playstation">
+            <i class="fa-brands fa-playstation"></i> PlayStation 5
+          </button>
+          <button class="poi-pill" data-platform="xbox">
+            <i class="fa-brands fa-xbox"></i> Xbox Series X/S
+          </button>
+          <button class="poi-pill" data-platform="phone">
+            <i class="fa-solid fa-mobile-screen"></i> Cell Phone Numbers
+          </button>
+        </div>
+
+        <div class="search-box" style="max-width: 280px; padding: 2px 4px 2px 14px;">
+          <i class="fa-solid fa-magnifying-glass search-icon" style="font-size: 0.8rem;"></i>
+          <input type="text" id="cheat-search-input" class="search-input" placeholder="Search cheat effect..." style="height: 34px; font-size: 0.82rem;">
+        </div>
+      </div>
+
+      <!-- Cheats Grid -->
+      <div class="cheats-grid" id="cheats-list-grid">
+        <!-- Generated dynamically via JS -->
+      </div>
+
+      <!-- Submission Info Box -->
+      <div class="map-submit-callout">
+        <div>
+          <strong>Found a new secret code or working combination?</strong>
+          <span> Send details to <strong>info@vicecityhub.eu</strong>. Our admins will verify the button sequence and credit you on this page.</span>
+        </div>
+        <a href="mailto:info@vicecityhub.eu?subject=New%20Cheat%20Code%20Submission">
+          <i class="fa-solid fa-paper-plane"></i> Email info@vicecityhub.eu
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- TOAST -->
+  <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
+    <span id="toast-text">Success</span>
+  </div>
+
+  <!-- MOBILE BOTTOM BAR -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="mobile-nav-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Feed</span>
+    </a>
+    <a href="discords.html" class="mobile-nav-item">
+      <i class="fa-brands fa-discord"></i>
+      <span>Discords</span>
+    </a>
+    <a href="map.html" class="mobile-nav-item">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Map</span>
+    </a>
+    <a href="cheats.html" class="mobile-nav-item active">
+      <i class="fa-solid fa-gamepad"></i>
+      <span>Cheats</span>
+    </a>
+    <a href="clips.html" class="mobile-nav-item">
+      <i class="fa-solid fa-film"></i>
+      <span>Clips</span>
+    </a>
+  </nav>
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <img src="assets/brand/logo.png" alt="ViceCityHub" class="drawer-logo-img">
+        <button class="modal-close-btn" id="close-drawer" aria-label="Close Navigation">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <ul class="drawer-links">
+        <li><a href="index.html" class="drawer-link"><i class="fa-solid fa-house"></i> Feed</a></li>
+        <li><a href="discords.html" class="drawer-link"><i class="fa-brands fa-discord"></i> GTA VI Discords</a></li>
+        <li><a href="map.html" class="drawer-link"><i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides</a></li>
+        <li><a href="cheats.html" class="drawer-link active"><i class="fa-solid fa-gamepad"></i> Cheats</a></li>
+        <li><a href="clips.html" class="drawer-link"><i class="fa-solid fa-film"></i> Clips</a></li>
+        <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="footer-logo-row">
+          <img src="assets/brand/logo.png" alt="ViceCityHub.eu" class="footer-logo-img">
+        </div>
+        <p class="footer-desc">
+          The premier independent community hub and Discord directory dedicated to Grand Theft Auto VI in Vice City and Leonida.
+        </p>
+        <div class="footer-social-row">
+          <a href="https://discord.gg" target="_blank" rel="noopener noreferrer nofollow" class="footer-social-icon" aria-label="Community Discord">
+            <i class="fa-brands fa-discord"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-cols">
+        <div class="f-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="index.html">Community Feed</a></li>
+            <li><a href="discords.html">GTA VI Discord Servers</a></li>
+            <li><a href="map.html">Interactive Map</a></li>
+            <li><a href="cheats.html">Cheat Codes</a></li>
+            <li><a href="clips.html">4K Clips &amp; Media</a></li>
+          </ul>
+        </div>
+
+        <div class="f-col">
+          <h4>About &amp; Help</h4>
+          <ul>
+            <li><a href="about.html">About ViceCityHub</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="report.html">Report Content / Takedown</a></li>
+            <li><a href="mailto:info@vicecityhub.eu">info@vicecityhub.eu</a></li>
+          </ul>
+        </div>
+
+        <div class="f-col">
+          <h4>Legal &amp; Policy</h4>
+          <ul>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="cookies.html">Cookie Policy</a></li>
+            <li><a href="dsa.html">Digital Services Act (DSA)</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <p class="footer-disclaimer-text">
+        &copy; 2026 ViceCityHub.eu &bull; All rights reserved. Grand Theft Auto and GTA VI are registered trademarks of Rockstar Games &amp; Take-Two Interactive. Unofficial fan community.
+      </p>
+      <span>vicecityhub.eu</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
