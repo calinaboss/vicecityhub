@@ -652,10 +652,11 @@
         general: { label: 'Other Mapped Buildings', color: '#94a3b8', icon: 'fa-city', priority: 3 }
       };
 
-      // 1. INITIALIZE LEAFLET MAP
+      // 1. INITIALIZE LEAFLET MAP (Hardware-Accelerated & Ultra-Smooth)
       const MAP_SIZE = 10000;
       const fullBounds = [[0, 0], [MAP_SIZE, MAP_SIZE]];
       const islandBounds = [[-1500, -500], [11500, 11500]];
+      const canvasRenderer = L.canvas({ padding: 0.5 });
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
@@ -664,6 +665,7 @@
         zoomSnap: 0.1,
         zoomDelta: 0.3,
         attributionControl: false,
+        preferCanvas: true,
         maxBounds: islandBounds,
         maxBoundsViscosity: 0.7,
         scrollWheelZoom: true
@@ -724,27 +726,14 @@
       };
 
       // 4. LOAD & RENDER LANDMARKS WITH SYMBOLS
+      // Start with ONLY Strip Clubs active by default to guarantee 60 FPS and zero startup lag!
       let allLandmarks = window.LEONIDA_LANDMARKS || [];
-      // Active categories: by default all key places
-      let activeCategories = new Set([
-        'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
-        'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
-      ]);
+      let activeCategories = new Set(['stripclub']);
 
       const markersLayer = L.layerGroup().addTo(map);
 
       function createSymbolIcon(item) {
         const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
-        if (item.cat === 'general') {
-          return L.divIcon({
-            className: 'custom-symbol-icon',
-            html: `<div class="symbol-marker-dot" style="background: ${conf.color};"></div>`,
-            iconSize: [8, 8],
-            iconAnchor: [4, 4],
-            popupAnchor: [0, -5]
-          });
-        }
-
         return L.divIcon({
           className: 'custom-symbol-icon',
           html: `<div class="symbol-marker-pin" style="background: ${conf.color};" title="${escapeHtml(item.name)}"><i class="fa-solid ${conf.icon}"></i></div>`,
@@ -788,14 +777,30 @@
 
         const filtered = allLandmarks.filter(item => activeCategories.has(item.cat));
 
+        // If rendering bulk markers (> 150), use canvas circle markers for 60fps performance
+        const useCanvas = filtered.length > 150;
+
         filtered.forEach(item => {
           const lat = MAP_SIZE - item.py;
           const lng = item.px;
+          const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
 
-          const marker = L.marker([lat, lng], {
-            icon: createSymbolIcon(item),
-            title: item.name
-          });
+          let marker;
+          if (useCanvas) {
+            marker = L.circleMarker([lat, lng], {
+              renderer: canvasRenderer,
+              radius: 5,
+              fillColor: conf.color,
+              color: '#ffffff',
+              weight: 1,
+              fillOpacity: 0.9
+            });
+          } else {
+            marker = L.marker([lat, lng], {
+              icon: createSymbolIcon(item),
+              title: item.name
+            });
+          }
 
           marker.bindPopup(buildPopupContent(item));
           marker.itemData = item;
@@ -839,18 +844,16 @@
         listEl.querySelectorAll('.sidebar-item').forEach(item => {
           item.addEventListener('click', function() {
             const cat = this.getAttribute('data-cat');
-            if (activeCategories.size === 1 && activeCategories.has(cat)) {
-              // Reset to all key places
-              activeCategories = new Set([
-                'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
-                'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
-              ]);
+            // Toggle or isolate category
+            if (activeCategories.has(cat) && activeCategories.size === 1) {
+              // If already the only active one, switch to Strip Clubs
+              activeCategories = new Set(['stripclub']);
             } else {
               activeCategories = new Set([cat]);
               const matches = allLandmarks.filter(l => l.cat === cat);
-              if (matches.length > 0) {
+              if (matches.length > 0 && matches.length < 50) {
                 const boundsList = matches.map(m => [MAP_SIZE - m.py, m.px]);
-                map.flyToBounds(boundsList, { maxZoom: 1.5, padding: [40, 40], duration: 1 });
+                map.flyToBounds(boundsList, { maxZoom: 1.2, padding: [60, 60], duration: 0.8 });
               }
             }
             updateSidebarActiveStates();
@@ -875,13 +878,14 @@
       const btnFilterReset = document.getElementById('btn-filter-reset');
       if (btnFilterReset) {
         btnFilterReset.addEventListener('click', function() {
+          // Switch to all key places with canvas rendering
           activeCategories = new Set([
             'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
             'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
           ]);
           updateSidebarActiveStates();
           renderMarkers();
-          map.fitBounds([[1400, 2400], [8600, 9800]], { padding: [15, 15] });
+          map.setView([5000, 6000], -2.0);
         });
       }
 
