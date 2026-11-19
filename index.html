@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViceCityHub &bull; The Premier GTA 6 Community Hub</title>
+  <meta name="description" content="ViceCityHub.eu - The modern community hub for Grand Theft Auto VI in Leonida & Vice City. Discussions, official news, map guides, crews, and 4K clips.">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome 6+ (Zero Emojis - Vector Icons Only) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Site Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- STICKY TOP NAVBAR -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <a href="/" class="brand-logo" aria-label="ViceCityHub Homepage">
+          <div class="brand-icon">
+            <i class="fa-solid fa-gamepad"></i>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">VICECITYHUB</span>
+            <span class="brand-badge">VI</span>
+          </div>
+        </a>
+      </div>
+
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li>
+            <a href="#feed" class="nav-link active">
+              <i class="fa-solid fa-house"></i> Feed
+            </a>
+          </li>
+          <li>
+            <a href="#news" class="nav-link">
+              <i class="fa-solid fa-newspaper"></i> News
+            </a>
+          </li>
+          <li>
+            <a href="#map" class="nav-link">
+              <i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides
+            </a>
+          </li>
+          <li>
+            <a href="#crews" class="nav-link">
+              <i class="fa-solid fa-users"></i> Crews
+            </a>
+          </li>
+          <li>
+            <a href="#clips" class="nav-link">
+              <i class="fa-solid fa-film"></i> Clips
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="search-input" class="search-input" placeholder="Search discussions..." autocomplete="off">
+        </div>
+
+        <button class="btn-primary trigger-new-post" aria-label="Create New Post">
+          <i class="fa-solid fa-plus"></i> New Post
+        </button>
+
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="site-main">
+
+    <!-- HERO / ANNOUNCEMENT BANNER -->
+    <section class="hero-banner" aria-label="Official Announcement">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-tag">
+            <i class="fa-solid fa-circle-check"></i> Worldwide Launch Live
+          </div>
+          <h1 class="hero-title">
+            Welcome to <span>Vice City</span> &amp; The State of Leonida
+          </h1>
+          <p class="hero-description">
+            Grand Theft Auto VI has officially arrived. Connect with thousands of players, join top-tier crews, discover secret map locations, and share your 4K clips.
+          </p>
+          <div class="hero-stats-row">
+            <div class="hero-stat-item">
+              <i class="fa-solid fa-users"></i> <span>24,850+ Online</span>
+            </div>
+            <div class="hero-stat-item">
+              <i class="fa-solid fa-comments"></i> <span>1,420 Discussions Today</span>
+            </div>
+            <div class="hero-stat-item">
+              <i class="fa-solid fa-shield-halved"></i> <span>Rockstar Verified</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-countdown-box">
+          <div class="countdown-label">
+            <i class="fa-solid fa-signal"></i> Network Status
+          </div>
+          <div class="countdown-digits">ONLINE</div>
+          <div class="countdown-subtext">Leonida Cloud Infrastructure Stable</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HORIZONTAL FILTER CHIPS -->
+    <div class="filter-bar" role="tablist" aria-label="Filter discussions by category">
+      <button class="filter-chip active" data-category="all" role="tab">
+        <i class="fa-solid fa-fire"></i> All Posts
+      </button>
+      <button class="filter-chip" data-category="discussions" role="tab">
+        <i class="fa-solid fa-comments"></i> Discussions
+      </button>
+      <button class="filter-chip" data-category="official" role="tab">
+        <i class="fa-solid fa-bullhorn"></i> Official News
+      </button>
+      <button class="filter-chip" data-category="leaks" role="tab">
+        <i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides
+      </button>
+      <button class="filter-chip" data-category="clips" role="tab">
+        <i class="fa-solid fa-film"></i> Clips &amp; Media
+      </button>
+      <button class="filter-chip" data-category="crews" role="tab">
+        <i class="fa-solid fa-users"></i> Clans &amp; Crews
+      </button>
+    </div>
+
+    <!-- MAIN TWO-COLUMN GRID -->
+    <div class="content-grid">
+
+      <!-- LEFT: COMMUNITY FEED -->
+      <section class="feed-wrapper" aria-label="Community Feed">
+        <div class="feed-container" id="community-feed">
+          <!-- Rendered dynamically via js/app.js -->
+        </div>
+      </section>
+
+      <!-- RIGHT: SIDEBAR WIDGETS -->
+      <aside class="sidebar-wrapper" aria-label="Community Widgets">
+
+        <!-- Server & Service Status Widget -->
+        <div class="widget-card">
+          <div class="widget-header">
+            <h3 class="widget-title">
+              <i class="fa-solid fa-server"></i> Server Health
+            </h3>
+            <span class="badge-pill verified">Live</span>
+          </div>
+          <div class="status-list">
+            <div class="status-item">
+              <div class="status-name-group">
+                <span class="status-pulse-dot"></span>
+                <span>Vice City Online</span>
+              </div>
+              <span class="status-ping" id="ping-vice">22ms</span>
+            </div>
+            <div class="status-item">
+              <div class="status-name-group">
+                <span class="status-pulse-dot"></span>
+                <span>Social Club Services</span>
+              </div>
+              <span class="status-ping" id="ping-social">31ms</span>
+            </div>
+            <div class="status-item">
+              <div class="status-name-group">
+                <span class="status-pulse-dot"></span>
+                <span>Cloud Save / Matchmaking</span>
+              </div>
+              <span class="status-ping" id="ping-rockstar">35ms</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending Discussions Widget -->
+        <div class="widget-card">
+          <div class="widget-header">
+            <h3 class="widget-title">
+              <i class="fa-solid fa-arrow-trend-up"></i> Trending Now
+            </h3>
+          </div>
+          <div class="trending-list">
+            <a href="#feed" class="trending-item">
+              <span class="trending-tag">Downtown Vice</span>
+              <span class="trending-title">Best real estate investments for starter cash</span>
+              <span class="trending-stats">
+                <i class="fa-regular fa-comment"></i> 148 replies &bull; 8m ago
+              </span>
+            </a>
+            <a href="#feed" class="trending-item">
+              <span class="trending-tag">Grassrivers</span>
+              <span class="trending-title">Location of the hidden airboat hangar in the swamps</span>
+              <span class="trending-stats">
+                <i class="fa-regular fa-comment"></i> 92 replies &bull; 24m ago
+              </span>
+            </a>
+            <a href="#feed" class="trending-item">
+              <span class="trending-tag">Next-Gen Audio</span>
+              <span class="trending-title">3D spatial sound profile setup for headphones</span>
+              <span class="trending-stats">
+                <i class="fa-regular fa-comment"></i> 64 replies &bull; 1h ago
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Crew Spotlight Widget -->
+        <div class="widget-card">
+          <div class="widget-header">
+            <h3 class="widget-title">
+              <i class="fa-solid fa-trophy"></i> Featured Crew
+            </h3>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 10px;">
+            <div style="width: 44px; height: 44px; border-radius: var(--radius-sm); background: linear-gradient(135deg, var(--accent-pink), #8000ff); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fff;">
+              SYN
+            </div>
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;">Sunset Syndicate</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">
+                <i class="fa-solid fa-users"></i> 245 Members &bull; Tier 1
+              </div>
+            </div>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Tactical driving and high-stakes missions. Active nightly voice comms.
+          </p>
+          <button class="btn-secondary" style="width: 100%; justify-content: center;">
+            <i class="fa-solid fa-user-plus"></i> Request Recruitment
+          </button>
+        </div>
+
+        <!-- Community Discord CTA -->
+        <div class="widget-card discord-widget">
+          <div class="widget-header">
+            <h3 class="widget-title" style="color: #ffffff;">
+              <i class="fa-brands fa-discord" style="color: #5865f2;"></i> Discord Server
+            </h3>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+            Join 35,000+ members on our official Discord for voice heists, car meets, and instant patch alerts.
+          </p>
+          <a href="https://discord.gg" target="_blank" rel="noopener noreferrer" class="btn-discord">
+            <i class="fa-brands fa-discord"></i> Join ViceCityHub Discord
+          </a>
+        </div>
+
+        <!-- Community Rules Widget -->
+        <div class="widget-card">
+          <div class="widget-header">
+            <h3 class="widget-title">
+              <i class="fa-solid fa-shield-halved"></i> Hub Rules
+            </h3>
+          </div>
+          <ul class="rules-list">
+            <li>
+              <i class="fa-solid fa-check"></i> Be respectful to fellow community members.
+            </li>
+            <li>
+              <i class="fa-solid fa-check"></i> Tag story spoilers with appropriate warnings.
+            </li>
+            <li>
+              <i class="fa-solid fa-check"></i> No real-money trading or unauthorized cheats.
+            </li>
+            <li>
+              <i class="fa-solid fa-check"></i> Post clips and media in high resolution.
+            </li>
+          </ul>
+        </div>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- CREATE POST MODAL -->
+  <div class="modal-overlay" id="create-post-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-heading">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title-heading">
+          <i class="fa-solid fa-pen-to-square"></i> Create Discussion
+        </h2>
+        <button class="modal-close-btn trigger-close-modal" aria-label="Close Modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="new-post-form" class="modal-form">
+        <div class="form-group">
+          <label for="post-title-input" class="form-label">Discussion Title</label>
+          <input type="text" id="post-title-input" class="form-input" placeholder="e.g. Secret underground garage found in Starfish Island" required maxlength="120">
+        </div>
+
+        <div class="form-group">
+          <label for="post-category-select" class="form-label">Category</label>
+          <select id="post-category-select" class="form-select" required>
+            <option value="discussions">Discussions</option>
+            <option value="leaks">Map &amp; Guides</option>
+            <option value="crews">Clans &amp; Crews</option>
+            <option value="clips">Clips &amp; Media</option>
+            <option value="official">Official News</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="post-content-input" class="form-label">Content</label>
+          <textarea id="post-content-input" class="form-textarea" placeholder="Describe the discovery, coordinate a heist, or share tips..." required maxlength="2000"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="post-media-input" class="form-label">Image or Clip Preview URL (Optional)</label>
+          <input type="url" id="post-media-input" class="form-input" placeholder="https://images.unsplash.com/...">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary trigger-close-modal">Cancel</button>
+          <button type="submit" class="btn-primary">
+            <i class="fa-solid fa-paper-plane"></i> Publish Post
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- IMAGE LIGHTBOX MODAL -->
+  <div class="lightbox-overlay" id="lightbox-modal" role="dialog" aria-modal="true">
+    <div class="lightbox-content">
+      <button class="lightbox-close-btn" id="close-lightbox" aria-label="Close Lightbox">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <img id="lightbox-img" class="lightbox-image" src="" alt="Media Preview">
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check toast-icon"></i>
+    <span id="toast-text">Action completed successfully</span>
+  </div>
+
+  <!-- MOBILE SLIDE-OUT DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <div class="brand-text">
+          <span class="brand-title">VICECITYHUB</span>
+        </div>
+        <button class="modal-close-btn" id="close-drawer" aria-label="Close Navigation">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <ul class="drawer-links">
+        <li>
+          <a href="#feed" class="drawer-link active">
+            <i class="fa-solid fa-house"></i> Feed
+          </a>
+        </li>
+        <li>
+          <a href="#news" class="drawer-link">
+            <i class="fa-solid fa-newspaper"></i> News
+          </a>
+        </li>
+        <li>
+          <a href="#map" class="drawer-link">
+            <i class="fa-solid fa-map-location-dot"></i> Map &amp; Guides
+          </a>
+        </li>
+        <li>
+          <a href="#crews" class="drawer-link">
+            <i class="fa-solid fa-users"></i> Crews
+          </a>
+        </li>
+        <li>
+          <a href="#clips" class="drawer-link">
+            <i class="fa-solid fa-film"></i> Clips
+          </a>
+        </li>
+      </ul>
+      <button class="btn-primary trigger-new-post" style="width: 100%; justify-content: center; margin-top: auto;">
+        <i class="fa-solid fa-plus"></i> New Post
+      </button>
+    </div>
+  </div>
+
+  <!-- MOBILE BOTTOM BAR -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <a href="#feed" class="mobile-nav-item active">
+      <i class="fa-solid fa-house"></i>
+      <span>Feed</span>
+    </a>
+    <a href="#map" class="mobile-nav-item">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Map</span>
+    </a>
+    <button class="mobile-nav-item highlight trigger-new-post" aria-label="Create New Post">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+    <a href="#crews" class="mobile-nav-item">
+      <i class="fa-solid fa-users"></i>
+      <span>Crews</span>
+    </a>
+    <a href="#clips" class="mobile-nav-item">
+      <i class="fa-solid fa-film"></i>
+      <span>Clips</span>
+    </a>
+  </nav>
+
+  <!-- MINIMALIST FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-icon" style="width: 32px; height: 32px; font-size: 0.95rem;">
+            <i class="fa-solid fa-gamepad"></i>
+          </div>
+          <span style="font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 0.5px;">VICECITYHUB.EU</span>
+        </div>
+
+        <ul class="footer-links">
+          <li><a href="#feed">Feed</a></li>
+          <li><a href="#rules">Guidelines</a></li>
+          <li><a href="#privacy">Privacy</a></li>
+          <li><a href="#terms">Terms</a></li>
+          <li><a href="https://discord.gg" target="_blank" rel="noopener noreferrer">Discord</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-disclaimer">
+        <p>
+          ViceCityHub.eu is an independent fan community website. Grand Theft Auto, GTA VI, Vice City, and related logos and trademarks are registered trademarks of Take-Two Interactive Software, Inc. and Rockstar Games. This website is not endorsed by, affiliated with, or sponsored by Rockstar Games or Take-Two Interactive.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>

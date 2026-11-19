@@ -1,0 +1,193 @@
+================================================================================
+           MODERN COMMUNITY HUB - GENERAL STYLE & ARCHITECTURE GUIDE
+             (Clean, Minimalist, Responsive, Zero-Emoji Design)
+================================================================================
+
+This guide provides a clean, flexible, and modern blueprint for building any 
+community website or gaming hub (such as a GTA 6 / Vice City community hub).
+
+It focuses on layout, component structure, usability, and styling rules without 
+locking you into rigid colors or overly complex specifications.
+
+You can paste Section 6 directly into another AI chat as the master prompt!
+
+--------------------------------------------------------------------------------
+TABLE OF CONTENTS
+--------------------------------------------------------------------------------
+1. GENERAL DESIGN PHILOSOPHY
+2. THE ZERO-EMOJI RULE & ICON SYSTEM
+3. FLEXIBLE THEME & COLOR PALETTE ARCHITECTURE
+4. KEY COMMUNITY HUB COMPONENTS (STRUCTURE & LAYOUT)
+5. RESPONSIVE & MOBILE-FIRST RULES
+6. READY-TO-USE MASTER PROMPT (COPY & PASTE INTO YOUR NEXT CHAT)
+
+================================================================================
+1. GENERAL DESIGN PHILOSOPHY
+================================================================================
+- Clean & Uncluttered: A modern community hub needs clear visual hierarchy so 
+  users can quickly scan headlines, discussion threads, and media without distraction.
+- Subtle Depth: Use soft 1px borders, subtle card backgrounds, and gentle drop 
+  shadows instead of heavy, loud boxes.
+- Smooth Feedback: Every button, link, and interactive card must have a slight 
+  hover effect (e.g., 0.15s - 0.2s transition, subtle color shift, or slight lift).
+- Generous Spacing: Give cards, posts, and text plenty of breathing room (padding 
+  and margins between 12px and 24px).
+
+================================================================================
+2. THE ZERO-EMOJI RULE & ICON SYSTEM
+================================================================================
+CRITICAL RULE:
+Do NOT use system emojis in website UI elements (buttons, navigation, badges, 
+or category filters). Emojis look amateurish and render inconsistently across 
+iOS, Android, Windows, and macOS.
+
+Instead, always use FontAwesome 6+ (free CDN) vector icons:
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+COMMON EXAMPLES FOR A COMMUNITY HUB:
+- Home / Feed:      <i class="fa-solid fa-house"></i>
+- News / Updates:   <i class="fa-solid fa-newspaper"></i>
+- Community / Clan: <i class="fa-solid fa-users"></i>
+- Gaming / Hub:     <i class="fa-solid fa-gamepad"></i>
+- Discussions:      <i class="fa-solid fa-comments"></i>
+- Media / Clips:    <i class="fa-solid fa-film"></i>
+- Map / Locations:  <i class="fa-solid fa-map-location-dot"></i>
+- Search:           <i class="fa-solid fa-magnifying-glass"></i>
+- Likes / Upvotes:  <i class="fa-solid fa-thumbs-up"></i> (or <i class="fa-solid fa-heart"></i>)
+- Comments count:   <i class="fa-regular fa-comment"></i>
+- Share:            <i class="fa-solid fa-share-nodes"></i>
+- Create / Add:     <i class="fa-solid fa-plus"></i>
+- Profile / User:   <i class="fa-solid fa-user"></i>
+- Settings:         <i class="fa-solid fa-gear"></i>
+- Pin / Featured:   <i class="fa-solid fa-thumbtack"></i>
+
+================================================================================
+3. FLEXIBLE THEME & COLOR PALETTE ARCHITECTURE
+================================================================================
+Use CSS variables at the root level so you can switch colors or accents instantly 
+(e.g., dark gaming theme with Vice City magenta/cyan accents, or sleek monochrome):
+
+```css
+:root {
+  /* Surface & Background (Clean Dark Mode) */
+  --bg-body: #0d1117;          /* Deep dark background */
+  --bg-surface: #161b22;       /* Post cards and container surfaces */
+  --bg-surface-hover: #1f242c; /* Card hover background */
+  --border-color: #30363d;     /* Crisp 1px border lines */
+
+  /* Text Hierarchy */
+  --text-main: #f0f6fc;        /* Primary titles and headings */
+  --text-muted: #8b949e;       /* Metadata, dates, and secondary labels */
+
+  /* Accent Color (Easy to customize for GTA 6 / Vice City vibes) */
+  --accent: #ff2a85;           /* Neon Pink / Magenta or #00d2ff Cyan */
+  --accent-hover: #e01e72;
+  --accent-glow: rgba(255, 42, 133, 0.25);
+
+  /* Status Colors */
+  --color-success: #238636;
+  --color-danger: #da3633;
+  --color-warning: #d29922;
+
+  /* Geometry */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+}
+```
+
+FONTS:
+Use clean, readable modern fonts from Google Fonts:
+- General body & UI: 'Inter' or 'Plus Jakarta Sans'
+- Headings (optional for gaming flair): 'Chakra Petch', 'Montserrat', or 'Teko'
+
+================================================================================
+4. KEY COMMUNITY HUB COMPONENTS (STRUCTURE & LAYOUT)
+================================================================================
+
+1. STICKY NAVBAR (HEADER)
+   - Height: ~64px, fixed or sticky at the top with a subtle backdrop blur.
+   - Left: Logo / Site Name (clean text + brand icon).
+   - Center (desktop): Main navigation links (Feed, News, Guides, Crews, Media).
+   - Right: Search input (or search button) + "New Post" button + User profile avatar/button.
+
+2. HERO / FEATURED BANNER (OPTIONAL)
+   - A clean top banner highlighting the latest big announcement (e.g., GTA 6 Trailer, 
+     Release Countdown, or Featured Community Event).
+   - Keeps users informed without taking over the whole screen.
+
+3. CATEGORY / FILTER CHIPS
+   - A horizontal row of scrollable pill buttons:
+     [All] [Official News] [Leaks & Rumors] [Gameplay & Map] [Clans & Crews] [Screenshots]
+   - Active state has the accent background; inactive state has a soft border and muted text.
+
+4. COMMUNITY POST CARDS (THE FEED)
+   - Post Header: Author avatar (circle), author username, badge (e.g., "Crew Leader", "Mod"), 
+     and timestamp ("2h ago").
+   - Post Body: Bold title, readable description snippet, optional media (image/video preview).
+   - Post Footer: Interaction bar with pill buttons for Upvotes/Likes, Comments count, and Share.
+   - Clean hover effect: subtle border brightening or 2px lift.
+
+5. SIDEBAR WIDGETS (DESKTOP)
+   - Right-side column (width ~300px-340px) containing:
+     - Community Rules / Welcome Card
+     - Trending Topics / Tags
+     - Active Members / Online Counter
+     - Quick Links / Discord Invite Button
+
+6. MODALS & POPUPS
+   - "Create Post" modal: Simple clean text area, title input, tag selector, file attachment button.
+   - Image lightbox: Dark overlay, centered full-resolution image, close button (X).
+
+7. FOOTER
+   - Simple, unobtrusive 2-column or 3-column footer with disclaimer (e.g., "Unofficial Fan Community"), 
+     privacy policy, terms, and community links.
+
+================================================================================
+5. RESPONSIVE & MOBILE-FIRST RULES
+================================================================================
+- Mobile Viewport: Everything should comfortably fit small screens (360px - 420px width).
+- Touch Targets: Buttons and clickable chips must have at least 44px height for easy tapping.
+- Mobile Navigation: Collapse the desktop navbar into a slide-out drawer or a sleek bottom 
+  tab bar (Home, Search, Create Post, Notifications, Profile).
+- Font Sizing: Form inputs must have at least 16px font-size to prevent iOS Safari from 
+  forcibly zooming in when tapping fields.
+- Modals on Mobile: Automatically expand modals to full-screen or bottom-sheet for a native app feel.
+
+================================================================================
+6. READY-TO-USE MASTER PROMPT (COPY & PASTE INTO YOUR NEXT CHAT)
+================================================================================
+Copy the block below and paste it directly into your new chat for the GTA 6 Community Hub:
+
+"""
+Act as a senior front-end web developer and UI designer. 
+I want you to build a modern, sleek, and high-performance Community Hub website for GTA 6 (Vice City theme).
+
+Follow these core design and architectural rules:
+
+1. AESTHETIC & THEME:
+   - Modern gaming community look (clean dark theme: deep slate/black background #0d1117, surface cards #161b22, crisp 1px borders #30363d).
+   - Accent colors inspired by Vice City vibes (vibrant neon pink/magenta #ff2a85 and optional electric cyan #00d2ff).
+   - Clean, modern typography using Google Fonts ('Plus Jakarta Sans' or 'Inter' for UI, clean bold headings).
+
+2. ZERO EMOJIS:
+   - Absolutely NO Unicode emojis in UI buttons, headings, navigation, or badges.
+   - Use FontAwesome 6+ vector icons (<i class="fa-solid fa-..."></i>) for all iconography (home, gamepad, newspaper, comments, users, thumbs-up, plus, etc.).
+
+3. KEY PAGES & COMPONENTS:
+   - Sticky Top Navbar with Logo, Search bar, navigation links (Feed, News, Map & Guides, Crews, Clips), and a "New Post" button.
+   - Hero / Announcement Banner for major updates (e.g. countdown or latest trailer).
+   - Horizontal scrollable filter chips (All, Discussions, Official News, Leaks & Map, Clips, Crews).
+   - Community Feed layout: interactive post cards with author avatar, username, badge, time, post title, text/image preview, and like/comment/share action buttons.
+   - Desktop sidebar with Trending Discussions, Server/Online status, and Community Discord link.
+   - "Create Post" modal popup.
+   - Minimalist footer with disclaimer.
+
+4. RESPONSIVENESS & USABILITY:
+   - 100% mobile-friendly with responsive grid/flexbox.
+   - Touch targets at least 44px high.
+   - Smooth CSS hover transitions (0.2s ease).
+   - Clean, modular code (HTML, CSS variables, vanilla JS) without unnecessary bloated libraries.
+"""
+================================================================================
