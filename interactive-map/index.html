@@ -26,6 +26,7 @@
       --accent-purple: #c084fc;
       --accent-green: #10b981;
       --accent-red: #ef4444;
+      --accent-orange: #f97316;
       --text-main: #f0f6fc;
       --text-muted: #8b949e;
       --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -73,18 +74,19 @@
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       text-decoration: none;
-      color: var(--text-main);
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
     }
 
-    .brand-logo-icon {
-      color: var(--accent-pink);
-      font-size: 18px;
+    .header-logo-img {
+      height: 32px;
+      width: auto;
+      display: block;
+      transition: opacity 0.2s ease;
+    }
+
+    .header-logo-img:hover {
+      opacity: 0.85;
     }
 
     /* SEARCH BAR */
@@ -137,7 +139,7 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      max-height: 280px;
+      max-height: 300px;
       overflow-y: auto;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
       display: none;
@@ -215,63 +217,13 @@
       border-color: #e02374;
     }
 
-    /* FILTER BAR */
-    .filter-bar {
-      height: 44px;
-      background: #11151c;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0 12px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      z-index: 999;
-      flex-shrink: 0;
-    }
-
-    .filter-bar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .filter-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 14px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      font-size: 11.5px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-
-    .filter-chip:hover {
-      color: var(--text-main);
-      border-color: #484f58;
-    }
-
-    .filter-chip.active {
+    .map-btn-active {
       background: var(--bg-elevated);
-      color: var(--text-main);
       border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
     }
 
-    .filter-chip.active[data-cat="stripclub"] { border-color: var(--accent-pink); color: var(--accent-pink); }
-    .filter-chip.active[data-cat="nightlife"] { border-color: var(--accent-purple); color: var(--accent-purple); }
-    .filter-chip.active[data-cat="weapons"] { border-color: var(--accent-red); color: var(--accent-red); }
-    .filter-chip.active[data-cat="police"] { border-color: #3b82f6; color: #60a5fa; }
-    .filter-chip.active[data-cat="hospital"] { border-color: var(--accent-green); color: var(--accent-green); }
-    .filter-chip.active[data-cat="safehouse"] { border-color: var(--accent-gold); color: var(--accent-gold); }
-    .filter-chip.active[data-cat="easteregg"] { border-color: #ec4899; color: #f472b6; }
-
-    /* MAP CONTAINER WITH PALM BACKGROUND */
+    /* MAP CONTAINER */
     .map-viewport-wrapper {
       position: relative;
       flex: 1;
@@ -300,13 +252,14 @@
       position: absolute;
       top: 14px;
       right: 14px;
-      z-index: 1000;
+      z-index: 900;
       pointer-events: none;
       display: flex;
       align-items: center;
       justify-content: center;
       background: rgba(13, 17, 23, 0.65);
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       padding: 6px 12px;
@@ -320,26 +273,200 @@
       filter: drop-shadow(0 2px 8px rgba(255, 42, 133, 0.35));
     }
 
-    /* LEAFLET ZOOM BAR */
-    .leaflet-bar {
-      border: 1px solid var(--border-color) !important;
-      border-radius: 6px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+    /* SIDEBAR (GLASSMORPHISM WITH PALMS BACKGROUND) */
+    .map-sidebar {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      bottom: 14px;
+      width: 290px;
+      max-width: calc(100vw - 28px);
+      background-color: rgba(13, 17, 23, 0.86);
+      background-image: linear-gradient(rgba(13, 17, 23, 0.88), rgba(13, 17, 23, 0.94)), url('images/map-bg.webp');
+      background-size: cover;
+      background-position: center;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .leaflet-bar a {
-      background-color: var(--bg-surface) !important;
-      color: var(--text-main) !important;
-      border-bottom: 1px solid var(--border-color) !important;
-      width: 34px !important;
-      height: 34px !important;
-      line-height: 34px !important;
+    .map-sidebar.collapsed {
+      transform: translateX(-320px);
     }
 
-    .leaflet-bar a:hover {
-      background-color: var(--bg-elevated) !important;
-      color: var(--accent-pink) !important;
+    .sidebar-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .sidebar-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 15px;
+      padding: 4px;
+      transition: color 0.15s ease;
+    }
+
+    .sidebar-close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .sidebar-tools-row {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 11px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .sidebar-tool-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent-cyan);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 4px;
+      transition: opacity 0.15s ease;
+    }
+
+    .sidebar-tool-btn:hover {
+      opacity: 0.8;
+    }
+
+    .sidebar-categories-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .sidebar-categories-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-categories-list::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 2px;
+    }
+
+    .sidebar-cat-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: rgba(22, 27, 34, 0.6);
+      border: 1px solid rgba(48, 54, 61, 0.5);
+      color: var(--text-main);
+      font-size: 12.5px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-cat-item:hover {
+      background: rgba(33, 38, 45, 0.8);
+      border-color: #484f58;
+    }
+
+    .sidebar-cat-item.active {
+      background: rgba(255, 42, 133, 0.12);
+      border-color: var(--accent-pink);
+    }
+
+    .cat-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cat-icon-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .cat-label {
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .cat-count {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    /* MARKER SYMBOLS */
+    .symbol-marker-pin {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      font-size: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .symbol-marker-pin:hover {
+      transform: scale(1.35);
+      z-index: 10000 !important;
+    }
+
+    .symbol-marker-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .symbol-marker-dot:hover {
+      transform: scale(1.5);
     }
 
     /* POPUP STYLING */
@@ -360,7 +487,7 @@
     .leaflet-popup-content {
       margin: 14px !important;
       line-height: 1.4 !important;
-      min-width: 200px;
+      min-width: 220px;
     }
 
     .popup-badge {
@@ -442,9 +569,10 @@
     .map-hud-bar {
       position: absolute;
       bottom: 14px;
-      left: 14px;
+      right: 14px;
       background: rgba(22, 27, 34, 0.88);
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       border-radius: 6px;
       padding: 6px 12px;
@@ -454,7 +582,7 @@
       font-size: 12px;
       font-family: monospace;
       color: var(--text-muted);
-      z-index: 1000;
+      z-index: 900;
       pointer-events: none;
     }
 
@@ -472,7 +600,8 @@
     .toast-notice {
       position: absolute;
       bottom: 20px;
-      right: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       background: var(--bg-surface);
       border: 1px solid var(--accent-cyan);
       color: var(--text-main);
@@ -487,11 +616,12 @@
 
     /* MOBILE ADJUSTMENTS */
     @media (max-width: 768px) {
-      .search-wrapper { max-width: 180px; }
+      .search-wrapper { max-width: 170px; }
       .btn-text-desktop { display: none; }
       .map-vi-logo { top: 8px; right: 8px; padding: 4px 8px; }
       .map-vi-logo img { height: 26px; }
-      .map-hud-bar { bottom: 8px; left: 8px; font-size: 10px; padding: 4px 8px; gap: 8px; }
+      .map-sidebar { top: 8px; left: 8px; bottom: 8px; width: 260px; }
+      .map-hud-bar { bottom: 8px; right: 8px; font-size: 10px; padding: 4px 8px; gap: 8px; }
     }
   </style>
 </head>
@@ -502,8 +632,7 @@
     <!-- TOP HEADER -->
     <header class="map-header">
       <a href="../map.html" class="brand-section" title="Return to ViceCityHub">
-        <i class="fa-solid fa-map-location-dot brand-logo-icon"></i>
-        <span>VICECITYHUB</span>
+        <img src="images/logo.webp" alt="ViceCityHub" class="header-logo-img">
       </a>
 
       <!-- SEARCH BAR -->
@@ -517,6 +646,10 @@
 
       <!-- HEADER ACTIONS -->
       <div class="header-actions">
+        <button id="btn-toggle-sidebar" class="map-btn map-btn-active" title="Toggle Filters Sidebar">
+          <i class="fa-solid fa-filter"></i>
+          <span class="btn-text-desktop">Filters</span>
+        </button>
         <button id="btn-reset-view" class="map-btn" title="Center on Vice City">
           <i class="fa-solid fa-crosshairs"></i>
           <span class="btn-text-desktop">Vice City</span>
@@ -531,53 +664,7 @@
       </div>
     </header>
 
-    <!-- HORIZONTAL FILTER BAR -->
-    <nav class="filter-bar" aria-label="Category Filters">
-      <button class="filter-chip active" data-cat="all">
-        <i class="fa-solid fa-layer-group"></i> All Landmarks
-      </button>
-      <button class="filter-chip" data-cat="stripclub">
-        <i class="fa-solid fa-venus"></i> Strip Clubs
-      </button>
-      <button class="filter-chip" data-cat="nightlife">
-        <i class="fa-solid fa-martini-glass"></i> Nightclubs &amp; Bars
-      </button>
-      <button class="filter-chip" data-cat="easteregg">
-        <i class="fa-solid fa-skull"></i> Easter Eggs &amp; Pop Culture
-      </button>
-      <button class="filter-chip" data-cat="weapons">
-        <i class="fa-solid fa-gun"></i> Weapons
-      </button>
-      <button class="filter-chip" data-cat="safehouse">
-        <i class="fa-solid fa-house-chimney"></i> Safehouses
-      </button>
-      <button class="filter-chip" data-cat="police">
-        <i class="fa-solid fa-shield-halved"></i> Police
-      </button>
-      <button class="filter-chip" data-cat="hospital">
-        <i class="fa-solid fa-truck-medical"></i> Hospitals
-      </button>
-      <button class="filter-chip" data-cat="gas">
-        <i class="fa-solid fa-gas-pump"></i> Gas &amp; Mod Shops
-      </button>
-      <button class="filter-chip" data-cat="hotel">
-        <i class="fa-solid fa-hotel"></i> Hotels &amp; Motels
-      </button>
-      <button class="filter-chip" data-cat="shops">
-        <i class="fa-solid fa-bag-shopping"></i> Shops &amp; Retail
-      </button>
-      <button class="filter-chip" data-cat="food">
-        <i class="fa-solid fa-utensils"></i> Diners &amp; Food
-      </button>
-      <button class="filter-chip" data-cat="transport">
-        <i class="fa-solid fa-plane-departure"></i> Airports &amp; Transit
-      </button>
-      <button class="filter-chip" data-cat="enterable">
-        <i class="fa-solid fa-door-open"></i> Enterable Interiors
-      </button>
-    </nav>
-
-    <!-- MAP VIEWPORT WITH FLOATING GTA VI LOGO -->
+    <!-- MAP VIEWPORT -->
     <div class="map-viewport-wrapper">
       <div id="map"></div>
 
@@ -586,13 +673,39 @@
         <img src="images/vi-logo.webp" alt="GTA VI Logo">
       </div>
 
-      <!-- HUD BAR -->
+      <!-- SIDEBAR FILTERS (SEMI-TRANSPARENT WITH PALMS BACKGROUND) -->
+      <aside class="map-sidebar" id="map-sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-title">
+            <i class="fa-solid fa-layer-group" style="color: var(--accent-pink);"></i>
+            <span>Landmark Filters</span>
+          </div>
+          <button class="sidebar-close-btn" id="btn-close-sidebar" aria-label="Close Sidebar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="sidebar-tools-row">
+          <span>Active: <strong id="sidebar-active-label" style="color: var(--text-main);">All Key Places</strong></span>
+          <div>
+            <button class="sidebar-tool-btn" id="btn-filter-all">Show All</button>
+            <span style="opacity: 0.3;">|</span>
+            <button class="sidebar-tool-btn" id="btn-filter-reset">Reset</button>
+          </div>
+        </div>
+
+        <div class="sidebar-categories-list" id="sidebar-categories-list">
+          <!-- Dynamic category list populated by script -->
+        </div>
+      </aside>
+
+      <!-- HUD BAR (COORDINATES & VISIBLE COUNT) -->
       <div class="map-hud-bar">
         <div class="hud-coords">
           COORDS: <span id="hud-coords-text">X: 0.0  |  Y: 0.0</span>
         </div>
         <div class="hud-visible-count">
-          LANDMARKS: <span id="hud-count-text">0</span>
+          SPOTS: <span id="hud-count-text">0</span>
         </div>
       </div>
 
@@ -610,22 +723,22 @@
     (function() {
       'use strict';
 
-      // CATEGORY CONFIGURATION
+      // AUTHENTIC CATEGORY CONFIGURATION (Exact mappings from GTADB Leonida dataset)
       const CAT_CONFIG = {
-        stripclub: { label: 'Strip Club', color: '#ff2a85', icon: 'fa-venus', priority: 1, radius: 8 },
-        nightlife: { label: 'Nightclub / Bar', color: '#c084fc', icon: 'fa-martini-glass', priority: 1, radius: 8 },
-        weapons: { label: 'Weapons / Ammu-Nation', color: '#ef4444', icon: 'fa-gun', priority: 1, radius: 8 },
-        safehouse: { label: 'Safehouse', color: '#fbbf24', icon: 'fa-house-chimney', priority: 1, radius: 8 },
-        police: { label: 'Police Station / Jail', color: '#3b82f6', icon: 'fa-shield-halved', priority: 1, radius: 8 },
-        hospital: { label: 'Hospital / Medical', color: '#10b981', icon: 'fa-truck-medical', priority: 1, radius: 8 },
-        gas: { label: 'Gas / Mod Shop', color: '#f97316', icon: 'fa-gas-pump', priority: 2, radius: 7 },
-        easteregg: { label: 'Easter Egg / Movie Ref', color: '#ec4899', icon: 'fa-skull', priority: 1, radius: 8 },
-        hotel: { label: 'Hotel & Resort', color: '#00d2ff', icon: 'fa-hotel', priority: 2, radius: 7 },
-        shops: { label: 'Retail & Store', color: '#38bdf8', icon: 'fa-bag-shopping', priority: 3, radius: 6 },
-        food: { label: 'Restaurant & Diner', color: '#fb923c', icon: 'fa-utensils', priority: 3, radius: 6 },
-        transport: { label: 'Airport & Transit', color: '#14b8a6', icon: 'fa-plane-departure', priority: 2, radius: 7 },
-        enterable: { label: 'Enterable Interior', color: '#818cf8', icon: 'fa-door-open', priority: 4, radius: 5 },
-        general: { label: 'Identified Landmark', color: '#94a3b8', icon: 'fa-location-dot', priority: 5, radius: 5 }
+        stripclub: { label: 'Strip Clubs', color: '#ff2a85', icon: 'fa-venus', priority: 1 },
+        nightlife: { label: 'Nightclubs & Bars', color: '#c084fc', icon: 'fa-martini-glass', priority: 1 },
+        weapons: { label: 'Weapons & Ammu-Nation', color: '#ef4444', icon: 'fa-gun', priority: 1 },
+        safehouse: { label: 'Safehouses', color: '#fbbf24', icon: 'fa-house-chimney', priority: 1 },
+        police: { label: 'Police Stations & Prisons', color: '#3b82f6', icon: 'fa-shield-halved', priority: 1 },
+        hospital: { label: 'Hospitals & Medical', color: '#10b981', icon: 'fa-truck-medical', priority: 1 },
+        gas: { label: 'Gas Stations & Mod Shops', color: '#f97316', icon: 'fa-gas-pump', priority: 1 },
+        easteregg: { label: 'Easter Eggs & Film References', color: '#ec4899', icon: 'fa-skull', priority: 1 },
+        hotel: { label: 'Hotels & Motels', color: '#00d2ff', icon: 'fa-hotel', priority: 1 },
+        food: { label: 'Diners & Restaurants', color: '#fb923c', icon: 'fa-utensils', priority: 1 },
+        shops: { label: 'Retail & Supermarkets', color: '#38bdf8', icon: 'fa-bag-shopping', priority: 1 },
+        transport: { label: 'Airports & Transit', color: '#14b8a6', icon: 'fa-plane-departure', priority: 2 },
+        enterable: { label: 'Enterable Interiors', color: '#818cf8', icon: 'fa-door-open', priority: 2 },
+        general: { label: 'Other Mapped Buildings', color: '#94a3b8', icon: 'fa-city', priority: 3 }
       };
 
       // 1. INITIALIZE LEAFLET MAP
@@ -639,18 +752,17 @@
         zoomSnap: 0.25,
         zoomDelta: 0.5,
         attributionControl: false,
-        preferCanvas: true,
         maxBounds: [[-1000, -1000], [MAP_SIZE + 1000, MAP_SIZE + 1000]],
         maxBoundsViscosity: 0.8
       });
 
-      // Add high-resolution basemap overlay
+      // Basemap overlay
       const basemap = L.imageOverlay('images/basemap.webp', bounds, {
         interactive: false,
         alt: 'Leonida Basemap'
       }).addTo(map);
 
-      // Default view: Center on Vice City (approx X: 8200, Y: 5400)
+      // Default view: Center on Vice City
       function centerViceCity() {
         map.setView([5400, 8200], -0.25);
       }
@@ -694,10 +806,36 @@
         }
       };
 
-      // 4. LOAD & RENDER LANDMARKS
+      // 4. LOAD & RENDER LANDMARKS WITH SYMBOLS
       let allLandmarks = window.LEONIDA_LANDMARKS || [];
-      let activeCategory = 'all';
+      // Active categories set: by default, show all priority 1 & 2 categories (key places)
+      let activeCategories = new Set([
+        'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
+        'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
+      ]);
+
       const markersLayer = L.layerGroup().addTo(map);
+
+      function createSymbolIcon(item) {
+        const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
+        if (item.cat === 'general') {
+          return L.divIcon({
+            className: 'custom-symbol-icon',
+            html: `<div class="symbol-marker-dot" style="background: ${conf.color};"></div>`,
+            iconSize: [10, 10],
+            iconAnchor: [5, 5],
+            popupAnchor: [0, -6]
+          });
+        }
+
+        return L.divIcon({
+          className: 'custom-symbol-icon',
+          html: `<div class="symbol-marker-pin" style="background: ${conf.color};" title="${escapeHtml(item.name)}"><i class="fa-solid ${conf.icon}"></i></div>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14],
+          popupAnchor: [0, -16]
+        });
+      }
 
       function buildPopupContent(item) {
         const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
@@ -734,26 +872,15 @@
       function renderMarkers() {
         markersLayer.clearLayers();
 
-        const filtered = allLandmarks.filter(item => {
-          if (activeCategory === 'all') return true;
-          return item.cat === activeCategory;
-        });
+        const filtered = allLandmarks.filter(item => activeCategories.has(item.cat));
 
         filtered.forEach(item => {
           const lat = MAP_SIZE - item.py;
           const lng = item.px;
-          const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
 
-          const isSelectedCat = activeCategory !== 'all';
-          const radius = isSelectedCat ? (conf.radius + 2) : conf.radius;
-
-          const marker = L.circleMarker([lat, lng], {
-            radius: radius,
-            fillColor: conf.color,
-            color: '#ffffff',
-            weight: isSelectedCat ? 2 : 1.5,
-            opacity: 0.95,
-            fillOpacity: 0.9
+          const marker = L.marker([lat, lng], {
+            icon: createSymbolIcon(item),
+            title: item.name
           });
 
           marker.bindPopup(buildPopupContent(item));
@@ -762,44 +889,138 @@
         });
 
         if (hudCount) {
-          hudCount.textContent = filtered.length + ' / ' + allLandmarks.length;
+          hudCount.textContent = filtered.length;
         }
       }
 
-      // If landmarks weren't loaded synchronously, fetch from JSON
-      if (allLandmarks.length === 0) {
-        fetch('data/landmarks.json')
-          .then(res => res.json())
-          .then(data => {
-            allLandmarks = data;
+      // 5. BUILD SIDEBAR CATEGORY LIST
+      function buildSidebar() {
+        const listEl = document.getElementById('sidebar-categories-list');
+        if (!listEl) return;
+
+        // Count per category
+        const counts = {};
+        allLandmarks.forEach(l => {
+          counts[l.cat] = (counts[l.cat] || 0) + 1;
+        });
+
+        const catKeys = Object.keys(CAT_CONFIG);
+        listEl.innerHTML = catKeys.map(cat => {
+          const conf = CAT_CONFIG[cat];
+          const count = counts[cat] || 0;
+          const isActive = activeCategories.has(cat);
+
+          return `
+            <div class="sidebar-cat-item ${isActive ? 'active' : ''}" data-cat="${cat}">
+              <div class="cat-item-left">
+                <div class="cat-icon-badge" style="background: ${conf.color};">
+                  <i class="fa-solid ${conf.icon}"></i>
+                </div>
+                <span class="cat-label">${conf.label}</span>
+              </div>
+              <span class="cat-count">${count}</span>
+            </div>
+          `;
+        }).join('');
+
+        // Attach click listeners to sidebar items
+        listEl.querySelectorAll('.sidebar-cat-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            const cat = this.getAttribute('data-cat');
+            // If alt key or click to isolate
+            if (activeCategories.size === 1 && activeCategories.has(cat)) {
+              // Reset to all key places
+              activeCategories = new Set([
+                'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
+                'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
+              ]);
+            } else {
+              // Isolate this category
+              activeCategories = new Set([cat]);
+              // Zoom to fit this category's points
+              const matches = allLandmarks.filter(l => l.cat === cat);
+              if (matches.length > 0) {
+                const boundsList = matches.map(m => [MAP_SIZE - m.py, m.px]);
+                map.flyToBounds(boundsList, { maxZoom: 1.5, padding: [60, 60], duration: 1 });
+              }
+            }
+            updateSidebarActiveStates();
             renderMarkers();
-          })
-          .catch(err => {
-            console.error('Failed to load landmarks:', err);
           });
-      } else {
-        renderMarkers();
+        });
       }
 
-      // 5. FILTER CHIP INTERACTIONS
-      const filterChips = document.querySelectorAll('.filter-chip');
-      filterChips.forEach(chip => {
-        chip.addEventListener('click', function() {
-          filterChips.forEach(c => c.classList.remove('active'));
-          this.classList.add('active');
-          activeCategory = this.getAttribute('data-cat');
-          renderMarkers();
-
-          // If a specific category was clicked, zoom to fit those markers
-          if (activeCategory !== 'all') {
-            const catMatches = allLandmarks.filter(l => l.cat === activeCategory);
-            if (catMatches.length > 0) {
-              const boundsList = catMatches.map(m => [MAP_SIZE - m.py, m.px]);
-              map.flyToBounds(boundsList, { maxZoom: 1.5, padding: [60, 60], duration: 1 });
-            }
+      function updateSidebarActiveStates() {
+        const listEl = document.getElementById('sidebar-categories-list');
+        if (!listEl) return;
+        listEl.querySelectorAll('.sidebar-cat-item').forEach(item => {
+          const cat = item.getAttribute('data-cat');
+          if (activeCategories.has(cat)) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
           }
         });
-      });
+
+        const label = document.getElementById('sidebar-active-label');
+        if (label) {
+          if (activeCategories.size === Object.keys(CAT_CONFIG).length) {
+            label.textContent = 'Everything (' + allLandmarks.length + ')';
+          } else if (activeCategories.size === 1) {
+            const single = Array.from(activeCategories)[0];
+            label.textContent = (CAT_CONFIG[single] || {}).label || single;
+          } else {
+            label.textContent = 'All Key Places (' + markersLayer.getLayers().length + ')';
+          }
+        }
+      }
+
+      // Sidebar tool buttons
+      const btnFilterAll = document.getElementById('btn-filter-all');
+      if (btnFilterAll) {
+        btnFilterAll.addEventListener('click', function() {
+          activeCategories = new Set(Object.keys(CAT_CONFIG));
+          updateSidebarActiveStates();
+          renderMarkers();
+        });
+      }
+
+      const btnFilterReset = document.getElementById('btn-filter-reset');
+      if (btnFilterReset) {
+        btnFilterReset.addEventListener('click', function() {
+          activeCategories = new Set([
+            'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
+            'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
+          ]);
+          updateSidebarActiveStates();
+          renderMarkers();
+          centerViceCity();
+        });
+      }
+
+      // Sidebar Toggle
+      const sidebarEl = document.getElementById('map-sidebar');
+      const toggleSidebarBtn = document.getElementById('btn-toggle-sidebar');
+      const closeSidebarBtn = document.getElementById('btn-close-sidebar');
+
+      function toggleSidebar() {
+        if (!sidebarEl) return;
+        const isCollapsed = sidebarEl.classList.toggle('collapsed');
+        if (toggleSidebarBtn) {
+          if (isCollapsed) {
+            toggleSidebarBtn.classList.remove('map-btn-active');
+          } else {
+            toggleSidebarBtn.classList.add('map-btn-active');
+          }
+        }
+      }
+
+      if (toggleSidebarBtn) toggleSidebarBtn.addEventListener('click', toggleSidebar);
+      if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+
+      // Initial build & render
+      buildSidebar();
+      renderMarkers();
 
       // 6. REAL-TIME SEARCH AUTOCOMPLETE
       const searchInput = document.getElementById('map-search-input');
@@ -851,6 +1072,14 @@
           if (target) {
             searchDropdown.classList.remove('open');
             searchInput.value = target.name;
+
+            // Make sure target's category is active
+            if (!activeCategories.has(target.cat)) {
+              activeCategories.add(target.cat);
+              updateSidebarActiveStates();
+              renderMarkers();
+            }
+
             const lat = MAP_SIZE - target.py;
             const lng = target.px;
             map.flyTo([lat, lng], 1.25, { duration: 1.2 });
