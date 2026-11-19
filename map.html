@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leonida Interactive Map &bull; ViceCityHub.eu</title>
-  <meta name="description" content="Interactive map of Leonida and Vice City for Grand Theft Auto VI. Discover easter eggs, shops, strip clubs, and secrets.">
+  <title>State of Leonida Interactive Map &bull; ViceCityHub.eu</title>
+  <meta name="description" content="Explore the interactive map of Leonida and Vice City for Grand Theft Auto VI. Complete with identified landmarks, in-game photos, and coordinate navigation.">
   <meta name="theme-color" content="#0d1117">
 
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
@@ -15,7 +15,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -56,54 +55,64 @@
           <i class="fa-solid fa-map-location-dot" style="color: var(--accent-cyan);"></i> State of Leonida Interactive Map
         </h1>
         <p class="page-desc">
-          Drag, zoom, and explore points of interest across Vice City, Grassrivers, and Port Gellhorn.
+          High-resolution map of Vice City and Leonida. Drag, zoom, and click landmarks to view coordinates and in-game photo comparisons.
         </p>
       </div>
-      <a href="mailto:info@vicecityhub.eu?subject=New%20Map%20Location%20Submission" class="btn-secondary">
-        <i class="fa-solid fa-envelope"></i> Submit Spot (info@vicecityhub.eu)
-      </a>
-    </div>
-
-    <!-- Map & POI Controls -->
-    <div class="map-interactive-container">
-      <div class="map-controls-bar">
-        <div class="map-poi-pills">
-          <button class="poi-pill active" data-poi="all">
-            <i class="fa-solid fa-layer-group"></i> All Markers
-          </button>
-          <button class="poi-pill" data-poi="easter">
-            <i class="fa-solid fa-skull"></i> Easter Eggs
-          </button>
-          <button class="poi-pill" data-poi="nightlife">
-            <i class="fa-solid fa-champagne-glasses"></i> Strip Clubs &amp; Nightlife
-          </button>
-          <button class="poi-pill" data-poi="shops">
-            <i class="fa-solid fa-cart-shopping"></i> Stores &amp; Ammu-Nation
-          </button>
-          <button class="poi-pill" data-poi="secrets">
-            <i class="fa-solid fa-crosshairs"></i> Secrets &amp; Garages
-          </button>
-          <button class="poi-pill" data-poi="airstrips">
-            <i class="fa-solid fa-plane"></i> Airstrips &amp; Helipads
-          </button>
-        </div>
-      </div>
-
-      <!-- Leaflet Map Container -->
-      <div class="map-viewport-frame">
-        <div id="leonida-leaflet-map"></div>
-      </div>
-
-      <!-- Submission Callout -->
-      <div class="map-submit-callout">
-        <div>
-          <strong>Found an Easter Egg, secret weapon, or hidden location?</strong>
-          <span> Send coordinates or screenshots to <strong>info@vicecityhub.eu</strong> and our moderators will verify and add it.</span>
-        </div>
-        <a href="mailto:info@vicecityhub.eu?subject=Map%20Coordinate%20Submission">
-          <i class="fa-solid fa-paper-plane"></i> Send via Email
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button id="toggle-map-fullscreen" class="map-fullscreen-btn">
+          <i class="fa-solid fa-expand"></i> Fullscreen
+        </button>
+        <a href="interactive-map/index.html" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Standalone Map
+        </a>
+        <a href="mailto:info@vicecityhub.eu?subject=New%20Landmark%20Submission" class="btn-secondary">
+          <i class="fa-solid fa-envelope"></i> Submit Spot
         </a>
       </div>
+    </div>
+
+    <!-- Embedded Interactive Map Frame -->
+    <div style="margin-bottom: 20px;">
+      <iframe id="leonida-map-frame" src="interactive-map/index.html" class="interactive-map-frame" title="GTA VI Leonida Interactive Map" allowfullscreen></iframe>
+    </div>
+
+    <!-- Features Overview Grid -->
+    <div class="map-features-grid">
+      <div class="map-feature-item">
+        <h3 class="map-feature-title">
+          <i class="fa-solid fa-compass" style="color: var(--accent-pink);"></i> Full Slippy Tiles
+        </h3>
+        <p class="map-feature-desc">Pan, drag, and multi-level zoom across Ocean Drive, Vice Beach, and Grassrivers.</p>
+      </div>
+      <div class="map-feature-item">
+        <h3 class="map-feature-title">
+          <i class="fa-solid fa-location-dot" style="color: var(--accent-cyan);"></i> 400+ Landmarks
+        </h3>
+        <p class="map-feature-desc">All identified buildings and points from GTA VI trailers with real-life matching addresses.</p>
+      </div>
+      <div class="map-feature-item">
+        <h3 class="map-feature-title">
+          <i class="fa-solid fa-camera" style="color: #9333ea;"></i> Photo Comparisons
+        </h3>
+        <p class="map-feature-desc">Click any landmark to view side-by-side in-game capture and real-world Miami reference photos.</p>
+      </div>
+      <div class="map-feature-item">
+        <h3 class="map-feature-title">
+          <i class="fa-solid fa-magnifying-glass" style="color: #eab308;"></i> In-Map Search
+        </h3>
+        <p class="map-feature-desc">Search by building name, category (hotel, residential, commercial, transport) or coordinates.</p>
+      </div>
+    </div>
+
+    <!-- Submission Notice -->
+    <div class="map-submit-callout" style="margin-top: 20px;">
+      <div>
+        <strong>Discovered a new easter egg, shop, or secret location?</strong>
+        <span> Email coordinates and screenshots to <strong>info@vicecityhub.eu</strong>. Our admins will verify and add it to the landmark database.</span>
+      </div>
+      <a href="mailto:info@vicecityhub.eu?subject=New%20Landmark%20Submission">
+        <i class="fa-solid fa-paper-plane"></i> Email info@vicecityhub.eu
+      </a>
     </div>
   </main>
 
@@ -210,7 +219,26 @@
     </div>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
   <script src="assets/js/app.js"></script>
+  <script>
+    // Fullscreen Toggle
+    const fsBtn = document.getElementById('toggle-map-fullscreen');
+    const mapFrame = document.getElementById('leonida-map-frame');
+    if (fsBtn && mapFrame) {
+      fsBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          if (mapFrame.requestFullscreen) {
+            mapFrame.requestFullscreen();
+          } else if (mapFrame.webkitRequestFullscreen) {
+            mapFrame.webkitRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
