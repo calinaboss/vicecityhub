@@ -126,8 +126,20 @@ img {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  justify-content: center;
+  gap: 20px;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-color);
+  opacity: 0.8;
+  margin: 0 4px;
+}
+
+.mobile-brand-title {
+  display: none;
 }
 
 /* Left Navigation */
@@ -1404,6 +1416,21 @@ img {
 @media (max-width: 768px) {
   .site-header {
     height: 58px;
+  }
+
+  .header-container {
+    justify-content: space-between;
+  }
+
+  .nav-divider {
+    display: none;
+  }
+
+  .mobile-brand-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
   }
 
   .header-nav-left, .header-nav-right .nav-auth-link {
