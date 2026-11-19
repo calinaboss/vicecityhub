@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="leaflet/leaflet.css">
 
@@ -42,7 +42,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: var(--bg-dark);
+      background: transparent;
       color: var(--text-main);
       font-family: var(--font-main);
       -webkit-font-smoothing: antialiased;
@@ -55,17 +55,18 @@
       width: 100%;
       height: 100%;
       position: relative;
+      background: transparent;
     }
 
     /* TOP HEADER */
     .map-header {
-      height: 56px;
+      height: 52px;
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 14px;
       gap: 12px;
       z-index: 1000;
       flex-shrink: 0;
@@ -74,12 +75,11 @@
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 10px;
       text-decoration: none;
     }
 
     .header-logo-img {
-      height: 32px;
+      height: 30px;
       width: auto;
       display: block;
       transition: opacity 0.2s ease;
@@ -93,7 +93,7 @@
     .search-wrapper {
       position: relative;
       flex: 1;
-      max-width: 440px;
+      max-width: 420px;
     }
 
     .search-input-box {
@@ -103,7 +103,7 @@
       border: 1px solid var(--border-color);
       border-radius: 6px;
       padding: 0 12px;
-      height: 36px;
+      height: 34px;
       gap: 8px;
       transition: border-color 0.15s ease;
     }
@@ -133,13 +133,13 @@
 
     .search-dropdown {
       position: absolute;
-      top: 42px;
+      top: 40px;
       left: 0;
       right: 0;
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      max-height: 300px;
+      max-height: 280px;
       overflow-y: auto;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
       display: none;
@@ -151,7 +151,7 @@
     }
 
     .search-result-item {
-      padding: 10px 14px;
+      padding: 9px 12px;
       border-bottom: 1px solid #21262d;
       cursor: pointer;
       display: flex;
@@ -165,7 +165,7 @@
     }
 
     .search-result-title {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--text-main);
     }
@@ -193,7 +193,7 @@
       font-size: 12px;
       font-weight: 600;
       padding: 0 12px;
-      height: 34px;
+      height: 32px;
       border-radius: 6px;
       cursor: pointer;
       text-decoration: none;
@@ -206,40 +206,150 @@
       background: var(--bg-elevated);
     }
 
-    .map-btn-primary {
-      background: var(--accent-pink);
-      border-color: var(--accent-pink);
-      color: #ffffff;
-    }
-
-    .map-btn-primary:hover {
-      background: #e02374;
-      border-color: #e02374;
-    }
-
     .map-btn-active {
       background: var(--bg-elevated);
       border-color: var(--accent-cyan);
       color: var(--accent-cyan);
     }
 
-    /* MAP CONTAINER */
-    .map-viewport-wrapper {
-      position: relative;
+    /* MAP BODY (FLEX LAYOUT WITH CLEAN SIDEBAR) */
+    .map-body {
+      display: flex;
       flex: 1;
       width: 100%;
       height: 100%;
+      position: relative;
       overflow: hidden;
+      background: transparent;
+    }
+
+    /* CLEAN MODERN SIDEBAR (NON-SLOP, WHATSCR STYLE) */
+    .map-sidebar {
+      width: 250px;
+      background: rgba(13, 17, 23, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 500;
+      transition: width 0.2s ease, margin-left 0.2s ease;
+    }
+
+    .map-sidebar.collapsed {
+      margin-left: -250px;
+    }
+
+    .sidebar-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .sidebar-head-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .sidebar-reset-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent-cyan);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .sidebar-reset-btn:hover {
+      text-decoration: underline;
+    }
+
+    .sidebar-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar-list::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 2px;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border-color: #21262d;
+    }
+
+    .sidebar-item.active {
+      background: rgba(255, 42, 133, 0.1);
+      color: var(--text-main);
+      border-color: rgba(255, 42, 133, 0.35);
+      font-weight: 600;
+    }
+
+    .item-icon-box {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #ffffff;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+
+    .item-count {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text-muted);
+    }
+
+    /* MAP CANVAS */
+    .map-canvas-wrapper {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: transparent;
     }
 
     #map {
       width: 100%;
       height: 100%;
-      background-color: #0d1117;
-      background-image: linear-gradient(rgba(13, 17, 23, 0.72), rgba(13, 17, 23, 0.82)), url('images/map-bg.webp');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background: transparent !important;
     }
 
     .leaflet-container {
@@ -247,191 +357,26 @@
       font-family: var(--font-main) !important;
     }
 
-    /* GTA VI FLOATING WATERMARK LOGO TOP RIGHT */
-    .map-vi-logo {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      z-index: 900;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(13, 17, 23, 0.65);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 6px 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-    }
-
-    .map-vi-logo img {
-      height: 38px;
-      width: auto;
-      display: block;
-      filter: drop-shadow(0 2px 8px rgba(255, 42, 133, 0.35));
-    }
-
-    /* SIDEBAR (GLASSMORPHISM WITH PALMS BACKGROUND) */
-    .map-sidebar {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      bottom: 14px;
-      width: 290px;
-      max-width: calc(100vw - 28px);
-      background-color: rgba(13, 17, 23, 0.86);
-      background-image: linear-gradient(rgba(13, 17, 23, 0.88), rgba(13, 17, 23, 0.94)), url('images/map-bg.webp');
-      background-size: cover;
-      background-position: center;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
+    /* LEAFLET ZOOM BAR */
+    .leaflet-bar {
+      border: 1px solid var(--border-color) !important;
+      border-radius: 6px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
       overflow: hidden;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75);
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .map-sidebar.collapsed {
-      transform: translateX(-320px);
+    .leaflet-bar a {
+      background-color: var(--bg-surface) !important;
+      color: var(--text-main) !important;
+      border-bottom: 1px solid var(--border-color) !important;
+      width: 32px !important;
+      height: 32px !important;
+      line-height: 32px !important;
     }
 
-    .sidebar-header {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
-
-    .sidebar-title {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sidebar-close-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 15px;
-      padding: 4px;
-      transition: color 0.15s ease;
-    }
-
-    .sidebar-close-btn:hover {
-      color: var(--text-main);
-    }
-
-    .sidebar-tools-row {
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 11px;
-      color: var(--text-muted);
-      flex-shrink: 0;
-    }
-
-    .sidebar-tool-btn {
-      background: transparent;
-      border: none;
-      color: var(--accent-cyan);
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 2px 4px;
-      transition: opacity 0.15s ease;
-    }
-
-    .sidebar-tool-btn:hover {
-      opacity: 0.8;
-    }
-
-    .sidebar-categories-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .sidebar-categories-list::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .sidebar-categories-list::-webkit-scrollbar-thumb {
-      background: var(--border-color);
-      border-radius: 2px;
-    }
-
-    .sidebar-cat-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      border-radius: 6px;
-      background: rgba(22, 27, 34, 0.6);
-      border: 1px solid rgba(48, 54, 61, 0.5);
-      color: var(--text-main);
-      font-size: 12.5px;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.15s ease;
-    }
-
-    .sidebar-cat-item:hover {
-      background: rgba(33, 38, 45, 0.8);
-      border-color: #484f58;
-    }
-
-    .sidebar-cat-item.active {
-      background: rgba(255, 42, 133, 0.12);
-      border-color: var(--accent-pink);
-    }
-
-    .cat-item-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .cat-icon-badge {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      color: #ffffff;
-      flex-shrink: 0;
-    }
-
-    .cat-label {
-      font-weight: 600;
-      font-size: 12px;
-    }
-
-    .cat-count {
-      font-size: 11px;
-      font-family: monospace;
-      color: var(--text-muted);
-      background: rgba(0, 0, 0, 0.4);
-      padding: 2px 6px;
-      border-radius: 10px;
+    .leaflet-bar a:hover {
+      background-color: var(--bg-elevated) !important;
+      color: var(--accent-pink) !important;
     }
 
     /* MARKER SYMBOLS */
@@ -439,13 +384,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       border: 2px solid #ffffff;
       color: #ffffff;
-      font-size: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+      font-size: 11px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.8);
       cursor: pointer;
       transition: transform 0.15s ease;
     }
@@ -456,11 +401,11 @@
     }
 
     .symbol-marker-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      border: 1.5px solid #ffffff;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+      border: 1px solid #ffffff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
       cursor: pointer;
       transition: transform 0.15s ease;
     }
@@ -487,7 +432,7 @@
     .leaflet-popup-content {
       margin: 14px !important;
       line-height: 1.4 !important;
-      min-width: 220px;
+      min-width: 210px;
     }
 
     .popup-badge {
@@ -504,7 +449,7 @@
     }
 
     .popup-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--text-main);
       margin-bottom: 6px;
@@ -515,7 +460,7 @@
       flex-direction: column;
       gap: 2px;
       margin-bottom: 8px;
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
     }
 
@@ -530,11 +475,11 @@
       background: var(--bg-dark);
       border: 1px solid var(--border-color);
       border-radius: 4px;
-      padding: 6px 10px;
+      padding: 5px 8px;
       font-family: monospace;
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--accent-cyan);
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .copy-btn {
@@ -542,8 +487,8 @@
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 13px;
-      padding: 2px 4px;
+      font-size: 12px;
+      padding: 2px;
       transition: color 0.15s ease;
     }
 
@@ -551,38 +496,24 @@
       color: var(--text-main);
     }
 
-    .popup-submit-link {
-      display: block;
-      margin-top: 10px;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-decoration: none;
-      border-top: 1px solid var(--border-color);
-      padding-top: 8px;
-    }
-
-    .popup-submit-link:hover {
-      color: var(--accent-pink);
-    }
-
     /* HUD BOTTOM BAR */
     .map-hud-bar {
       position: absolute;
-      bottom: 14px;
-      right: 14px;
+      bottom: 12px;
+      right: 12px;
       background: rgba(22, 27, 34, 0.88);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 6px 12px;
+      padding: 5px 10px;
       display: flex;
       align-items: center;
-      gap: 14px;
-      font-size: 12px;
+      gap: 12px;
+      font-size: 11.5px;
       font-family: monospace;
       color: var(--text-muted);
-      z-index: 900;
+      z-index: 400;
       pointer-events: none;
     }
 
@@ -616,12 +547,15 @@
 
     /* MOBILE ADJUSTMENTS */
     @media (max-width: 768px) {
-      .search-wrapper { max-width: 170px; }
-      .btn-text-desktop { display: none; }
-      .map-vi-logo { top: 8px; right: 8px; padding: 4px 8px; }
-      .map-vi-logo img { height: 26px; }
-      .map-sidebar { top: 8px; left: 8px; bottom: 8px; width: 260px; }
-      .map-hud-bar { bottom: 8px; right: 8px; font-size: 10px; padding: 4px 8px; gap: 8px; }
+      .map-sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 220px;
+      }
+      .search-wrapper { max-width: 180px; }
+      .map-hud-bar { bottom: 8px; right: 8px; font-size: 10px; padding: 4px 8px; }
     }
   </style>
 </head>
@@ -648,69 +582,46 @@
       <div class="header-actions">
         <button id="btn-toggle-sidebar" class="map-btn map-btn-active" title="Toggle Filters Sidebar">
           <i class="fa-solid fa-filter"></i>
-          <span class="btn-text-desktop">Filters</span>
-        </button>
-        <button id="btn-reset-view" class="map-btn" title="Center on Vice City">
-          <i class="fa-solid fa-crosshairs"></i>
-          <span class="btn-text-desktop">Vice City</span>
+          <span>Filters</span>
         </button>
         <button id="btn-toggle-fullscreen" class="map-btn" title="Toggle Fullscreen">
           <i class="fa-solid fa-expand"></i>
         </button>
-        <a href="mailto:info@vicecityhub.eu?subject=New%20Landmark%20Submission" class="map-btn map-btn-primary">
-          <i class="fa-solid fa-plus"></i>
-          <span class="btn-text-desktop">Submit Spot</span>
-        </a>
       </div>
     </header>
 
-    <!-- MAP VIEWPORT -->
-    <div class="map-viewport-wrapper">
-      <div id="map"></div>
+    <!-- MAP BODY: SIDEBAR + CANVAS -->
+    <div class="map-body">
 
-      <!-- FLOATING GTA VI LOGO (TOP RIGHT OF MAP) -->
-      <div class="map-vi-logo" title="Grand Theft Auto VI">
-        <img src="images/vi-logo.webp" alt="GTA VI Logo">
-      </div>
-
-      <!-- SIDEBAR FILTERS (SEMI-TRANSPARENT WITH PALMS BACKGROUND) -->
+      <!-- CLEAN LATERAL SIDEBAR -->
       <aside class="map-sidebar" id="map-sidebar">
-        <div class="sidebar-header">
-          <div class="sidebar-title">
-            <i class="fa-solid fa-layer-group" style="color: var(--accent-pink);"></i>
-            <span>Landmark Filters</span>
-          </div>
-          <button class="sidebar-close-btn" id="btn-close-sidebar" aria-label="Close Sidebar">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+        <div class="sidebar-head">
+          <span class="sidebar-head-title">Categories</span>
+          <button class="sidebar-reset-btn" id="btn-filter-reset">Show All</button>
         </div>
-
-        <div class="sidebar-tools-row">
-          <span>Active: <strong id="sidebar-active-label" style="color: var(--text-main);">All Key Places</strong></span>
-          <div>
-            <button class="sidebar-tool-btn" id="btn-filter-all">Show All</button>
-            <span style="opacity: 0.3;">|</span>
-            <button class="sidebar-tool-btn" id="btn-filter-reset">Reset</button>
-          </div>
-        </div>
-
-        <div class="sidebar-categories-list" id="sidebar-categories-list">
-          <!-- Dynamic category list populated by script -->
+        <div class="sidebar-list" id="sidebar-categories-list">
+          <!-- Populated by script -->
         </div>
       </aside>
 
-      <!-- HUD BAR (COORDINATES & VISIBLE COUNT) -->
-      <div class="map-hud-bar">
-        <div class="hud-coords">
-          COORDS: <span id="hud-coords-text">X: 0.0  |  Y: 0.0</span>
+      <!-- CANVAS -->
+      <div class="map-canvas-wrapper">
+        <div id="map"></div>
+
+        <!-- HUD BAR -->
+        <div class="map-hud-bar">
+          <div class="hud-coords">
+            COORDS: <span id="hud-coords-text">X: 0.0  |  Y: 0.0</span>
+          </div>
+          <div class="hud-visible-count">
+            SPOTS: <span id="hud-count-text">0</span>
+          </div>
         </div>
-        <div class="hud-visible-count">
-          SPOTS: <span id="hud-count-text">0</span>
-        </div>
+
+        <!-- TOAST NOTICE -->
+        <div id="map-toast" class="toast-notice"></div>
       </div>
 
-      <!-- TOAST NOTICE -->
-      <div id="map-toast" class="toast-notice"></div>
     </div>
 
   </div>
@@ -723,16 +634,16 @@
     (function() {
       'use strict';
 
-      // AUTHENTIC CATEGORY CONFIGURATION (Exact mappings from GTADB Leonida dataset)
+      // AUTHENTIC CATEGORY CONFIGURATION (From GTADB dataset)
       const CAT_CONFIG = {
         stripclub: { label: 'Strip Clubs', color: '#ff2a85', icon: 'fa-venus', priority: 1 },
         nightlife: { label: 'Nightclubs & Bars', color: '#c084fc', icon: 'fa-martini-glass', priority: 1 },
-        weapons: { label: 'Weapons & Ammu-Nation', color: '#ef4444', icon: 'fa-gun', priority: 1 },
+        weapons: { label: 'Weapons & Ammunition', color: '#ef4444', icon: 'fa-gun', priority: 1 },
         safehouse: { label: 'Safehouses', color: '#fbbf24', icon: 'fa-house-chimney', priority: 1 },
-        police: { label: 'Police Stations & Prisons', color: '#3b82f6', icon: 'fa-shield-halved', priority: 1 },
+        police: { label: 'Police & Prisons', color: '#3b82f6', icon: 'fa-shield-halved', priority: 1 },
         hospital: { label: 'Hospitals & Medical', color: '#10b981', icon: 'fa-truck-medical', priority: 1 },
-        gas: { label: 'Gas Stations & Mod Shops', color: '#f97316', icon: 'fa-gas-pump', priority: 1 },
-        easteregg: { label: 'Easter Eggs & Film References', color: '#ec4899', icon: 'fa-skull', priority: 1 },
+        gas: { label: 'Gas Stations & Mods', color: '#f97316', icon: 'fa-gas-pump', priority: 1 },
+        easteregg: { label: 'Easter Eggs & Cinema', color: '#ec4899', icon: 'fa-skull', priority: 1 },
         hotel: { label: 'Hotels & Motels', color: '#00d2ff', icon: 'fa-hotel', priority: 1 },
         food: { label: 'Diners & Restaurants', color: '#fb923c', icon: 'fa-utensils', priority: 1 },
         shops: { label: 'Retail & Supermarkets', color: '#38bdf8', icon: 'fa-bag-shopping', priority: 1 },
@@ -743,30 +654,29 @@
 
       // 1. INITIALIZE LEAFLET MAP
       const MAP_SIZE = 10000;
-      const bounds = [[0, 0], [MAP_SIZE, MAP_SIZE]];
+      const fullBounds = [[0, 0], [MAP_SIZE, MAP_SIZE]];
+      // Clamped island boundaries: prevents scrolling into the black void
+      const islandBounds = [[1000, 2200], [8800, 9900]];
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
-        minZoom: -2,
-        maxZoom: 3,
-        zoomSnap: 0.25,
-        zoomDelta: 0.5,
+        minZoom: -1.2,
+        maxZoom: 2.5,
+        zoomSnap: 0.2,
+        zoomDelta: 0.4,
         attributionControl: false,
-        maxBounds: [[-1000, -1000], [MAP_SIZE + 1000, MAP_SIZE + 1000]],
-        maxBoundsViscosity: 0.8
+        maxBounds: islandBounds,
+        maxBoundsViscosity: 1.0
       });
 
       // Basemap overlay
-      const basemap = L.imageOverlay('images/basemap.webp', bounds, {
+      const basemap = L.imageOverlay('images/basemap.webp', fullBounds, {
         interactive: false,
         alt: 'Leonida Basemap'
       }).addTo(map);
 
-      // Default view: Center on Vice City
-      function centerViceCity() {
-        map.setView([5400, 8200], -0.25);
-      }
-      centerViceCity();
+      // Initial view: Fits entire State of Leonida into frame cleanly!
+      map.fitBounds([[1400, 2400], [8600, 9800]], { padding: [15, 15] });
 
       // 2. HUD COORDINATES
       const hudCoords = document.getElementById('hud-coords-text');
@@ -775,7 +685,6 @@
       map.on('mousemove', function(e) {
         const px = e.latlng.lng;
         const py = MAP_SIZE - e.latlng.lat;
-        // Transform pixel to game world coordinates:
         const wx = ((px * 4) - 32000) / 2;
         const wy = ((py * 4) - 24000) / -2;
         if (hudCoords) {
@@ -808,7 +717,7 @@
 
       // 4. LOAD & RENDER LANDMARKS WITH SYMBOLS
       let allLandmarks = window.LEONIDA_LANDMARKS || [];
-      // Active categories set: by default, show all priority 1 & 2 categories (key places)
+      // Active categories: by default all key places
       let activeCategories = new Set([
         'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
         'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
@@ -822,18 +731,18 @@
           return L.divIcon({
             className: 'custom-symbol-icon',
             html: `<div class="symbol-marker-dot" style="background: ${conf.color};"></div>`,
-            iconSize: [10, 10],
-            iconAnchor: [5, 5],
-            popupAnchor: [0, -6]
+            iconSize: [8, 8],
+            iconAnchor: [4, 4],
+            popupAnchor: [0, -5]
           });
         }
 
         return L.divIcon({
           className: 'custom-symbol-icon',
           html: `<div class="symbol-marker-pin" style="background: ${conf.color};" title="${escapeHtml(item.name)}"><i class="fa-solid ${conf.icon}"></i></div>`,
-          iconSize: [28, 28],
-          iconAnchor: [14, 14],
-          popupAnchor: [0, -16]
+          iconSize: [26, 26],
+          iconAnchor: [13, 13],
+          popupAnchor: [0, -15]
         });
       }
 
@@ -853,9 +762,6 @@
                 <i class="fa-regular fa-copy"></i>
               </button>
             </div>
-            <a href="mailto:info@vicecityhub.eu?subject=Update%20Spot%20${encodeURIComponent(item.id)}" class="popup-submit-link">
-              <i class="fa-solid fa-pen-to-square"></i> Submit correction / info to info@vicecityhub.eu
-            </a>
           </div>
         `;
       }
@@ -893,12 +799,11 @@
         }
       }
 
-      // 5. BUILD SIDEBAR CATEGORY LIST
+      // 5. BUILD CLEAN SIDEBAR
       function buildSidebar() {
         const listEl = document.getElementById('sidebar-categories-list');
         if (!listEl) return;
 
-        // Count per category
         const counts = {};
         allLandmarks.forEach(l => {
           counts[l.cat] = (counts[l.cat] || 0) + 1;
@@ -911,23 +816,21 @@
           const isActive = activeCategories.has(cat);
 
           return `
-            <div class="sidebar-cat-item ${isActive ? 'active' : ''}" data-cat="${cat}">
-              <div class="cat-item-left">
-                <div class="cat-icon-badge" style="background: ${conf.color};">
+            <div class="sidebar-item ${isActive ? 'active' : ''}" data-cat="${cat}">
+              <div style="display: flex; align-items: center;">
+                <div class="item-icon-box" style="background: ${conf.color};">
                   <i class="fa-solid ${conf.icon}"></i>
                 </div>
-                <span class="cat-label">${conf.label}</span>
+                <span>${conf.label}</span>
               </div>
-              <span class="cat-count">${count}</span>
+              <span class="item-count">${count}</span>
             </div>
           `;
         }).join('');
 
-        // Attach click listeners to sidebar items
-        listEl.querySelectorAll('.sidebar-cat-item').forEach(item => {
-          item.addEventListener('click', function(e) {
+        listEl.querySelectorAll('.sidebar-item').forEach(item => {
+          item.addEventListener('click', function() {
             const cat = this.getAttribute('data-cat');
-            // If alt key or click to isolate
             if (activeCategories.size === 1 && activeCategories.has(cat)) {
               // Reset to all key places
               activeCategories = new Set([
@@ -935,13 +838,11 @@
                 'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
               ]);
             } else {
-              // Isolate this category
               activeCategories = new Set([cat]);
-              // Zoom to fit this category's points
               const matches = allLandmarks.filter(l => l.cat === cat);
               if (matches.length > 0) {
                 const boundsList = matches.map(m => [MAP_SIZE - m.py, m.px]);
-                map.flyToBounds(boundsList, { maxZoom: 1.5, padding: [60, 60], duration: 1 });
+                map.flyToBounds(boundsList, { maxZoom: 1.5, padding: [40, 40], duration: 1 });
               }
             }
             updateSidebarActiveStates();
@@ -953,35 +854,13 @@
       function updateSidebarActiveStates() {
         const listEl = document.getElementById('sidebar-categories-list');
         if (!listEl) return;
-        listEl.querySelectorAll('.sidebar-cat-item').forEach(item => {
+        listEl.querySelectorAll('.sidebar-item').forEach(item => {
           const cat = item.getAttribute('data-cat');
           if (activeCategories.has(cat)) {
             item.classList.add('active');
           } else {
             item.classList.remove('active');
           }
-        });
-
-        const label = document.getElementById('sidebar-active-label');
-        if (label) {
-          if (activeCategories.size === Object.keys(CAT_CONFIG).length) {
-            label.textContent = 'Everything (' + allLandmarks.length + ')';
-          } else if (activeCategories.size === 1) {
-            const single = Array.from(activeCategories)[0];
-            label.textContent = (CAT_CONFIG[single] || {}).label || single;
-          } else {
-            label.textContent = 'All Key Places (' + markersLayer.getLayers().length + ')';
-          }
-        }
-      }
-
-      // Sidebar tool buttons
-      const btnFilterAll = document.getElementById('btn-filter-all');
-      if (btnFilterAll) {
-        btnFilterAll.addEventListener('click', function() {
-          activeCategories = new Set(Object.keys(CAT_CONFIG));
-          updateSidebarActiveStates();
-          renderMarkers();
         });
       }
 
@@ -994,31 +873,26 @@
           ]);
           updateSidebarActiveStates();
           renderMarkers();
-          centerViceCity();
+          map.fitBounds([[1400, 2400], [8600, 9800]], { padding: [15, 15] });
         });
       }
 
       // Sidebar Toggle
       const sidebarEl = document.getElementById('map-sidebar');
       const toggleSidebarBtn = document.getElementById('btn-toggle-sidebar');
-      const closeSidebarBtn = document.getElementById('btn-close-sidebar');
 
-      function toggleSidebar() {
-        if (!sidebarEl) return;
-        const isCollapsed = sidebarEl.classList.toggle('collapsed');
-        if (toggleSidebarBtn) {
+      if (toggleSidebarBtn && sidebarEl) {
+        toggleSidebarBtn.addEventListener('click', function() {
+          const isCollapsed = sidebarEl.classList.toggle('collapsed');
           if (isCollapsed) {
             toggleSidebarBtn.classList.remove('map-btn-active');
           } else {
             toggleSidebarBtn.classList.add('map-btn-active');
           }
-        }
+          setTimeout(() => map.invalidateSize(), 220);
+        });
       }
 
-      if (toggleSidebarBtn) toggleSidebarBtn.addEventListener('click', toggleSidebar);
-      if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
-
-      // Initial build & render
       buildSidebar();
       renderMarkers();
 
@@ -1073,7 +947,6 @@
             searchDropdown.classList.remove('open');
             searchInput.value = target.name;
 
-            // Make sure target's category is active
             if (!activeCategories.has(target.cat)) {
               activeCategories.add(target.cat);
               updateSidebarActiveStates();
@@ -1102,11 +975,6 @@
       }
 
       // 7. CONTROLS
-      const resetBtn = document.getElementById('btn-reset-view');
-      if (resetBtn) {
-        resetBtn.addEventListener('click', centerViceCity);
-      }
-
       const fsBtn = document.getElementById('btn-toggle-fullscreen');
       if (fsBtn) {
         fsBtn.addEventListener('click', function() {

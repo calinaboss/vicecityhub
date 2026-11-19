@@ -49,42 +49,31 @@
 
   <!-- MAIN -->
   <main class="site-main">
-    <div class="page-header-strip">
-      <div>
-        <h1 class="page-title">
-          <i class="fa-solid fa-map-location-dot" style="color: var(--accent-cyan);"></i> State of Leonida Interactive Map
-        </h1>
-        <p class="page-desc">
-          High-resolution map of Vice City and Leonida. Drag, zoom, and click landmarks to view coordinates and in-game photo comparisons.
-        </p>
-      </div>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+    <div style="text-align: center; padding: 32px 0 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 24px;">
+      <h1 style="font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; color: var(--text-main);">
+        State of Leonida Interactive Map
+      </h1>
+      <p style="font-size: 14px; color: var(--text-muted); max-width: 620px; margin: 0 auto 16px; line-height: 1.5;">
+        High-resolution map of Vice City and Leonida. Drag, zoom, and click landmarks to view coordinates and trailer evidence.
+      </p>
+      <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
         <button id="toggle-map-fullscreen" class="map-fullscreen-btn">
           <i class="fa-solid fa-expand"></i> Fullscreen
         </button>
         <a href="interactive-map/index.html" target="_blank" rel="noopener noreferrer" class="btn-secondary">
           <i class="fa-solid fa-arrow-up-right-from-square"></i> Standalone Map
         </a>
-        <a href="mailto:info@vicecityhub.eu?subject=New%20Landmark%20Submission" class="btn-secondary">
-          <i class="fa-solid fa-envelope"></i> Submit Spot
-        </a>
       </div>
     </div>
 
     <!-- Embedded Interactive Map Frame -->
-    <div style="margin-bottom: 20px;">
+    <div style="margin-bottom: 16px;">
       <iframe id="leonida-map-frame" src="interactive-map/index.html" class="interactive-map-frame" title="GTA VI Leonida Interactive Map" allowfullscreen></iframe>
     </div>
 
-    <!-- Submission Notice -->
-    <div class="map-submit-callout" style="margin-top: 20px;">
-      <div>
-        <strong>Discovered a new easter egg, shop, or secret location?</strong>
-        <span> Email coordinates and screenshots to <strong>info@vicecityhub.eu</strong>. Our admins will verify and add it to the landmark database.</span>
-      </div>
-      <a href="mailto:info@vicecityhub.eu?subject=New%20Landmark%20Submission">
-        <i class="fa-solid fa-paper-plane"></i> Email info@vicecityhub.eu
-      </a>
+    <!-- Submission Notice (Flat, Clean) -->
+    <div style="text-align: center; padding: 12px 16px; font-size: 13px; color: var(--text-muted);">
+      Discovered a new easter egg, shop, or secret location? Send coordinates to <a href="mailto:info@vicecityhub.eu" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600;">info@vicecityhub.eu</a> &bull; Verified by admins.
     </div>
   </main>
 
