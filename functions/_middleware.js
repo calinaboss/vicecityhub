@@ -26,12 +26,15 @@ export async function onRequest(context) {
     });
   }
 
-  // OWASP CSRF / Cross-Origin Mutation Guard on state-changing requests
-  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method) && origin && !isAllowedOrigin) {
-    return new Response(JSON.stringify({ error: 'Forbidden cross-origin request' }), {
-      status: 403,
-      headers: { 'Content-Type': 'application/json; charset=utf-8' }
-    });
+  // OWASP CSRF / Cross-Origin Mutation Guard on state-changing requests (Origin + Sec-Fetch-Site)
+  const secFetchSite = request.headers.get('Sec-Fetch-Site') || '';
+  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
+    if ((origin && !isAllowedOrigin) || (secFetchSite === 'cross-site' && !isAllowedOrigin)) {
+      return new Response(JSON.stringify({ error: 'Forbidden cross-origin request' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json; charset=utf-8' }
+      });
+    }
   }
 
   if (request.method === 'OPTIONS') {

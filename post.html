@@ -7,6 +7,26 @@
   <meta name="description" content="Publish a new GTA VI community discussion, map coordinate discovery, or news topic on ViceCityHub.eu.">
   <meta name="theme-color" content="#0d1117">
 
+  <!-- Open Graph / Social Share Image -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Create New Community Post &bull; ViceCityHub.eu">
+  <meta property="og:description" content="Share your Vice City discoveries, map coordinates, and gameplay discussions with the GTA VI community.">
+  <meta property="og:url" content="https://vicecityhub.eu/post.html">
+  <meta property="og:image" content="https://vicecityhub.eu/assets/brand/logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- BreadcrumbList JSON-LD Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://vicecityhub.eu/" },
+      { "@type": "ListItem", "position": 2, "name": "Create New Post", "item": "https://vicecityhub.eu/post.html" }
+    ]
+  }
+  </script>
+
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/favicon-192x192.png">
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
@@ -16,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=2.7">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.8">
 </head>
 <body>
 
@@ -47,6 +67,11 @@
 
   <!-- MAIN DEDICATED POSTING PAGE -->
   <main class="site-main">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <span class="breadcrumb-sep">/</span>
+      <span aria-current="page">Create New Post</span>
+    </nav>
     <div class="page-header-strip">
       <div>
         <h1 class="page-title">
@@ -282,6 +307,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/app.js?v=2.7"></script>
+  <script src="assets/js/app.js?v=2.8"></script>
 </body>
 </html>

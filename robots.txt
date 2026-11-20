@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /thank-you.html
+Disallow: /404.html
+
 Sitemap: https://vicecityhub.eu/sitemap.xml
