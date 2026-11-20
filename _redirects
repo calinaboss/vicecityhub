@@ -1,2 +1,4 @@
 # Cloudflare Pages Redirects
-/home   /   301
+/home       /                           301
+/map        https://map.vicecityhub.eu  302
+/map.html   https://map.vicecityhub.eu  302
