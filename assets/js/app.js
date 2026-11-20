@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="author-username">${escapeHtml(post.author)}</span>
                 ${badgeHtml}
               </div>
-              <span class="post-timestamp">${escapeHtml(post.time)} &bull; @${escapeHtml(post.username)}</span>
+              <span class="post-timestamp">${escapeHtml(formatTimeAgo(post.time))} &bull; @${escapeHtml(post.username)}</span>
             </div>
           </a>
           <span class="post-category-tag">${escapeHtml(post.categoryLabel)}</span>
@@ -248,6 +248,41 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
+  function formatIsoWithTimezone(val) {
+    if (!val || typeof val !== 'string') return new Date().toISOString();
+    let str = val.trim();
+    if (str === 'Recently' || str === 'Just now') return new Date().toISOString();
+    if (str.includes(' ') && !str.includes('T')) {
+      str = str.replace(' ', 'T');
+    }
+    if (/Z$|[+-]\d{2}:\d{2}$/.test(str)) {
+      return str;
+    }
+    const d = new Date(str.endsWith('Z') ? str : (str + 'Z'));
+    if (!isNaN(d.getTime())) {
+      return d.toISOString();
+    }
+    return str + 'Z';
+  }
+
+  function formatTimeAgo(timeStr) {
+    if (!timeStr) return 'Recently';
+    if (timeStr === 'Recently' || timeStr === 'Just now') return timeStr;
+    try {
+      const norm = timeStr.includes('T') ? (timeStr.endsWith('Z') ? timeStr : timeStr + 'Z') : (timeStr.replace(' ', 'T') + 'Z');
+      const d = new Date(norm);
+      if (isNaN(d.getTime())) return timeStr;
+      const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+      if (diff < 60) return 'Just now';
+      if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+      if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    } catch (e) {
+      return timeStr;
+    }
+  }
+
   function injectDynamicPostsSchema(items) {
     if (!Array.isArray(items) || items.length === 0) return;
     let tag = document.getElementById('dynamic-posts-jsonld');
@@ -271,7 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
           headline: p.title,
           articleBody: p.text,
           articleSection: p.categoryLabel || p.category || 'GTA VI Discussions',
-          datePublished: (p.time && p.time.length >= 10 && p.time !== 'Recently' && p.time !== 'Just now') ? p.time : new Date().toISOString().slice(0, 10),
+          datePublished: formatIsoWithTimezone(p.time || p.created_at),
+          dateModified: formatIsoWithTimezone(p.time || p.created_at),
           author: {
             '@type': 'Person',
             name: p.author || p.username || 'ViceCityHub Member',

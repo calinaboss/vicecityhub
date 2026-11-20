@@ -40,6 +40,14 @@ function sanitizeAuthorName(rawName, authUser) {
   return clean;
 }
 
+function formatIsoTime(val) {
+  if (!val) return new Date().toISOString();
+  let str = String(val).trim();
+  if (str.includes(' ') && !str.includes('T')) str = str.replace(' ', 'T');
+  if (/Z$|[+-]\d{2}:\d{2}$/.test(str)) return str;
+  return str + 'Z';
+}
+
 export async function onRequest(context) {
   const { request, env } = context;
   const ip = getClientIp(request);
@@ -89,7 +97,7 @@ export async function onRequest(context) {
         commentsByPost[c.post_id].push({
           id: c.id,
           author: c.author,
-          time: c.created_at || 'Recently',
+          time: formatIsoTime(c.created_at),
           text: c.text
         });
       }
@@ -99,7 +107,7 @@ export async function onRequest(context) {
         pinned: Number(p.pinned) === 1,
         likes: Number(p.likes) || 0,
         bookmarks: Number(p.bookmarks) || 0,
-        time: p.created_at || 'Recently',
+        time: formatIsoTime(p.created_at),
         comments: commentsByPost[p.id] || []
       }));
 
