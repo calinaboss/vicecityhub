@@ -351,7 +351,7 @@ img {
    CENTERED HERO SECTION (WHATSR-STYLE CENTERED LOGO + SEARCH)
    ========================================================================== */
 .hero-center-section {
-  padding: 38px 20px 24px;
+  padding: 12px 20px 14px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -362,21 +362,21 @@ img {
 }
 
 .hero-center-logo {
-  height: 86px;
+  height: 80px;
   width: auto;
-  max-width: 350px;
+  max-width: 340px;
   object-fit: contain;
-  margin: 0 auto 10px;
+  margin: 0 auto 6px;
   display: block;
 }
 
 .hero-subtitle {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
 }
 
 .hero-search-wrapper {
@@ -388,7 +388,9 @@ img {
 .search-box {
   display: flex;
   align-items: center;
-  background: var(--bg-surface);
+  background: rgba(22, 27, 34, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-pill);
   padding: 4px 6px 4px 18px;
@@ -408,7 +410,7 @@ img {
 
 .search-input {
   flex: 1;
-  height: 40px;
+  height: 38px;
   color: var(--text-main);
   font-size: 0.95rem;
 }
@@ -418,7 +420,7 @@ img {
 }
 
 .search-submit-btn {
-  height: 38px;
+  height: 36px;
   padding: 0 18px;
   border-radius: var(--radius-pill);
   background: var(--bg-surface-elevated);
@@ -442,7 +444,7 @@ img {
   max-width: var(--container-max);
   width: 100%;
   margin: 0 auto;
-  padding: 24px 20px 60px;
+  padding: 8px 20px 28px;
 }
 
 /* Filter Bar */
@@ -450,9 +452,9 @@ img {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 14px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
   scrollbar-width: none;
 }
 .filter-bar::-webkit-scrollbar {
@@ -460,10 +462,12 @@ img {
 }
 
 .filter-chip {
-  height: 38px;
+  height: 36px;
   padding: 0 16px;
   border-radius: var(--radius-pill);
-  background: var(--bg-surface);
+  background: rgba(22, 27, 34, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--border-color);
   color: var(--text-muted);
   font-size: 0.84rem;
@@ -473,7 +477,7 @@ img {
   gap: 7px;
   white-space: nowrap;
   flex-shrink: 0;
-  min-height: 44px;
+  min-height: 38px;
 }
 
 .filter-chip:hover {
@@ -491,18 +495,42 @@ img {
 .content-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 32px;
+  gap: 28px;
   align-items: start;
 }
 
 /* ==========================================================================
-   FEED POSTS (CLEAN, FLAT, NO HEAVY BOXES)
+   FEED POSTS (INDEPENDENT SCROLL CONTAINER - PAGE STAYS STILL)
    ========================================================================== */
 .feed-container {
   display: flex;
   flex-direction: column;
   gap: 0;
   border-top: none;
+  max-height: calc(100vh - 280px);
+  min-height: 380px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.feed-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.feed-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.feed-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+.feed-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 42, 133, 0.6);
 }
 
 .post-card {
@@ -738,7 +766,15 @@ img {
 .sidebar-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.sidebar-wrapper::-webkit-scrollbar {
+  display: none;
 }
 
 .widget-card {
@@ -747,7 +783,7 @@ img {
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 16px;
+  padding: 14px;
 }
 
 .widget-header {
@@ -826,9 +862,9 @@ img {
    DEDICATED PAGES (DISCORDS, MAP)
    ========================================================================== */
 .page-header-strip {
-  padding: 24px 0 16px;
+  padding: 14px 0 12px;
   border-bottom: 1px solid var(--border-color);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -858,7 +894,7 @@ img {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
 }
 
@@ -872,6 +908,26 @@ img {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-height: calc(100vh - 260px);
+  min-height: 360px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.discords-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.discords-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.discords-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
 }
 
 .discord-list-item {
@@ -1328,10 +1384,32 @@ body.page-map-view {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
+  max-height: calc(100vh - 280px);
+  min-height: 360px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.cheats-grid::-webkit-scrollbar {
+  width: 5px;
+}
+
+.cheats-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cheats-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
 }
 
 .cheat-card {
-  background: var(--bg-surface);
+  background: rgba(22, 27, 34, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: 16px;
@@ -1933,6 +2011,11 @@ body.page-map-view {
 @media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
+  }
+
+  .sidebar-wrapper {
+    max-height: none;
+    overflow-y: visible;
   }
 
   .footer-container {
