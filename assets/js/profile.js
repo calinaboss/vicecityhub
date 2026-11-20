@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     isOwnProfile = Boolean(data.isOwnProfile);
     isFollowing = Boolean(data.isFollowing);
 
-    document.title = `@${currentProfile.username} \u2022 ViceCityHub.eu`;
+    document.title = `@${currentProfile.username} \u2022 GTA 6 Community Profile \u2022 ViceCityHub`;
 
     if (usernameDisplay) usernameDisplay.textContent = currentProfile.username;
     if (roleBadge) {
