@@ -366,6 +366,12 @@ export async function ensureTursoSchema(env) {
 
   try {
     await runTursoBatch(env, statements);
+    try {
+      await runTursoSql(env, 'ALTER TABLE users ADD COLUMN google_id TEXT');
+    } catch (colErr) {}
+    try {
+      await runTursoSql(env, 'CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id)');
+    } catch (idxErr) {}
     tursoSchemaReady = true;
   } catch (e) {}
 }

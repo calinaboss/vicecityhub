@@ -10,7 +10,7 @@ import {
   checkRateLimit,
   getAuthenticatedUser,
   verifyTurnstileToken
-} from './_turso.js';
+} from '../_turso.js';
 
 function constantTimeEqual(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string') return false;
