@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.6">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.7">
 </head>
 <body>
   <header class="site-header">
@@ -41,7 +41,7 @@
           We take community safety and intellectual property rights seriously. If you encounter content that infringes upon copyright, violates our community guidelines, or represents a malicious Discord invite, please submit a report below.
         </p>
 
-        <form style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;" onsubmit="event.preventDefault(); alert('Thank you. Your report has been submitted to the moderation team.'); this.reset();">
+        <form style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;" id="dsa-report-form">
           <div class="form-group">
             <label class="form-label">Your Name / Organization</label>
             <input type="text" class="form-input" placeholder="e.g. Community Member or Rights Holder" required>
@@ -87,5 +87,6 @@
       <a href="/" style="color: var(--accent-pink); font-size: 0.82rem;">Return to Homepage</a>
     </div>
   </footer>
+  <script src="assets/js/report.js?v=3.7"></script>
 </body>
 </html>

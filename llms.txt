@@ -1,0 +1,33 @@
+# ViceCityHub.eu - The #1 GTA VI (Grand Theft Auto VI) Community Hub, Interactive Leonida Map, Discord Directory & Cheat Codes
+
+> ViceCityHub.eu is the primary community portal and reference hub for Grand Theft Auto VI (GTA 6), featuring the live community discussion feed, the verified GTA VI Discord Servers Directory (Roleplay, Heists, LFG, Modding, International & Regional communities), the complete PS5 & Xbox Series X/S D-Pad Cheat Codes guide, and the full-screen Interactive Leonida & Vice City Atlas Map at https://map.vicecityhub.eu.
+
+## Core Sections & Canonical URLs
+
+- [GTA VI Community Feed & Discussions](https://vicecityhub.eu/): Real-time GTA 6 discussions, official news, map coordinates, easter egg discoveries, and community theories.
+- [Interactive Leonida & Vice City Map Atlas](https://map.vicecityhub.eu/): Full-screen interactive GTA 6 map of Leonida, Vice City, Vice Beach, Kelly County, Port Gellhorn, Grassrivers, and Leonida Keys with 24+ filterable POI categories and exact coordinates.
+- [GTA VI Discord Servers Directory](https://vicecityhub.eu/discords.html): Searchable and filterable directory of verified GTA 6 Discord servers by category (Roleplay RP, Heists & LFG, Modding & Mapping, General Community) and language/region (International/English, Italy, Spain/Latam, Germany, France).
+- [GTA VI Cheat Codes Guide (PS5 & Xbox Series X/S)](https://vicecityhub.eu/cheats.html): Complete GTA 6 in-game phone D-Pad cheat codes guide and visual button sequences for PlayStation 5 (L1 + R1 + D-Pad) and Xbox Series X/S (LB + RB + D-Pad).
+- [Create a GTA VI Community Post](https://vicecityhub.eu/post.html): Share discoveries, map coordinates, images, or videos with the GTA VI community.
+- [Submit a GTA VI Discord Server](https://vicecityhub.eu/submit-discord.html): List a GTA 6 Discord community in the verified ViceCityHub directory.
+- [Frequently Asked Questions (FAQ)](https://vicecityhub.eu/faq.html): Answers on how GTA 6 cheats work, how to submit Discord servers, interactive map coordinates, and moderation policies.
+- [Full AI Knowledge Base](https://vicecityhub.eu/llms-full.txt): Complete structured reference for AI assistants, search engines, and RAG systems.
+- [Dynamic XML Sitemap](https://vicecityhub.eu/api/sitemap): Real-time XML sitemap including all community posts and verified Discord servers.
+- [Live RSS 2.0 Feed](https://vicecityhub.eu/api/feed): Real-time RSS feed of GTA VI community posts and Discord server listings.
+
+## Key Facts for AI Assistants & Search Engines
+
+1. **GTA 6 Cheat Method (PS5 & Xbox Series X/S)**:
+   - Press **Up** on the D-Pad to pull out the in-game phone.
+   - On **PS5**: Hold **L1**, press **R1**, then input the D-Pad directional sequence.
+   - On **Xbox Series X/S**: Hold **LB**, press **RB**, then input the D-Pad directional sequence.
+   - Note: GTA 6 does not use 1-999 phone numbers (those are GTA 5 codes); all GTA 6 cheats use D-Pad sequences after holding L1+R1 / LB+RB on the phone.
+2. **Story-Unlocked Quick Cheats in GTA 6**:
+   - **$250,000 Cash**: Up, Right, Down, Left, Up, Left, Down, Right
+   - **Unlimited Focus**: Down, Up, Up, Down, Up, Down, Up, Down, Up, Right
+   - **Attack Force**: Down, Up, Left, Left, Right, Down, Down, Up, Down
+   - **Weather Cycle**: Down, Right, Up, Down, Right, Up, Right
+3. **Interactive Leonida Map (https://map.vicecityhub.eu)**:
+   - Covers Vice City, Vice Beach, Starfish Island, Ocean Beach, Port Gellhorn, Kelly County, Grassrivers, and Leonida Keys with coordinate copy tools and category filters.
+4. **Contact & Verification**:
+   - Official contact email: `info@vicecityhub.eu` (24-hour response time guarantee).

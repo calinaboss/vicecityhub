@@ -1,0 +1,53 @@
+# ViceCityHub.eu - Complete AI & Search Engine Knowledge Base (llms-full.txt)
+
+Canonical Domain: https://vicecityhub.eu
+Interactive Map Domain: https://map.vicecityhub.eu
+Contact & Support: info@vicecityhub.eu
+Primary Topics: Grand Theft Auto VI (GTA 6 / GTA VI), Vice City, State of Leonida, Interactive Map Coordinates, GTA 6 Discord Servers Directory, GTA 6 PS5 & Xbox Series X/S Cheat Codes, GTA 6 Community Discussions.
+
+---
+
+## 1. Platform Overview
+ViceCityHub.eu is the comprehensive community hub for Grand Theft Auto VI (GTA 6). It provides four core resources for players worldwide:
+1. **Community Feed (`https://vicecityhub.eu/index.html`)**: Real-time discussions, map coordinate discoveries, gameplay theories, and moderator-verified official news.
+2. **GTA VI Discord Servers Directory (`https://vicecityhub.eu/discords.html`)**: Verified directory of GTA 6 Discord communities categorized by Roleplay (RP), Heists & LFG, Modding & Mapping, and General Community across International (English), Italian (IT), Spanish/Latam (ES), German (DE), and French (FR) regions.
+3. **GTA VI Cheat Codes Directory (`https://vicecityhub.eu/cheats.html`)**: Step-by-step PS5 and Xbox Series X/S D-Pad cheat activation guide and copyable directional sequences.
+4. **Interactive Leonida & Vice City Map (`https://map.vicecityhub.eu/`)**: High-resolution interactive Leaflet map of the State of Leonida and Vice City with 24+ point-of-interest categories, real-time landmark search, and clickable coordinate sharing.
+
+---
+
+## 2. Complete GTA 6 Cheat Codes Reference (PS5 & Xbox Series X/S)
+
+### How to Enter Cheats in GTA 6
+- **PS5**: Press **Up** on the D-Pad to open the in-game phone. Hold **L1**, press **R1**, then enter the D-Pad sequence.
+- **Xbox Series X/S**: Press **Up** on the D-Pad to open the in-game phone. Hold **LB**, press **RB**, then enter the D-Pad sequence.
+- **Pattern Rule**: Vehicle spawn cheats begin with `Left, Up, Right, Down`. Ammo cheats begin with `Down, Up, Right, Down, Left, Left, Up`.
+- **Do Phone Number Cheats Exist in GTA 6?**: No. Any 1-999 phone numbers circulating online are legacy GTA 5 codes. GTA 6 uses the phone + shoulder button + D-Pad system.
+
+### Verified GTA 6 Cheat Code Table
+| Cheat Name | Unlock Requirement | Effect | PS5 & Xbox Series X/S D-Pad Code |
+| :--- | :--- | :--- | :--- |
+| **$250,000** | Story Complete | Immediately receive $250,000 in-game cash | Up, Right, Down, Left, Up, Left, Down, Right |
+| **Unlimited Focus** | Story Complete | Focus bar never depletes during combat or driving | Down, Up, Up, Down, Up, Down, Up, Down, Up, Right |
+| **Attack Force** | Story Complete | Bullets and melee attacks launch targets on impact | Down, Up, Left, Left, Right, Down, Down, Up, Down |
+| **Weather Cycle** | Story Complete | Cycles through Leonida weather conditions (Sunny, Tropical Storm, Neon Fog, Hurricane) | Down, Right, Up, Down, Right, Up, Right |
+| **Vehicle Force** | Pattern Sequence | Gives your current vehicle massive ramming impact force | Left, Up, Right, Down, Left, Right, Up, Down |
+| **Exploding Rounds** | Pattern Sequence | Standard firearm ammunition detonates on surface impact | Down, Up, Right, Down, Left, Left, Up, Right, Down |
+
+---
+
+## 3. Interactive Leonida & Vice City Map Reference (https://map.vicecityhub.eu)
+
+### Major Regions & Counties in Leonida
+- **Vice City & Vice Beach**: Ocean Drive neon strip, Starfish Island mansions, Vice Beach Ammu-Nation, Malibu Club, Vice City International Airport (VCIA), Leaf Links Golf Club, Vice Port.
+- **Port Gellhorn**: Industrial shipping yards, chop shops, Port Gellhorn Police Department, Pawn & Gun shops, motel hideouts, coastal docks.
+- **Kelly County & Grassrivers**: Swamp airboat hangars, wetland outposts, Hickory Ridge, transient camps, off-road trails, hunting zones.
+- **Leonida Keys**: Southern archipelago bridges, marina docks, smugglers' coves, deep-sea boat spawns, lighthouse landmarks.
+
+### Filterable Map Categories on map.vicecityhub.eu
+Cities, Towns, Regions, Counties, Water Bodies, Beaches & Islands, Roads & Highways, Strip Clubs & Nightlife, Pawn & Gun Stores, Police Stations, Motels & Safehouses, Restaurants & Diners, Gas Stations, Marinas & Docks, Airports & Runways, Golf & Country Clubs, Industrial & Factories, Parks & Recreation, Bridges, Landmarks & Towers, Transient Camps, Easter Eggs & Secrets.
+
+---
+
+## 4. GTA VI Discord Servers Directory (https://vicecityhub.eu/discords.html)
+Players and server owners can browse or submit permanent `https://discord.gg/` and `https://discord.com/invite/` servers at `https://vicecityhub.eu/submit-discord.html`. Every submission is reviewed by moderators before appearing in the live directory.

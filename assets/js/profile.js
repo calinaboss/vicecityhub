@@ -209,6 +209,33 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSocialsBar(currentProfile);
     renderUserPosts(data.posts || []);
 
+    let schemaTag = document.getElementById('dynamic-profile-jsonld');
+    if (!schemaTag) {
+      schemaTag = document.createElement('script');
+      schemaTag.type = 'application/ld+json';
+      schemaTag.id = 'dynamic-profile-jsonld';
+      document.head.appendChild(schemaTag);
+    }
+    const socialUrls = Object.values(currentProfile.social_links || {}).filter(v => typeof v === 'string' && v.startsWith('https://'));
+    schemaTag.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ProfilePage',
+      mainEntity: {
+        '@type': 'Person',
+        name: currentProfile.username,
+        alternateName: `@${currentProfile.username}`,
+        description: currentProfile.bio || 'ViceCityHub GTA VI community member.',
+        image: currentProfile.avatar_url || 'https://vicecityhub.eu/assets/brand/favicon-192x192.png',
+        url: `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(currentProfile.username)}`,
+        sameAs: socialUrls,
+        interactionStatistic: {
+          '@type': 'InteractionCounter',
+          interactionType: 'https://schema.org/FollowAction',
+          userInteractionCount: Number(currentProfile.followers_count || 0)
+        }
+      }
+    });
+
     if (isOwnProfile) {
       if (ownerActions) ownerActions.style.display = 'flex';
       if (visitorActions) visitorActions.style.display = 'none';

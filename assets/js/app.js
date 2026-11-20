@@ -248,8 +248,56 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
+  function injectDynamicPostsSchema(items) {
+    if (!Array.isArray(items) || items.length === 0) return;
+    let tag = document.getElementById('dynamic-posts-jsonld');
+    if (!tag) {
+      tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.id = 'dynamic-posts-jsonld';
+      document.head.appendChild(tag);
+    }
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'GTA VI Community Discussions & Leonida Map Discoveries',
+      itemListElement: items.slice(0, 25).map((p, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        item: {
+          '@type': 'DiscussionForumPosting',
+          '@id': `https://vicecityhub.eu/index.html#post-${p.id}`,
+          url: `https://vicecityhub.eu/index.html#post-${p.id}`,
+          headline: p.title,
+          articleBody: p.text,
+          articleSection: p.categoryLabel || p.category || 'GTA VI Discussions',
+          datePublished: (p.time && p.time.length >= 10 && p.time !== 'Recently' && p.time !== 'Just now') ? p.time : new Date().toISOString().slice(0, 10),
+          author: {
+            '@type': 'Person',
+            name: p.author || p.username || 'ViceCityHub Member',
+            url: `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(p.username || p.author || '')}`
+          },
+          interactionStatistic: [
+            {
+              '@type': 'InteractionCounter',
+              interactionType: 'https://schema.org/LikeAction',
+              userInteractionCount: Number(p.likes || 0)
+            },
+            {
+              '@type': 'InteractionCounter',
+              interactionType: 'https://schema.org/CommentAction',
+              userInteractionCount: Array.isArray(p.comments) ? p.comments.length : 0
+            }
+          ]
+        }
+      }))
+    };
+    tag.textContent = JSON.stringify(schema);
+  }
+
   function renderFeed() {
     renderTrendingFeed();
+    injectDynamicPostsSchema(posts);
     if (!feedContainer) return;
     const query = (searchInput?.value || '').toLowerCase().trim();
     const filtered = posts.filter(post => {
@@ -760,8 +808,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let discordServers = [];
 
+  function injectDynamicDiscordsSchema(servers) {
+    if (!Array.isArray(servers) || servers.length === 0) return;
+    let tag = document.getElementById('dynamic-discords-jsonld');
+    if (!tag) {
+      tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.id = 'dynamic-discords-jsonld';
+      document.head.appendChild(tag);
+    }
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Verified GTA VI Discord Servers Directory - ViceCityHub.eu',
+      description: 'Directory of verified Grand Theft Auto VI (GTA 6) Discord servers for Roleplay (RP), Heists, Modding, and International communities.',
+      itemListElement: servers.map((s, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        item: {
+          '@type': 'Organization',
+          name: s.name,
+          description: s.desc,
+          url: s.inviteUrl,
+          sameAs: [s.inviteUrl],
+          keywords: `GTA 6 Discord, GTA VI ${s.tag || 'Community'}, ${s.countryLabel || 'International'} GTA 6 Server`
+        }
+      }))
+    };
+    tag.textContent = JSON.stringify(schema);
+  }
+
   function renderDiscords() {
     if (!discordGrid) return;
+    injectDynamicDiscordsSchema(discordServers);
     const query = (discordSearchInput?.value || '').toLowerCase().trim();
     const selCountry = discordCountryFilter?.value || 'all';
     const selType = discordTypeFilter?.value || 'all';

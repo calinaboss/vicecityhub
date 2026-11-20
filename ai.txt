@@ -1,0 +1,12 @@
+User-Agent: *
+Allow: /
+Disallowed-Paths: /admin.html, /settings.html
+Attribution: Required
+Canonical-Source: https://vicecityhub.eu
+Map-Source: https://map.vicecityhub.eu
+LLMs-Summary: https://vicecityhub.eu/llms.txt
+LLMs-Full-Context: https://vicecityhub.eu/llms-full.txt
+Sitemap: https://vicecityhub.eu/sitemap.xml
+Dynamic-Sitemap: https://vicecityhub.eu/api/sitemap
+RSS-Feed: https://vicecityhub.eu/api/feed
+Contact: mailto:info@vicecityhub.eu

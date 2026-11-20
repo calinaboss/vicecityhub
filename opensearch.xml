@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>ViceCityHub</ShortName>
+  <Description>Search GTA VI Discussions, Leonida Map Coordinates, Discord Servers, and Cheat Codes on ViceCityHub.eu</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Image width="32" height="32" type="image/png">https://vicecityhub.eu/assets/brand/favicon-32x32.png</Image>
+  <Url type="text/html" method="get" template="https://vicecityhub.eu/?q={searchTerms}"/>
+</OpenSearchDescription>

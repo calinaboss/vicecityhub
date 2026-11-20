@@ -4,6 +4,10 @@ const ALLOWED_ORIGINS = [
   'https://map.vicecityhub.eu'
 ];
 
+const STRICT_CSP = "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://images.unsplash.com https://i.pravatar.cc https://ui-avatars.com https://raw.githubusercontent.com https://*.tile.openstreetmap.org https://*.githubusercontent.com; media-src 'self' data: blob:; connect-src 'self' data: blob: https://challenges.cloudflare.com; worker-src 'self' blob:; frame-src 'self' https://map.vicecityhub.eu https://challenges.cloudflare.com; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;";
+
+const STRICT_PERMISSIONS = 'camera=(),microphone=(),geolocation=(),payment=(),usb=(),autoplay=(),accelerometer=(),gyroscope=(),magnetometer=(),fullscreen=(self)';
+
 function checkAllowedOrigin(origin) {
   if (!origin) return true;
   if (ALLOWED_ORIGINS.includes(origin)) return true;
@@ -18,8 +22,8 @@ export async function onRequest(context) {
   const isAllowedOrigin = checkAllowedOrigin(origin);
 
   const contentLength = parseInt(request.headers.get('Content-Length') || '0', 10);
-  if (contentLength > 65536 && new URL(request.url).pathname.startsWith('/api/')) {
-    return new Response(JSON.stringify({ error: 'Payload too large (max 64KB)' }), {
+  if (contentLength > 2097152 && new URL(request.url).pathname.startsWith('/api/')) {
+    return new Response(JSON.stringify({ error: 'Payload too large (max 2MB per chunk)' }), {
       status: 413,
       headers: { 'Content-Type': 'application/json; charset=utf-8' }
     });
@@ -48,7 +52,9 @@ export async function onRequest(context) {
         'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
         'X-Frame-Options': 'SAMEORIGIN',
         'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
-        'Referrer-Policy': 'strict-origin-when-cross-origin'
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': STRICT_PERMISSIONS,
+        'Content-Security-Policy': STRICT_CSP
       }
     });
   }
@@ -61,7 +67,10 @@ export async function onRequest(context) {
   newHeaders.set('X-Frame-Options', 'SAMEORIGIN');
   newHeaders.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
   newHeaders.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  newHeaders.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=(), bluetooth=(), battery=()');
+  newHeaders.set('Permissions-Policy', STRICT_PERMISSIONS);
+  if (!new URL(request.url).pathname.startsWith('/api/media')) {
+    newHeaders.set('Content-Security-Policy', STRICT_CSP);
+  }
 
   if (origin && isAllowedOrigin) {
     newHeaders.set('Access-Control-Allow-Origin', origin);

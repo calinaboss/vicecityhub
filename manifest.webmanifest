@@ -1,0 +1,30 @@
+{
+  "name": "ViceCityHub.eu - GTA VI Community Hub, Leonida Map & Cheats",
+  "short_name": "ViceCityHub",
+  "description": "The #1 GTA VI community hub: live discussions, verified GTA 6 Discord servers directory, PS5 & Xbox cheat codes, and interactive Leonida map.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "orientation": "any",
+  "categories": ["games", "entertainment", "social"],
+  "icons": [
+    {
+      "src": "/assets/brand/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/brand/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/brand/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
