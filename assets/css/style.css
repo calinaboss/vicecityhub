@@ -778,12 +778,11 @@ img {
 }
 
 .widget-card {
-  background: rgba(22, 27, 34, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 14px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  padding: 4px 0 4px 20px;
 }
 
 .widget-header {
@@ -931,22 +930,20 @@ img {
 }
 
 .discord-list-item {
-  background: rgba(22, 27, 34, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 14px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  padding: 14px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .discord-list-item:hover {
-  border-color: rgba(88, 101, 242, 0.45);
-  background: var(--bg-surface-elevated);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .discord-list-left {
@@ -1369,12 +1366,10 @@ body.page-map-view {
 }
 
 .console-guide-card {
-  background: rgba(22, 27, 34, 0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 14px 18px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 6px 0 6px 14px;
 }
 
 .console-guide-card.ps5-card {
@@ -1445,12 +1440,11 @@ body.page-map-view {
 }
 
 .cheat-tip-box {
-  background: rgba(22, 27, 34, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  padding: 4px 0 4px 14px;
 }
 
 .cheat-tip-title {
@@ -1491,12 +1485,11 @@ body.page-map-view {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 14px;
-  background: rgba(22, 27, 34, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  padding: 6px 0 12px;
 }
 
 .cheats-platform-pills {
@@ -1509,7 +1502,7 @@ body.page-map-view {
 .cheats-ordered-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   max-height: 460px;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1532,22 +1525,20 @@ body.page-map-view {
 }
 
 .cheat-row-card {
-  background: rgba(22, 27, 34, 0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 14px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  padding: 14px 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .cheat-row-card:hover {
-  border-color: rgba(255, 42, 133, 0.45);
-  background: var(--bg-surface-elevated);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .cheat-row-info {
@@ -2290,22 +2281,20 @@ body.page-map-view {
 }
 
 /* ==========================================================================
-   DEDICATED POSTING & DISCORD SUBMISSION PAGES (post.html & submit-discord.html)
+   DEDICATED POSTING & DISCORD SUBMISSION PAGES (FLAT, NO BOXES)
    ========================================================================== */
 .posting-page-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 24px;
+  gap: 32px;
   align-items: start;
 }
 
 .posting-form-card {
-  background: rgba(22, 27, 34, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 24px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 4px 0;
 }
 
 .dedicated-form {
@@ -2373,7 +2362,11 @@ body.page-map-view {
 }
 
 .rules-card-highlight {
-  border-top: 3px solid var(--accent-pink);
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  padding: 4px 0 4px 24px;
 }
 
 .posting-rules-list {
@@ -2388,7 +2381,7 @@ body.page-map-view {
   align-items: flex-start;
   gap: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .posting-rules-list li:last-child {
@@ -2425,40 +2418,40 @@ body.page-map-view {
   border-radius: 3px;
 }
 
+.empty-feed-state {
+  background: transparent;
+  border: none;
+  text-align: center;
+  padding: 48px 16px;
+}
+
 /* ==========================================================================
-   RESERVED GOOGLE ADSENSE SPACES (SIDEBAR & HORIZONTAL BANNERS)
+   RESERVED GOOGLE ADSENSE SPACES (INVISIBLE CONTAINER, ZERO BOX)
    ========================================================================== */
 .adsense-slot {
-  background: rgba(13, 17, 23, 0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1px dashed rgba(139, 148, 158, 0.25);
-  border-radius: var(--radius-md);
+  background: transparent;
+  border: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 12px;
+  padding: 4px;
   overflow: hidden;
 }
 
 .adsense-sidebar {
-  min-height: 220px;
+  min-height: 180px;
   width: 100%;
 }
 
 .adsense-banner {
-  min-height: 90px;
+  min-height: 70px;
   width: 100%;
 }
 
 .adsense-label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-dim);
+  display: none;
 }
 
 @media (max-width: 960px) {
@@ -2468,6 +2461,13 @@ body.page-map-view {
 
   .form-row-two {
     grid-template-columns: 1fr;
+  }
+
+  .rules-card-highlight,
+  .widget-card {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px 0 0 0;
   }
 }
 
@@ -2509,12 +2509,11 @@ body.page-map-view {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.28);
+  background: transparent;
+  border: none;
   color: #a7f3d0;
   font-size: 0.78rem;
-  padding: 8px 14px;
-  border-radius: var(--radius-sm);
+  padding: 6px 0;
   line-height: 1.45;
 }
 
@@ -2526,12 +2525,9 @@ body.page-map-view {
 .error-404-card {
   max-width: 540px;
   width: 100%;
-  background: rgba(22, 27, 34, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 38px 28px;
+  background: transparent;
+  border: none;
+  padding: 38px 20px;
   text-align: center;
 }
 

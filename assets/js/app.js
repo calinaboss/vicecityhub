@@ -127,180 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 1. CLEAN TEXT-ONLY FEED (index.html)
+  // 1. CLEAN TEXT-ONLY FEED (index.html - LIVE BACKEND, NO PREVIEW POSTS)
   // ==========================================
-  let posts = [
-    {
-      id: 'post-1',
-      category: 'official',
-      categoryLabel: 'Official News',
-      pinned: true,
-      author: 'ViceCityHub Staff',
-      username: 'admin',
-      badge: 'Official',
-      badgeClass: 'mod',
-      time: '1 hour ago',
-      avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&auto=format&fit=crop&q=80',
-      title: 'Grand Theft Auto VI is live worldwide. Welcome to Vice City & Leonida!',
-      text: 'The journey begins across Ocean Drive, Grassrivers, and Port Gellhorn. Share your discoveries, map coordinates, and find active community Discord servers. For submissions, contact info@vicecityhub.eu.',
-      likes: 1248,
-      isLiked: false,
-      bookmarks: 342,
-      isBookmarked: false,
-      comments: [
-        { author: 'TommyV_86', time: '45m ago', text: 'Ocean Beach lighting at sunset is unbelievable.' },
-        { author: 'Lucia_Driver', time: '20m ago', text: 'Handling model on sports cars feels super responsive.' }
-      ]
-    },
-    {
-      id: 'post-2',
-      category: 'leaks',
-      categoryLabel: 'Map',
-      pinned: false,
-      author: 'Cartographer_VC',
-      username: 'vice_carto',
-      badge: 'Verified',
-      badgeClass: 'verified',
-      time: '2 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
-      title: 'Leonida State Map Breakdown: Supercar Spawns & Heliports',
-      text: 'We are mapping all confirmed private airstrips and vehicle garages across the state. Check out the new interactive map on our site to explore the locations.',
-      likes: 673,
-      isLiked: false,
-      bookmarks: 189,
-      isBookmarked: false,
-      comments: [
-        { author: 'SpeedDemon99', time: '1h ago', text: 'Confirmed the helicopter spawn on Starfish Island.' }
-      ]
-    },
-    {
-      id: 'post-3',
-      category: 'discussions',
-      categoryLabel: 'Discussions',
-      pinned: false,
-      author: 'RetroGamer88',
-      username: 'retrogamer',
-      badge: '',
-      badgeClass: '',
-      time: '3 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1628157582853-a796fa650a6a?w=100&auto=format&fit=crop&q=80',
-      title: 'What radio station is everyone listening to on your first roadtrip?',
-      text: 'Flash FM returns along with Wave 103 and several brand new synth, rap, and Latin radio stations. Share your favorite tracks so far!',
-      likes: 421,
-      isLiked: false,
-      bookmarks: 67,
-      isBookmarked: false,
-      comments: [
-        { author: 'FlashFM_Fan', time: '2h ago', text: 'Flash FM 80s pop tracks hit just as good today.' }
-      ]
-    },
-    {
-      id: 'post-4',
-      category: 'discussions',
-      categoryLabel: 'Discussions',
-      pinned: false,
-      author: 'NeonRacer_XX',
-      username: 'neon_racer',
-      badge: 'Verified',
-      badgeClass: 'verified',
-      time: '4 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&auto=format&fit=crop&q=80',
-      title: 'Night drift down Ocean Beach during a heavy thunderstorm',
-      text: 'The wet asphalt reflections and dynamic lightning strikes make nighttime pursuits in Vice City look like a cinematic movie.',
-      likes: 894,
-      isLiked: false,
-      bookmarks: 211,
-      isBookmarked: false,
-      comments: [
-        { author: 'RayTracer', time: '3h ago', text: 'Weather engine is next level.' }
-      ]
-    },
-    {
-      id: 'post-5',
-      category: 'official',
-      categoryLabel: 'Official News',
-      pinned: false,
-      author: 'ViceCityHub Staff',
-      username: 'admin',
-      badge: 'Official',
-      badgeClass: 'mod',
-      time: '5 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&auto=format&fit=crop&q=80',
-      title: 'Title Update 1.02 Overview: Performance Optimizations & Bug Fixes',
-      text: 'Rockstar has released hotfix 1.02 addressing framerate drops near Ocean Drive neon districts and improving server matchmaking for heist squads. Full patch notes verified on our news thread.',
-      likes: 1102,
-      isLiked: false,
-      bookmarks: 310,
-      isBookmarked: false,
-      comments: [
-        { author: 'Techie_Dan', time: '4h ago', text: 'DLSS 3.5 frame gen is buttery smooth now.' }
-      ]
-    },
-    {
-      id: 'post-6',
-      category: 'leaks',
-      categoryLabel: 'Map',
-      pinned: false,
-      author: 'LeonidaScout',
-      username: 'scout_leonida',
-      badge: 'Verified',
-      badgeClass: 'verified',
-      time: '6 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
-      title: 'Everglades Swamp Outpost Hidden Cache Coordinates',
-      text: 'Found a sunken patrol boat at coordinates [25.7617, -80.1918] containing body armor, an assault rifle, and 5000 cash. Open map.vicecityhub.eu to check the exact marker.',
-      likes: 745,
-      isLiked: false,
-      bookmarks: 412,
-      isBookmarked: false,
-      comments: [
-        { author: 'SwampRat', time: '5h ago', text: 'Confirmed, watch out for the gators around the hull.' }
-      ]
-    },
-    {
-      id: 'post-7',
-      category: 'discussions',
-      categoryLabel: 'Discussions',
-      pinned: false,
-      author: 'ViceResident',
-      username: 'vicelocal',
-      badge: '',
-      badgeClass: '',
-      time: '8 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
-      title: 'What property or safehouse are you saving up for first?',
-      text: 'Starfish Island villas have private docks for speedboats, while Downtown penthouses have private helipads. Which one are you planning to buy first once your bank balance allows?',
-      likes: 588,
-      isLiked: false,
-      bookmarks: 140,
-      isBookmarked: false,
-      comments: [
-        { author: 'BoatKing', time: '6h ago', text: 'Villas on Starfish Island for sure.' },
-        { author: 'SkyscraperFan', time: '7h ago', text: 'Helipad penthouse is unbeatable for fast travel.' }
-      ]
-    },
-    {
-      id: 'post-8',
-      category: 'official',
-      categoryLabel: 'Official News',
-      pinned: false,
-      author: 'ViceCityHub Staff',
-      username: 'admin',
-      badge: 'Official',
-      badgeClass: 'mod',
-      time: '12 hours ago',
-      avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&auto=format&fit=crop&q=80',
-      title: 'Weekly Community Spotlight: Top Roleplay Servers and Heist Crews',
-      text: 'Check out the refreshed GTA VI Discords directory to join verified roleplay servers, modding hubs, and heist teams with active voice channels.',
-      likes: 820,
-      isLiked: false,
-      bookmarks: 230,
-      isBookmarked: false,
-      comments: [
-        { author: 'HeistLeader', time: '10h ago', text: 'Found our 4th player within 10 minutes on the directory.' }
-      ]
-    }
-  ];
+  let posts = [];
 
   let currentCategory = 'all';
 
@@ -384,10 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (filtered.length === 0) {
       feedContainer.innerHTML = `
-        <div class="widget-card" style="text-align: center; padding: 40px 20px;">
-          <h3 style="font-size: 1.05rem; margin-bottom: 6px;">No discussions found</h3>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 14px;">Try searching for another topic or create a new discussion.</p>
-          <button class="btn-post trigger-new-post">Create Discussion</button>
+        <div class="empty-feed-state">
+          <h3 style="font-size: 1.02rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">No community posts yet</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Be the first to share a discovery, map coordinate, or discussion in Vice City.</p>
+          <a href="post.html" class="btn-post-submit" style="text-decoration: none;">
+            <i class="fa-solid fa-plus"></i> Create New Post
+          </a>
         </div>
       `;
       return;
@@ -610,100 +441,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 2. DISCORD DIRECTORY & FILTERS (discords.html)
+  // 2. DISCORD DIRECTORY & FILTERS (discords.html - LIVE BACKEND, NO PREVIEW SERVERS)
   // ==========================================
   const DISCORD_REGEX = /^https:\/\/(discord\.gg\/[a-zA-Z0-9_-]{2,32}|discord\.com\/invite\/[a-zA-Z0-9_-]{2,32})$/;
 
-  let discordServers = [
-    {
-      id: 'dc-1',
-      name: 'Vice City Roleplay (VCRP)',
-      tag: 'Roleplay',
-      category: 'roleplay',
-      country: 'intl',
-      countryLabel: 'International',
-      inviteUrl: 'https://discord.gg/viceroleplay',
-      members: '14,800 Members',
-      desc: 'The premier text and voice roleplay server set in Vice City & Leonida. Whitelisted police, cartel, and civilian careers.'
-    },
-    {
-      id: 'dc-2',
-      name: 'GTA VI Italian Community',
-      tag: 'Italian Community',
-      category: 'roleplay',
-      country: 'it',
-      countryLabel: 'Italy',
-      inviteUrl: 'https://discord.gg/gta6italia',
-      members: '8,450 Members',
-      desc: 'Il principale server Discord italiano dedicato a GTA VI. Organizzazione sessioni serali, ritrovi e canali vocali dedicati.'
-    },
-    {
-      id: 'dc-3',
-      name: 'Leonida Heists & Speedruns',
-      tag: 'Heists & LFG',
-      category: 'heists',
-      country: 'intl',
-      countryLabel: 'International',
-      inviteUrl: 'https://discord.gg/leonidaheists',
-      members: '6,200 Members',
-      desc: 'Coordinated heist groups, speedrun routes, and verified high-tier players.'
-    },
-    {
-      id: 'dc-4',
-      name: 'GTA 6 Espana & Latam',
-      tag: 'Spanish Community',
-      category: 'general',
-      country: 'es',
-      countryLabel: 'Spain / Latam',
-      inviteUrl: 'https://discord.gg/gta6es',
-      members: '5,300 Members',
-      desc: 'Comunidad hispanohablante de GTA 6 para organizar partidas, noticias y servidores de rol.'
-    },
-    {
-      id: 'dc-5',
-      name: 'Vice City Modding & Tools',
-      tag: 'Modding & Mapping',
-      category: 'modding',
-      country: 'intl',
-      countryLabel: 'International',
-      inviteUrl: 'https://discord.gg/vicemodding',
-      members: '9,120 Members',
-      desc: 'Technical hub for engine research, coordinate tracking, asset datamining, and map development.'
-    },
-    {
-      id: 'dc-6',
-      name: 'GTA VI Deutschland',
-      tag: 'German Community',
-      category: 'general',
-      country: 'de',
-      countryLabel: 'Germany',
-      inviteUrl: 'https://discord.gg/gta6de',
-      members: '3,800 Members',
-      desc: 'Die deutsche GTA 6 Community fuer Crews, Heists und Rollenspiel.'
-    },
-    {
-      id: 'dc-7',
-      name: 'Vice City RP Italia - Leonida Life',
-      tag: 'Italian RP',
-      category: 'roleplay',
-      country: 'it',
-      countryLabel: 'Italy',
-      inviteUrl: 'https://discord.gg/leonidalife',
-      members: '11,200 Members',
-      desc: 'Server Roleplay italiano con script personalizzati, whitelist attiva e oltre 40 fazioni tra polizia, mafie e cittadini.'
-    },
-    {
-      id: 'dc-8',
-      name: 'GTA VI France & Francophonie',
-      tag: 'French Community',
-      category: 'general',
-      country: 'fr',
-      countryLabel: 'France',
-      inviteUrl: 'https://discord.gg/gta6fr',
-      members: '4,100 Members',
-      desc: 'Communaute francophone active pour suivre les actualites, trouver des joueurs et rejoindre des crews.'
-    }
-  ];
+  let discordServers = [];
 
   function renderDiscords() {
     if (!discordGrid) return;
@@ -720,9 +462,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (filtered.length === 0) {
       discordGrid.innerHTML = `
-        <div class="widget-card" style="text-align: center; padding: 40px 20px;">
-          <p style="color: var(--text-muted); margin-bottom: 12px;">No Discord servers matching your search.</p>
-          <button class="btn-discord trigger-add-discord"><i class="fa-solid fa-plus"></i> Submit Your Discord</button>
+        <div class="empty-feed-state">
+          <h3 style="font-size: 1.02rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">No Discord servers listed yet</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Have a GTA VI Roleplay, Heist, or Community server? Share it in the directory.</p>
+          <a href="submit-discord.html" class="btn-discord" style="height: 40px; padding: 0 18px; text-decoration: none;">
+            <i class="fa-solid fa-plus"></i> Share Your Discord Server
+          </a>
         </div>
       `;
       return;
