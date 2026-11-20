@@ -372,6 +372,9 @@ export async function ensureTursoSchema(env) {
     try {
       await runTursoSql(env, 'CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id)');
     } catch (idxErr) {}
+    try {
+      await runTursoSql(env, "ALTER TABLE community_comments ADD COLUMN status TEXT NOT NULL DEFAULT 'approved'");
+    } catch (statusErr) {}
     tursoSchemaReady = true;
   } catch (e) {}
 }

@@ -115,7 +115,7 @@ export async function onRequest(context) {
     env,
     `SELECT id, post_id, author, username, content as text, created_at
      FROM community_comments
-     WHERE post_id = ? AND status = 'approved'
+     WHERE post_id = ? AND (status = 'approved' OR status IS NULL OR status = '')
      ORDER BY created_at ASC
      LIMIT 200`,
     [postId]
@@ -452,6 +452,7 @@ export async function onRequest(context) {
         try {
           const res = await fetch('/api/posts?action=like', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ postId: postId })
           });
@@ -477,6 +478,7 @@ export async function onRequest(context) {
         try {
           const res = await fetch('/api/posts?action=bookmark', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ postId: postId })
           });
@@ -535,19 +537,21 @@ export async function onRequest(context) {
         if (userJson) {
           try {
             const u = JSON.parse(userJson);
-            if (u && u.username) authorName = u.username;
+            if (u && (u.username || u.name)) authorName = u.username || u.name;
           } catch (err) {}
         }
 
         try {
           const res = await fetch('/api/posts?action=comment', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ postId: postId, text: text, author: authorName })
           });
           const data = await res.json();
           if (!res.ok || !data.ok) {
             if (feedback) {
+              feedback.style.display = 'block';
               feedback.style.background = 'rgba(239, 68, 68, 0.16)';
               feedback.style.color = '#fca5a5';
               feedback.textContent = data.error || 'Failed to submit comment.';
@@ -564,7 +568,7 @@ export async function onRequest(context) {
           const newEl = document.createElement('article');
           newEl.className = 'discussion-comment-item';
           newEl.style.cssText = 'padding:12px 14px;background:#161b22;border:1px solid #30363d;border-radius:8px;margin-bottom:10px;';
-          newEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-weight:700;color:#f0f6fc;font-size:0.86rem;">' + authorName + '</span><span style="font-size:0.74rem;color:#8b949e;">Just now</span></div><p style="font-size:0.88rem;color:#c9d1d9;line-height:1.45;margin:0;word-break:break-word;"></p>';
+          newEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-weight:700;color:#f0f6fc;font-size:0.86rem;">' + (data.comment?.author || authorName) + '</span><span style="font-size:0.74rem;color:#8b949e;">Just now</span></div><p style="font-size:0.88rem;color:#c9d1d9;line-height:1.45;margin:0;word-break:break-word;"></p>';
           newEl.querySelector('p').textContent = text;
           commentsList.appendChild(newEl);
 
@@ -572,6 +576,7 @@ export async function onRequest(context) {
           commentCountEl.textContent = String(count + 1);
         } catch (err) {
           if (feedback) {
+            feedback.style.display = 'block';
             feedback.style.background = 'rgba(239, 68, 68, 0.16)';
             feedback.style.color = '#fca5a5';
             feedback.textContent = 'Connection error. Please try again.';

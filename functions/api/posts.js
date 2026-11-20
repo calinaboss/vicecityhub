@@ -288,8 +288,8 @@ export async function onRequest(context) {
         try {
           await runTursoSql(
             env,
-            `INSERT INTO community_comments (id, post_id, user_id, author, username, content)
-             VALUES (?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO community_comments (id, post_id, user_id, author, username, content, status)
+             VALUES (?, ?, ?, ?, ?, ?, 'approved')`,
             [commentId, postId, authUser ? authUser.id : null, author, username, content]
           );
           await runTursoSql(
@@ -297,7 +297,10 @@ export async function onRequest(context) {
             `UPDATE community_posts SET comments_count = comments_count + 1 WHERE id = ?`,
             [postId]
           );
-        } catch (e) {}
+        } catch (e) {
+          console.error('Comment insertion error:', e);
+          return jsonResponse({ error: 'Failed to save comment to database: ' + (e.message || 'database error') }, 500);
+        }
       }
 
       return jsonResponse({
