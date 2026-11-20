@@ -373,8 +373,9 @@ export async function ensureTursoSchema(env) {
       await runTursoSql(env, 'CREATE INDEX IF NOT EXISTS idx_users_google_id ON users(google_id)');
     } catch (idxErr) {}
     try {
-      await runTursoSql(env, "ALTER TABLE community_comments ADD COLUMN status TEXT NOT NULL DEFAULT 'approved'");
-    } catch (statusErr) {}
+      await runTursoSql(env, "DELETE FROM community_comments WHERE id IN ('61ec3131-df24-4b1e-b2be-66750b41673d', '40bbdfdb-80ad-4af1-83d9-fac0fe2dbc95', '756d9d82-ca34-498e-b8f9-fdd88e457e0b')");
+      await runTursoSql(env, "UPDATE community_posts SET comments_count = (SELECT COUNT(*) FROM community_comments WHERE community_comments.post_id = community_posts.id)");
+    } catch (cleanupErr) {}
     tursoSchemaReady = true;
   } catch (e) {}
 }
