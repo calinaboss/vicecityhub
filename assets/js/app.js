@@ -125,6 +125,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function getLocalLikedPosts() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem('vch_liked_posts') || '[]'));
+    } catch (e) {
+      return new Set();
+    }
+  }
+
+  function saveLocalLikedPost(postId, isLiked) {
+    try {
+      const set = getLocalLikedPosts();
+      if (isLiked) set.add(postId);
+      else set.delete(postId);
+      localStorage.setItem('vch_liked_posts', JSON.stringify([...set]));
+    } catch (e) {}
+  }
+
+  function getLocalBookmarkedPosts() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem('vch_bookmarked_posts') || '[]'));
+    } catch (e) {
+      return new Set();
+    }
+  }
+
+  function saveLocalBookmarkedPost(postId, isBookmarked) {
+    try {
+      const set = getLocalBookmarkedPosts();
+      if (isBookmarked) set.add(postId);
+      else set.delete(postId);
+      localStorage.setItem('vch_bookmarked_posts', JSON.stringify([...set]));
+    } catch (e) {}
+  }
+
   function renderPostCard(post) {
     const isPinnedClass = post.pinned ? 'pinned' : '';
     const pinBadge = post.pinned ? `<span class="badge-pill mod" style="margin-right: 6px;"><i class="fa-solid fa-thumbtack"></i> Pinned</span>` : '';
@@ -417,12 +451,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const p = posts.find(item => item.id === likeBtn.dataset.id);
         if (p) {
           p.isLiked = !p.isLiked;
-          p.likes += p.isLiked ? 1 : -1;
+          p.likes = Math.max(0, (p.likes || 0) + (p.isLiked ? 1 : -1));
+          saveLocalLikedPost(p.id, p.isLiked);
           renderFeed();
           fetch('/api/posts?action=like', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ postId: p.id })
+          }).then(r => r.ok ? r.json() : null).then(data => {
+            if (data && typeof data.liked === 'boolean') {
+              p.isLiked = data.liked;
+              saveLocalLikedPost(p.id, data.liked);
+              renderFeed();
+            }
           }).catch(() => {});
         }
         return;
@@ -433,12 +474,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const p = posts.find(item => item.id === bookmarkBtn.dataset.id);
         if (p) {
           p.isBookmarked = !p.isBookmarked;
+          saveLocalBookmarkedPost(p.id, p.isBookmarked);
           renderFeed();
           showToast(p.isBookmarked ? 'Saved to bookmarks' : 'Removed from bookmarks');
           fetch('/api/posts?action=bookmark', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ postId: p.id })
+          }).then(r => r.ok ? r.json() : null).then(data => {
+            if (data && typeof data.bookmarked === 'boolean') {
+              p.isBookmarked = data.bookmarked;
+              saveLocalBookmarkedPost(p.id, data.bookmarked);
+              renderFeed();
+            }
           }).catch(() => {});
         }
         return;
@@ -575,12 +623,26 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (data && Array.isArray(data.posts)) {
-          posts = data.posts.map(p => ({
-            ...p,
-            time: p.time || 'Recently',
-            avatar: p.avatar || 'assets/brand/favicon-192x192.png',
-            comments: Array.isArray(p.comments) ? p.comments : []
-          }));
+          const localLiked = getLocalLikedPosts();
+          const localBookmarked = getLocalBookmarkedPosts();
+          posts = data.posts.map(p => {
+            const isLiked = typeof p.isLiked === 'boolean' ? (p.isLiked || localLiked.has(p.id)) : localLiked.has(p.id);
+            const isBookmarked = typeof p.isBookmarked === 'boolean' ? (p.isBookmarked || localBookmarked.has(p.id)) : localBookmarked.has(p.id);
+            if (isLiked) localLiked.add(p.id);
+            if (isBookmarked) localBookmarked.add(p.id);
+            return {
+              ...p,
+              isLiked,
+              isBookmarked,
+              time: p.time || 'Recently',
+              avatar: p.avatar || 'assets/brand/favicon-192x192.png',
+              comments: Array.isArray(p.comments) ? p.comments : []
+            };
+          });
+          try {
+            localStorage.setItem('vch_liked_posts', JSON.stringify([...localLiked]));
+            localStorage.setItem('vch_bookmarked_posts', JSON.stringify([...localBookmarked]));
+          } catch (e) {}
           renderFeed();
         }
       })

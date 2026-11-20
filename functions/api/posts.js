@@ -69,6 +69,9 @@ export async function onRequest(context) {
       return jsonResponse({ posts: [], mode: 'edge_local' });
     }
 
+    const authUser = await getAuthenticatedUser(request, env);
+    const actorFingerprint = authUser ? `user_${authUser.id}` : `ip_${ipHash}`;
+
     try {
       const { rows: postRows } = await runTursoSql(
         env,
@@ -102,11 +105,42 @@ export async function onRequest(context) {
         });
       }
 
+      const userLikedPostIds = new Set();
+      const userBookmarkedPostIds = new Set();
+
+      try {
+        const { rows: likedRows } = await runTursoSql(
+          env,
+          `SELECT post_id FROM post_likes WHERE actor_fingerprint = ? OR (user_id IS NOT NULL AND user_id = ?)`,
+          [actorFingerprint, authUser ? authUser.id : '']
+        );
+        if (Array.isArray(likedRows)) {
+          for (const lr of likedRows) {
+            if (lr.post_id) userLikedPostIds.add(lr.post_id);
+          }
+        }
+      } catch (e) {}
+
+      try {
+        const { rows: bookmarkedRows } = await runTursoSql(
+          env,
+          `SELECT post_id FROM post_bookmarks WHERE actor_fingerprint = ? OR (user_id IS NOT NULL AND user_id = ?)`,
+          [actorFingerprint, authUser ? authUser.id : '']
+        );
+        if (Array.isArray(bookmarkedRows)) {
+          for (const br of bookmarkedRows) {
+            if (br.post_id) userBookmarkedPostIds.add(br.post_id);
+          }
+        }
+      } catch (e) {}
+
       const formatted = postRows.map(p => ({
         ...p,
         pinned: Number(p.pinned) === 1,
         likes: Number(p.likes) || 0,
+        isLiked: userLikedPostIds.has(p.id),
         bookmarks: Number(p.bookmarks) || 0,
+        isBookmarked: userBookmarkedPostIds.has(p.id),
         time: formatIsoTime(p.created_at),
         comments: commentsByPost[p.id] || []
       }));
