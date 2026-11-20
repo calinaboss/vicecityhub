@@ -1353,12 +1353,136 @@ body.page-map-view {
 .marker-airstrips { background: #00d2ff; color: #000; }
 
 /* ==========================================================================
-   CHEATS DIRECTORY (cheats.html)
+   CHEATS DIRECTORY & MINI-GUIDE (PS5 & XBOX SERIES X/S ONLY)
    ========================================================================== */
+.cheats-guide-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.cheats-consoles-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.console-guide-card {
+  background: rgba(22, 27, 34, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+}
+
+.console-guide-card.ps5-card {
+  border-left: 3px solid #3b82f6;
+}
+
+.console-guide-card.xbox-card {
+  border-left: 3px solid #10b981;
+}
+
+.console-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.ps5-card .console-card-head i {
+  color: #60a5fa;
+  font-size: 1.05rem;
+}
+
+.xbox-card .console-card-head i {
+  color: #34d399;
+  font-size: 1.05rem;
+}
+
+.console-card-steps {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.dpad-inline,
+.btn-shoulder {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-ui);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--text-main);
+}
+
+.btn-shoulder.ps-btn {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+}
+
+.btn-shoulder.xb-btn {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+}
+
+.cheats-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cheat-tip-box {
+  background: rgba(22, 27, 34, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.cheat-tip-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.cheat-tip-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.48;
+}
+
+.cheat-tip-text code {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  background: rgba(0, 210, 255, 0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
 .cheats-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .cheats-toolbar {
@@ -1367,10 +1491,12 @@ body.page-map-view {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 14px;
-  background: var(--bg-surface);
+  background: rgba(22, 27, 34, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 12px 16px;
+  padding: 10px 14px;
 }
 
 .cheats-platform-pills {
@@ -1380,12 +1506,11 @@ body.page-map-view {
   flex-wrap: wrap;
 }
 
-.cheats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-  max-height: calc(100vh - 280px);
-  min-height: 360px;
+.cheats-ordered-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 460px;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-right: 8px;
@@ -1393,99 +1518,176 @@ body.page-map-view {
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
 
-.cheats-grid::-webkit-scrollbar {
+.cheats-ordered-list::-webkit-scrollbar {
   width: 5px;
 }
 
-.cheats-grid::-webkit-scrollbar-track {
+.cheats-ordered-list::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.cheats-grid::-webkit-scrollbar-thumb {
+.cheats-ordered-list::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.18);
   border-radius: 999px;
 }
 
-.cheat-card {
-  background: rgba(22, 27, 34, 0.72);
+.cheat-row-card {
+  background: rgba(22, 27, 34, 0.78);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: var(--transition);
-}
-
-.cheat-card:hover {
-  border-color: var(--text-dim);
-}
-
-.cheat-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.cheat-title {
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: var(--text-main);
-}
-
-.cheat-platform-badge {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: var(--radius-xs);
-  background: var(--bg-surface-elevated);
-  color: var(--text-dim);
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-.cheat-desc {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-  margin-bottom: 14px;
-}
-
-.cheat-code-box {
-  background: var(--bg-body);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 8px 12px;
+  padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 18px;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.cheat-code-text {
-  font-family: monospace, Courier, sans-serif;
-  font-size: 0.85rem;
+.cheat-row-card:hover {
+  border-color: rgba(255, 42, 133, 0.45);
+  background: var(--bg-surface-elevated);
+}
+
+.cheat-row-info {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cheat-row-title-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cheat-row-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.cheat-unlock-tag {
+  font-size: 0.66rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 42, 133, 0.14);
   color: var(--accent-pink);
-  letter-spacing: 1px;
-  word-break: break-all;
+}
+
+.cheat-row-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.42;
+}
+
+.cheat-prefix-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.console-prefix {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.71rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.console-prefix.ps-prefix {
+  background: rgba(59, 130, 246, 0.14);
+  color: #93c5fd;
+}
+
+.console-prefix.xb-prefix {
+  background: rgba(16, 185, 129, 0.14);
+  color: #6ee7b7;
+}
+
+.cheat-row-sequence-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.dpad-sequence-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.dpad-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: rgba(13, 17, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dpad-badge i {
+  font-size: 0.74rem;
+  color: var(--accent-cyan);
 }
 
 .cheat-copy-btn {
-  background: none;
-  border: none;
-  color: var(--text-dim);
-  font-size: 0.85rem;
-  padding: 4px;
-  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 6px 11px;
+  min-height: 32px;
+  flex-shrink: 0;
 }
 
 .cheat-copy-btn:hover {
-  color: var(--text-main);
+  background: var(--accent-pink);
+  border-color: var(--accent-pink);
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .cheats-consoles-row,
+  .cheats-tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cheat-row-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .cheat-row-sequence-box {
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-light);
+  }
 }
 
 /* ==========================================================================

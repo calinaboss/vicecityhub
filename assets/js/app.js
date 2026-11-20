@@ -704,129 +704,138 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 3. GTA VI CHEAT CODES (cheats.html)
+  // 3. GTA VI CHEAT CODES (PS5 & XBOX SERIES X/S ONLY - D-PAD SEQUENCES)
   // ==========================================
   const cheatsData = [
     {
       id: 'cheat-1',
-      title: 'Max Health & Armor',
-      category: 'playstation',
-      platform: 'PS5',
-      desc: 'Restores full player health and gives 100% body armor.',
-      code: 'XXXX-HEALTH-XXXX (L1, R1, SQUARE, XXXX)'
+      title: '$250,000',
+      tag: 'Quick Cheat (Story Unlock)',
+      desc: 'Instantly receive $250,000. Unlocked and ready to use right after completing the final story mission.',
+      sequence: ['Up', 'Right', 'Down', 'Left', 'Up', 'Left', 'Down', 'Right']
     },
     {
       id: 'cheat-2',
-      title: 'Lower Wanted Level',
-      category: 'playstation',
-      platform: 'PS5',
-      desc: 'Removes one star from your active police wanted level.',
-      code: 'XXXX-WANTED-MINUS (R1, R1, CIRCLE, XXXX)'
+      title: 'Unlimited Focus',
+      tag: 'Quick Cheat (Story Unlock)',
+      desc: 'Never run out of Focus. Unlocked and ready to use right after completing the final story mission.',
+      sequence: ['Down', 'Up', 'Up', 'Down', 'Up', 'Down', 'Up', 'Down', 'Up', 'Right']
     },
     {
       id: 'cheat-3',
-      title: 'Raise Wanted Level',
-      category: 'playstation',
-      platform: 'PS5',
-      desc: 'Adds one star to your wanted level to initiate police pursuits.',
-      code: 'XXXX-WANTED-PLUS (R1, R1, CIRCLE, XXXX)'
+      title: 'Attack Force',
+      tag: 'Quick Cheat (Story Unlock)',
+      desc: 'Bullets and melee attacks blast targets away upon impact. Unlocked after the final story mission.',
+      sequence: ['Down', 'Up', 'Left', 'Left', 'Right', 'Down', 'Down', 'Up', 'Down']
     },
     {
       id: 'cheat-4',
-      title: 'Spawn Attack Helicopter',
-      category: 'playstation',
-      platform: 'PS5',
-      desc: 'Instantly spawns a military attack chopper equipped with rockets.',
-      code: 'XXXX-CHOPPER-XXXX (CIRCLE, CIRCLE, L1, XXXX)'
+      title: 'Weather Cycle',
+      tag: 'Quick Cheat (Story Unlock)',
+      desc: 'Changes current weather conditions and sky colors across Vice City and Leonida.',
+      sequence: ['Down', 'Right', 'Up', 'Down', 'Right', 'Up', 'Right']
     },
     {
       id: 'cheat-5',
-      title: 'Super Jump & Fast Sprint',
-      category: 'xbox',
-      platform: 'Xbox',
-      desc: 'Allows the character to sprint at high speeds and jump 10 meters high.',
-      code: 'XXXX-SPRINT-JUMP (Y, RB, RT, XXXX)'
+      title: 'Exploding Balls',
+      tag: 'Combat Pattern',
+      desc: 'Projectiles trigger explosive impact blasts. Note: Differs from Attack Force by only the final input.',
+      sequence: ['Down', 'Up', 'Left', 'Left', 'Right', 'Down', 'Down', 'Up', 'Up']
     },
     {
       id: 'cheat-6',
-      title: 'Flaming Bullets & Explosive Ammo',
-      category: 'xbox',
-      platform: 'Xbox',
-      desc: 'All firearms ignite targets and cause explosive concussive damage on impact.',
-      code: 'XXXX-FLAME-AMMO (LB, RB, X, XXXX)'
+      title: 'Vehicle Force',
+      tag: 'Vehicle Combat',
+      desc: 'Grants heavy ramming force to your vehicle on collision. Differs from Attack Force by one command.',
+      sequence: ['Down', 'Up', 'Left', 'Left', 'Right', 'Down', 'Down', 'Right', 'Down']
     },
     {
       id: 'cheat-7',
-      title: 'Spawn Supercar (Grotti Cheetah)',
-      category: 'xbox',
-      platform: 'Xbox',
-      desc: 'Spawns a top-tier exotic sports vehicle right in front of you.',
-      code: 'XXXX-SPAWN-SUPER (RT, LB, B, XXXX)'
+      title: 'Standard Ammo Refill',
+      tag: 'Ammo Pattern',
+      desc: 'Follows the universal Ammo prefix (Down, Up, Right, Down, Left, Left, Up) to restore weapon ammunition.',
+      sequence: ['Down', 'Up', 'Right', 'Down', 'Left', 'Left', 'Up', 'Right', 'Down']
     },
     {
       id: 'cheat-8',
-      title: 'Change Weather: Thunderstorm',
-      category: 'phone',
-      platform: 'Cell Phone',
-      desc: 'Toggles between heavy Vice City tropical storms, fog, and clear sunset.',
-      code: '1-999-XXXX-THUNDER'
-    },
-    {
-      id: 'cheat-9',
-      title: 'Slow Motion Aiming (Dead Eye Mode)',
-      category: 'phone',
-      platform: 'Cell Phone',
-      desc: 'Slows down time when drawing your weapon to line up precise headshots.',
-      code: '1-999-XXXX-DEADEYE'
-    },
-    {
-      id: 'cheat-10',
-      title: 'Moon Gravity Physics',
-      category: 'phone',
-      platform: 'Cell Phone',
-      desc: 'Drastically reduces gravity for vehicles and player ragdolls.',
-      code: '1-999-XXXX-GRAVITY'
+      title: 'Vehicle Spawn Pattern',
+      tag: 'Vehicle Pattern',
+      desc: 'All vehicle spawn cheats begin with the universal prefix: Left, Up, Right, Down.',
+      sequence: ['Left', 'Up', 'Right', 'Down', 'Left', 'Up', 'Right', 'Up']
     }
   ];
 
   let currentPlatform = 'all';
 
+  const dpadIconMap = {
+    Up: 'fa-arrow-up',
+    Right: 'fa-arrow-right',
+    Down: 'fa-arrow-down',
+    Left: 'fa-arrow-left'
+  };
+
+  function renderPrefixBadges(platform) {
+    const psBadge = `<span class="console-prefix ps-prefix"><i class="fa-brands fa-playstation"></i> PS5: Up (Phone) &rarr; Hold L1 + R1</span>`;
+    const xbBadge = `<span class="console-prefix xb-prefix"><i class="fa-brands fa-xbox"></i> Xbox: Up (Phone) &rarr; Hold LB + RB</span>`;
+    if (platform === 'ps5') return psBadge;
+    if (platform === 'xbox') return xbBadge;
+    return `${psBadge} ${xbBadge}`;
+  }
+
   function renderCheats() {
     if (!cheatsGrid) return;
     const query = (cheatSearchInput?.value || '').toLowerCase().trim();
     const filtered = cheatsData.filter(c => {
-      const matchPlatform = currentPlatform === 'all' || c.category === currentPlatform;
-      const matchQuery = !query || c.title.toLowerCase().includes(query) || c.desc.toLowerCase().includes(query);
-      return matchPlatform && matchQuery;
+      const codeStr = c.sequence.join(', ').toLowerCase();
+      return !query ||
+        c.title.toLowerCase().includes(query) ||
+        c.desc.toLowerCase().includes(query) ||
+        c.tag.toLowerCase().includes(query) ||
+        codeStr.includes(query);
     });
 
     if (filtered.length === 0) {
       cheatsGrid.innerHTML = `
-        <div class="widget-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
-          <p style="color: var(--text-muted); margin-bottom: 8px;">No cheat codes found.</p>
-          <span style="font-size: 0.8rem; color: var(--text-dim);">Know a working code? Email info@vicecityhub.eu</span>
+        <div class="widget-card" style="text-align: center; padding: 36px 20px;">
+          <p style="color: var(--text-muted); margin-bottom: 6px;">No cheat codes matching "${escapeHtml(query)}".</p>
+          <span style="font-size: 0.8rem; color: var(--text-dim);">Discovered a new D-pad code? Email info@vicecityhub.eu</span>
         </div>
       `;
       return;
     }
 
-    cheatsGrid.innerHTML = filtered.map(c => `
-      <div class="cheat-card">
-        <div>
-          <div class="cheat-header">
-            <h3 class="cheat-title">${escapeHtml(c.title)}</h3>
-            <span class="cheat-platform-badge">${escapeHtml(c.platform)}</span>
+    cheatsGrid.innerHTML = filtered.map(c => {
+      const plainCode = c.sequence.join(', ');
+      const dpadBadgesHtml = c.sequence.map(dir => `
+        <span class="dpad-badge dpad-${dir.toLowerCase()}">
+          <i class="fa-solid ${dpadIconMap[dir] || 'fa-circle'}"></i> ${escapeHtml(dir)}
+        </span>
+      `).join('');
+
+      return `
+        <div class="cheat-row-card">
+          <div class="cheat-row-info">
+            <div class="cheat-row-title-line">
+              <h3 class="cheat-row-title">${escapeHtml(c.title)}</h3>
+              <span class="cheat-unlock-tag">${escapeHtml(c.tag)}</span>
+            </div>
+            <p class="cheat-row-desc">${escapeHtml(c.desc)}</p>
+            <div class="cheat-prefix-row">
+              ${renderPrefixBadges(currentPlatform)}
+            </div>
           </div>
-          <p class="cheat-desc">${escapeHtml(c.desc)}</p>
+
+          <div class="cheat-row-sequence-box">
+            <div class="dpad-sequence-wrap">
+              ${dpadBadgesHtml}
+            </div>
+            <button class="cheat-copy-btn btn-copy-cheat" data-code="${escapeHtml(plainCode)}" title="Copy D-Pad Sequence">
+              <i class="fa-solid fa-copy"></i> <span>Copy</span>
+            </button>
+          </div>
         </div>
-        <div class="cheat-code-box">
-          <span class="cheat-code-text">${escapeHtml(c.code)}</span>
-          <button class="cheat-copy-btn btn-copy-cheat" data-code="${escapeHtml(c.code)}" title="Copy Cheat">
-            <i class="fa-solid fa-copy"></i>
-          </button>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   if (cheatsGrid) {
@@ -848,7 +857,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (copyBtn) {
         const code = copyBtn.dataset.code;
         navigator.clipboard.writeText(code).then(() => {
-          showToast('Cheat code copied to clipboard!');
+          showToast('D-Pad sequence copied to clipboard!');
         });
       }
     });
