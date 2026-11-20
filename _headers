@@ -49,5 +49,8 @@
 /BingSiteAuth.xml
   Cache-Control: public, max-age=86400, must-revalidate
 
+/loaderio-f13f8c17f49450ee203618a543199db0.txt
+  Cache-Control: public, max-age=86400, must-revalidate
+
 /d/*
   Cache-Control: public, max-age=0, must-revalidate
