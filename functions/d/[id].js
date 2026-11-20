@@ -240,8 +240,8 @@ export async function onRequest(context) {
         </video>
       </div>`;
     } else {
-      mediaHtml = `<div class="post-media-container" style="margin-top:14px;border-radius:8px;overflow:hidden;background:#05070a;">
-        <img src="${escapeHtml(post.mediaUrl)}" alt="${escapeHtml(postTitle)}" style="max-height:500px;width:100%;object-fit:cover;display:block;" loading="lazy">
+      mediaHtml = `<div class="post-media-container" style="margin-top:14px;border-radius:8px;overflow:hidden;background:#05070a;display:flex;justify-content:center;align-items:center;max-height:500px;">
+        <img src="${escapeHtml(post.mediaUrl)}" alt="${escapeHtml(postTitle)}" style="max-height:500px;max-width:100%;width:auto;object-fit:contain;display:block;margin:0 auto;" loading="lazy">
       </div>`;
     }
   }
