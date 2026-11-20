@@ -8,7 +8,8 @@ import {
   ensureTursoSchema,
   checkRateLimit,
   getAuthenticatedUser,
-  sanitizePlainText
+  sanitizePlainText,
+  verifyTurnstileToken
 } from './_turso.js';
 
 const DISCORD_REGEX = /^https:\/\/(discord\.gg\/[a-zA-Z0-9_-]{2,32}|discord\.com\/invite\/[a-zA-Z0-9_-]{2,32})$/;
@@ -82,6 +83,12 @@ export async function onRequest(context) {
     // OWASP Honeypot Check
     if (body.discord_hp_url && String(body.discord_hp_url).trim().length > 0) {
       return jsonResponse({ error: 'Automated bot submission rejected' }, 400);
+    }
+
+    const turnstileToken = body.cfTurnstileResponse || body['cf-turnstile-response'] || '';
+    const turnstileCheck = await verifyTurnstileToken(env, turnstileToken, ip, 'submit_discord');
+    if (!turnstileCheck.valid) {
+      return jsonResponse({ error: turnstileCheck.error || 'Turnstile verification failed.' }, 403);
     }
 
     const authUser = await getAuthenticatedUser(request, env);

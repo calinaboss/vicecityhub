@@ -15,57 +15,74 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=2.8">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.9">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
   <!-- HEADER -->
   <header class="site-header">
     <div class="header-container">
-      <div class="brand-wrapper">
-        <a href="index.html" class="brand-logo" aria-label="ViceCityHub Homepage">
-          <img src="assets/brand/logo.png" alt="ViceCityHub" class="brand-logo-img">
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="https://map.vicecityhub.eu" class="nav-link">Map</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
+      </nav>
+      <div class="header-nav-right">
+        <a href="index.html" class="btn-secondary">
+          <i class="fa-solid fa-arrow-left"></i> Back to Hub
         </a>
       </div>
-      <a href="index.html" class="btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Back to Hub
-      </a>
     </div>
   </header>
 
-  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); width: 100%; max-width: 420px; padding: 28px;">
-      
-      <div style="text-align: center; margin-bottom: 22px;">
-        <img src="assets/brand/logo.png" alt="ViceCityHub" style="height: 38px; width: auto; margin: 0 auto 8px;">
-        <h1 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);" id="auth-title">Welcome to ViceCityHub</h1>
-        <p style="font-size: 0.82rem; color: var(--text-muted);" id="auth-subtitle">Log in to your account</p>
+  <main style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 20px;">
+    <div style="background: rgba(22, 27, 34, 0.85); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: var(--radius-md); width: 100%; max-width: 430px; padding: 28px;">
+
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="assets/brand/logo.png" alt="ViceCityHub" style="height: 44px; width: auto; margin: 0 auto 10px;">
+        <h1 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main);" id="auth-title">Welcome Back</h1>
+        <p style="font-size: 0.82rem; color: var(--text-muted);" id="auth-subtitle">Log in to your ViceCityHub account</p>
       </div>
 
       <!-- Auth Tabs -->
       <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
-        <button id="tab-login" class="nav-link active" style="flex: 1; justify-content: center;">Log in</button>
-        <button id="tab-signup" class="nav-link" style="flex: 1; justify-content: center;">Sign in</button>
+        <button type="button" id="tab-login" class="nav-link active" style="flex: 1; justify-content: center;">Log in</button>
+        <button type="button" id="tab-signup" class="nav-link" style="flex: 1; justify-content: center;">Sign in / Register</button>
       </div>
 
-      <form id="auth-form" style="display: flex; flex-direction: column; gap: 14px;" onsubmit="event.preventDefault(); alert('Frontend prototype: Authentication system ready to connect to your backend.');">
-        <div class="form-group">
-          <label class="form-label">Email or Username</label>
-          <input type="text" class="form-input" placeholder="player@vicecityhub.eu" required autocomplete="username">
+      <div id="auth-feedback" style="display: none; padding: 10px 12px; border-radius: 6px; font-size: 0.8rem; margin-bottom: 12px;"></div>
+
+      <form id="auth-form" style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="form-group" id="username-group" style="display: none;">
+          <label for="auth-username" class="form-label">Username</label>
+          <input type="text" id="auth-username" class="form-input" placeholder="e.g. TommyV_86" maxlength="24" autocomplete="username">
         </div>
 
         <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+          <label for="auth-email" class="form-label">Email Address</label>
+          <input type="email" id="auth-email" class="form-input" placeholder="player@vicecityhub.eu" required autocomplete="email">
         </div>
 
-        <button type="submit" class="btn-post" style="width: 100%; justify-content: center; margin-top: 6px;">
-          Continue
+        <div class="form-group">
+          <label for="auth-password" class="form-label">Password (min 8 characters)</label>
+          <input type="password" id="auth-password" class="form-input" placeholder="••••••••" required minlength="8" maxlength="128" autocomplete="current-password">
+        </div>
+
+        <!-- Cloudflare Turnstile Anti-Bot Widget -->
+        <div class="form-group" style="display: flex; justify-content: center;">
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAGKbR5q-KyH7QJsw" data-theme="dark"></div>
+        </div>
+
+        <button type="submit" id="auth-submit-btn" class="btn-post-submit" style="width: 100%; justify-content: center; margin-top: 4px;">
+          <i class="fa-solid fa-right-to-bracket"></i> <span>Continue</span>
         </button>
       </form>
 
       <div style="text-align: center; margin-top: 18px; font-size: 0.78rem; color: var(--text-dim);">
-        By continuing, you agree to our <a href="terms.html" style="color: var(--accent-pink);">Terms of Service</a> and <a href="privacy.html" style="color: var(--accent-pink);">Privacy Policy</a>.
+        Protected by Cloudflare Turnstile &amp; OWASP PBKDF2-SHA256.<br>
+        By continuing, you agree to our <a href="terms.html" style="color: var(--accent-pink);">Terms</a> and <a href="privacy.html" style="color: var(--accent-pink);">Privacy Policy</a>.
       </div>
     </div>
   </main>
@@ -79,22 +96,34 @@
   </footer>
 
   <script>
+    let currentAuthMode = 'login';
     const tabLogin = document.getElementById('tab-login');
     const tabSignup = document.getElementById('tab-signup');
     const authTitle = document.getElementById('auth-title');
     const authSubtitle = document.getElementById('auth-subtitle');
+    const usernameGroup = document.getElementById('username-group');
+    const authUsername = document.getElementById('auth-username');
+    const authForm = document.getElementById('auth-form');
+    const authFeedback = document.getElementById('auth-feedback');
 
     function setTab(tab) {
+      authFeedback.style.display = 'none';
       if (tab === 'signup') {
+        currentAuthMode = 'register';
         tabSignup.classList.add('active');
         tabLogin.classList.remove('active');
         authTitle.textContent = 'Create an Account';
-        authSubtitle.textContent = 'Join GTA VI\'s community hub';
+        authSubtitle.textContent = "Join GTA VI's community hub";
+        usernameGroup.style.display = 'flex';
+        authUsername.required = true;
       } else {
+        currentAuthMode = 'login';
         tabLogin.classList.add('active');
         tabSignup.classList.remove('active');
         authTitle.textContent = 'Welcome Back';
-        authSubtitle.textContent = 'Log in to your account';
+        authSubtitle.textContent = 'Log in to your ViceCityHub account';
+        usernameGroup.style.display = 'none';
+        authUsername.required = false;
       }
     }
 
@@ -105,6 +134,49 @@
     if (urlParams.get('tab') === 'signup' || urlParams.get('tab') === 'register') {
       setTab('signup');
     }
+
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      const username = authUsername.value.trim();
+      const turnstileInput = authForm.querySelector('[name="cf-turnstile-response"]');
+      const cfTurnstileResponse = turnstileInput ? turnstileInput.value : '';
+
+      authFeedback.style.display = 'block';
+      authFeedback.style.background = 'rgba(59, 130, 246, 0.14)';
+      authFeedback.style.color = '#93c5fd';
+      authFeedback.textContent = 'Verifying credentials with Cloudflare Turnstile...';
+
+      try {
+        const res = await fetch(`/api/auth?action=${currentAuthMode}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, username, cfTurnstileResponse })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          authFeedback.style.background = 'rgba(239, 68, 68, 0.16)';
+          authFeedback.style.color = '#fca5a5';
+          authFeedback.textContent = data.error || 'Authentication failed.';
+          if (window.turnstile) window.turnstile.reset();
+          return;
+        }
+        authFeedback.style.background = 'rgba(16, 185, 129, 0.16)';
+        authFeedback.style.color = '#6ee7b7';
+        authFeedback.textContent = 'Authenticated! Redirecting to ViceCityHub...';
+        if (data.user && data.user.username) {
+          localStorage.setItem('vicecityhub_user', JSON.stringify(data.user));
+        }
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 700);
+      } catch (err) {
+        authFeedback.style.background = 'rgba(239, 68, 68, 0.16)';
+        authFeedback.style.color = '#fca5a5';
+        authFeedback.textContent = 'Network error. Please try again.';
+      }
+    });
   </script>
 </body>
 </html>

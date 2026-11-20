@@ -9,7 +9,8 @@ import {
   checkRateLimit,
   getAuthenticatedUser,
   sanitizePlainText,
-  sanitizeExternalUrl
+  sanitizeExternalUrl,
+  verifyTurnstileToken
 } from './_turso.js';
 
 const RESERVED_NAMES = [
@@ -134,6 +135,12 @@ export async function onRequest(context) {
       const allowed = await checkRateLimit(env, `posts_create_${ipHash}`, 8, 60000);
       if (!allowed) {
         return jsonResponse({ error: 'Too many posts submitted. Please wait 1 minute.' }, 429);
+      }
+
+      const turnstileToken = body.cfTurnstileResponse || body['cf-turnstile-response'] || '';
+      const turnstileCheck = await verifyTurnstileToken(env, turnstileToken, ip, 'create_post');
+      if (!turnstileCheck.valid) {
+        return jsonResponse({ error: turnstileCheck.error || 'Turnstile verification failed.' }, 403);
       }
 
       const title = sanitizePlainText(body.title, 120);

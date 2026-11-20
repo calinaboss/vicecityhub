@@ -412,3 +412,74 @@ export function sanitizeExternalUrl(rawVal) {
     return '';
   }
 }
+
+/**
+ * Canonical Server-Side Cloudflare Turnstile Siteverify
+ * Reads secret strictly from env.TURNSTILE_SECRET_KEY (or env.TURNSTILE_SECRET).
+ * Zero secrets stored in source code.
+ */
+export async function verifyTurnstileToken(env, token, remoteIp, expectedAction = '') {
+  const secretKey = (env?.TURNSTILE_SECRET_KEY || env?.TURNSTILE_SECRET || '').trim();
+  if (!secretKey) {
+    // If TURNSTILE_SECRET_KEY is not yet set in Cloudflare env, allow local preview
+    return { valid: true, mode: 'unconfigured_preview' };
+  }
+
+  if (typeof token !== 'string' || token.length === 0 || token.length > 2048) {
+    return { valid: false, error: 'Please complete the Cloudflare Turnstile security check.' };
+  }
+
+  const expectedHostnames = new Set(
+    (env.TURNSTILE_HOSTNAMES || 'vicecityhub.eu,www.vicecityhub.eu,map.vicecityhub.eu')
+      .split(',')
+      .map(h => h.trim().toLowerCase())
+      .filter(Boolean)
+  );
+
+  try {
+    const bodyParams = new URLSearchParams({
+      secret: secretKey,
+      response: token
+    });
+    if (remoteIp && remoteIp !== 'anonymous') {
+      bodyParams.append('remoteip', remoteIp);
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: bodyParams.toString(),
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      return { valid: false, error: 'Turnstile verification service unavailable.' };
+    }
+
+    const result = await res.json();
+    if (!result || result.success !== true) {
+      return { valid: false, error: 'Cloudflare Turnstile verification failed. Please retry.' };
+    }
+
+    if (expectedAction && result.action && result.action !== expectedAction) {
+      return { valid: false, error: 'Turnstile action mismatch.' };
+    }
+
+    if (result.hostname) {
+      const host = result.hostname.toLowerCase();
+      const allowedHost = expectedHostnames.has(host) || host.endsWith('.vicecityhub.pages.dev');
+      if (!allowedHost) {
+        return { valid: false, error: 'Turnstile hostname verification failed.' };
+      }
+    }
+
+    return { valid: true };
+  } catch (e) {
+    return { valid: false, error: 'Turnstile verification timed out.' };
+  }
+}

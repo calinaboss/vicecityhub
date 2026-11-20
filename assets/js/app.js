@@ -565,6 +565,9 @@ document.addEventListener('DOMContentLoaded', () => {
         comments: []
       };
 
+      const turnstileInput = dedicatedPostForm.querySelector('[name="cf-turnstile-response"]');
+      const cfTurnstileResponse = turnstileInput ? turnstileInput.value : '';
+
       try {
         const res = await fetch('/api/posts?action=create', {
           method: 'POST',
@@ -575,9 +578,16 @@ document.addEventListener('DOMContentLoaded', () => {
             category,
             text,
             mediaUrl,
-            website_url_hp: hp
+            website_url_hp: hp,
+            cfTurnstileResponse
           })
         });
+        if (res.status === 403 || res.status === 400 || res.status === 429) {
+          const errData = await res.json().catch(() => ({}));
+          showToast(errData.error || 'Security verification failed. Please retry.');
+          if (window.turnstile) window.turnstile.reset();
+          return;
+        }
         if (res.ok) {
           const data = await res.json();
           if (data && data.post) {
@@ -818,6 +828,9 @@ document.addEventListener('DOMContentLoaded', () => {
         desc: desc
       };
 
+      const turnstileInput = dedicatedDiscordForm.querySelector('[name="cf-turnstile-response"]');
+      const cfTurnstileResponse = turnstileInput ? turnstileInput.value : '';
+
       try {
         const res = await fetch('/api/discords', {
           method: 'POST',
@@ -828,9 +841,16 @@ document.addEventListener('DOMContentLoaded', () => {
             category,
             country,
             desc,
-            discord_hp_url: hp
+            discord_hp_url: hp,
+            cfTurnstileResponse
           })
         });
+        if (res.status === 403 || res.status === 400 || res.status === 429) {
+          const errData = await res.json().catch(() => ({}));
+          showToast(errData.error || 'Security verification failed. Please retry.');
+          if (window.turnstile) window.turnstile.reset();
+          return;
+        }
         if (res.ok) {
           const data = await res.json();
           if (data && data.server) {

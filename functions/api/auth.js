@@ -7,7 +7,8 @@ import {
   runTursoSql,
   ensureTursoSchema,
   checkRateLimit,
-  getAuthenticatedUser
+  getAuthenticatedUser,
+  verifyTurnstileToken
 } from './_turso.js';
 
 function constantTimeEqual(a, b) {
@@ -96,6 +97,12 @@ export async function onRequest(context) {
     const email = (body.email || '').trim().toLowerCase();
     const password = body.password || '';
     const username = (body.username || '').trim().replace(/[^\w-]/g, '').slice(0, 24);
+    const turnstileToken = body.cfTurnstileResponse || body['cf-turnstile-response'] || '';
+
+    const turnstileCheck = await verifyTurnstileToken(env, turnstileToken, ip, action === 'register' ? 'register' : 'login');
+    if (!turnstileCheck.valid) {
+      return jsonResponse({ error: turnstileCheck.error || 'Turnstile verification failed.' }, 403);
+    }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 120) {
       return jsonResponse({ error: 'Invalid email address format' }, 400);
