@@ -102,17 +102,21 @@ function parseTursoResult(execResult) {
 }
 
 export function getTursoUrl(env) {
-  const raw = (
+  let raw = (
     env?.TURSO_DATABASE_URL ||
     env?.TURSO_URL ||
     env?.DATABASE_URL ||
     'libsql://vicecityhub-calinaboss.aws-eu-central-1.turso.io'
-  ).trim();
+  ).trim().replace(/^["']+|["']+$/g, '');
+  const qIdx = raw.indexOf('?');
+  if (qIdx !== -1) {
+    raw = raw.slice(0, qIdx);
+  }
   return raw.replace(/^libsql:\/\//i, 'https://').replace(/\/+$/, '');
 }
 
 export function getTursoToken(env) {
-  return (
+  let rawToken = (
     env?.TURSO_AUTH_TOKEN ||
     env?.TURSO_TOKEN ||
     env?.TURSO_API_KEY ||
@@ -121,6 +125,20 @@ export function getTursoToken(env) {
     env?.DB_TOKEN ||
     ''
   ).trim();
+
+  if (!rawToken) {
+    const rawUrl = (env?.TURSO_DATABASE_URL || env?.TURSO_URL || env?.DATABASE_URL || '').trim();
+    const match = rawUrl.match(/[?&]authToken=([^&]+)/i);
+    if (match && match[1]) {
+      rawToken = match[1];
+    }
+  }
+
+  return rawToken
+    .replace(/^["']+|["']+$/g, '')
+    .replace(/^Bearer\s+/i, '')
+    .replace(/^authToken=/i, '')
+    .replace(/\s+/g, '');
 }
 
 export function isTursoConfigured(env) {
