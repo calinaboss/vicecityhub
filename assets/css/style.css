@@ -1,11 +1,5 @@
-/* ==========================================================================
-   VICECITYHUB.EU - CLEAN WHATSR-INSPIRED COMMUNITY HUB
-   Simple, Flat, Centered & High-Performance (No Heavy Neon / No Boxy Clutter)
-   Zero Unicode Emojis - 100% Vector FontAwesome 6 Icons
-   ========================================================================== */
-
 :root {
-  /* Surfaces & Backgrounds (Clean, Deep Slate/Black like WhatsCR) */
+  
   --bg-body: #0d1117;
   --bg-surface: #161b22;
   --bg-surface-elevated: #21262d;
@@ -13,36 +7,34 @@
   --border-color: #30363d;
   --border-light: rgba(240, 246, 252, 0.08);
 
-  /* Typography */
+  
   --text-main: #f0f6fc;
   --text-muted: #8b949e;
   --text-dim: #6e7681;
 
-  /* Subtle Vice City Accents (Elegant, No Aggressive Neon Glow) */
+  
   --accent-pink: #ff2a85;
   --accent-pink-hover: #e01e72;
   --accent-cyan: #00d2ff;
   --color-discord: #5865f2;
   --color-discord-hover: #4752c4;
 
-  /* Typography */
+  
   --font-ui: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Teko', sans-serif;
 
-  /* Geometry & Layout (Sharp, Flat, Less Rounded, Zero Boxy Clutter) */
+  
   --container-max: 1140px;
   --radius-xs: 2px;
   --radius-sm: 3px;
   --radius-md: 4px;
   --radius-pill: 9999px;
 
-  /* Simple Transitions - No Lifting or Jumping */
+  
   --transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
-/* ==========================================================================
-   RESET & BASE
-   ========================================================================== */
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -73,7 +65,7 @@ body {
   width: 100%;
 }
 
-/* Fixed Palm Background (Remains static while feed & news scroll smoothly) */
+
 body::before {
   content: "";
   position: fixed;
@@ -101,7 +93,7 @@ a {
 
 button, input, textarea, select {
   font-family: inherit;
-  font-size: 16px; /* Prevents auto-zoom on mobile */
+  font-size: 16px; 
   color: inherit;
   border: none;
   outline: none;
@@ -119,7 +111,7 @@ img {
   display: block;
 }
 
-/* Scrollbar */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -132,9 +124,7 @@ img {
   border-radius: var(--radius-pill);
 }
 
-/* ==========================================================================
-   TOP HEADER & NAVBAR (WHATSR-STYLE)
-   ========================================================================== */
+
 .site-header {
   position: relative;
   z-index: 100;
@@ -163,7 +153,7 @@ img {
   display: none;
 }
 
-/* Left Navigation */
+
 .header-nav-left {
   display: flex;
   align-items: center;
@@ -202,7 +192,7 @@ img {
   box-shadow: none !important;
 }
 
-/* Center Logo */
+
 .header-brand-center {
   display: flex;
   align-items: center;
@@ -216,7 +206,7 @@ img {
   display: block;
 }
 
-/* Right Navigation & Auth (Log in / Sign in) */
+
 .header-nav-right {
   display: flex;
   align-items: center;
@@ -352,9 +342,7 @@ img {
   justify-content: center;
 }
 
-/* ==========================================================================
-   CENTERED HERO SECTION (WHATSR-STYLE CENTERED LOGO + SEARCH)
-   ========================================================================== */
+
 .hero-center-section {
   padding: 12px 20px 14px;
   text-align: center;
@@ -443,9 +431,7 @@ img {
   border-color: var(--accent-pink);
 }
 
-/* ==========================================================================
-   CENTERED CONTENT AREA
-   ========================================================================== */
+
 .site-main {
   flex: 1;
   max-width: var(--container-max);
@@ -454,7 +440,7 @@ img {
   padding: 8px 20px 28px;
 }
 
-/* Filter Bar */
+
 .filter-bar {
   display: flex;
   align-items: center;
@@ -498,7 +484,7 @@ img {
   border-color: var(--text-main);
 }
 
-/* Main Grid Layout */
+
 .content-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
@@ -512,9 +498,7 @@ img {
   max-width: 100%;
 }
 
-/* ==========================================================================
-   FEED POSTS (INDEPENDENT SCROLL CONTAINER - PAGE STAYS STILL)
-   ========================================================================== */
+
 .feed-container {
   display: flex;
   flex-direction: column;
@@ -553,7 +537,7 @@ img {
   border-radius: 0;
   padding: 16px 8px;
   transition: background-color 0.15s ease;
-  /* Twitter-style flat message flow */
+  
 }
 
 .post-card:hover {
@@ -722,7 +706,7 @@ img {
   color: var(--accent-cyan);
 }
 
-/* Comments Drawer */
+
 .post-comments-drawer {
   display: none;
   margin-top: 12px;
@@ -790,9 +774,7 @@ img {
   color: var(--text-muted);
 }
 
-/* ==========================================================================
-   SIDEBAR (SIMPLE & MINIMALIST)
-   ========================================================================== */
+
 .sidebar-wrapper {
   display: flex;
   flex-direction: column;
@@ -842,14 +824,14 @@ img {
 .trending-item {
   display: flex;
   flex-direction: column;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-surface-elevated);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
   transition: var(--transition);
 }
 
 .trending-item:hover {
-  background: var(--bg-body);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .trending-tag {
@@ -887,9 +869,7 @@ img {
   gap: 8px;
 }
 
-/* ==========================================================================
-   DEDICATED PAGES (DISCORDS, MAP)
-   ========================================================================== */
+
 .page-header-strip {
   padding: 14px 0 12px;
   border-bottom: 1px solid var(--border-color);
@@ -916,9 +896,7 @@ img {
   margin-top: 4px;
 }
 
-/* ==========================================================================
-   DISCORD SERVERS DIRECTORY (SLEEK LIST VIEW & LIVE NAME SEARCH)
-   ========================================================================== */
+
 .discord-filter-row {
   display: flex;
   align-items: center;
@@ -1103,9 +1081,7 @@ img {
   }
 }
 
-/* ==========================================================================
-   INTERACTIVE MAP (LEONIDA ATLAS)
-   ========================================================================== */
+
 body.page-map-view {
   background-color: #0d1117;
   background-image: linear-gradient(rgba(13, 17, 23, 0.88), rgba(13, 17, 23, 0.94)),
@@ -1280,7 +1256,7 @@ body.page-map-view {
   background: #090d12;
 }
 
-/* Leaflet Dark Theme Adjustments */
+
 .leaflet-bar {
   border: 1px solid var(--border-color) !important;
   border-radius: var(--radius-sm) !important;
@@ -1359,7 +1335,7 @@ body.page-map-view {
   font-weight: 600;
 }
 
-/* Custom Leaflet Marker Icons */
+
 .custom-poi-marker {
   width: 32px;
   height: 32px;
@@ -1379,9 +1355,7 @@ body.page-map-view {
 .marker-secrets { background: #eab308; color: #000; }
 .marker-airstrips { background: #00d2ff; color: #000; }
 
-/* ==========================================================================
-   CHEATS DIRECTORY & MINI-GUIDE (PS5 & XBOX SERIES X/S ONLY)
-   ========================================================================== */
+
 .cheats-guide-section {
   display: flex;
   flex-direction: column;
@@ -1711,9 +1685,7 @@ body.page-map-view {
   }
 }
 
-/* ==========================================================================
-   DISCORDS COUNTRY & TYPE FILTERS
-   ========================================================================== */
+
 .discord-filter-row {
   display: flex;
   align-items: center;
@@ -1748,7 +1720,7 @@ body.page-map-view {
   border-color: var(--color-discord);
 }
 
-/* Map Guide View */
+
 .map-container {
   display: flex;
   flex-direction: column;
@@ -1802,9 +1774,7 @@ body.page-map-view {
   color: var(--text-muted);
 }
 
-/* ==========================================================================
-   MODALS
-   ========================================================================== */
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1910,7 +1880,7 @@ body.page-map-view {
   margin-top: 6px;
 }
 
-/* Toast */
+
 .toast-notification {
   position: fixed;
   bottom: 24px;
@@ -1938,9 +1908,7 @@ body.page-map-view {
   pointer-events: auto;
 }
 
-/* ==========================================================================
-   WHATSR-STYLE COMPREHENSIVE FOOTER
-   ========================================================================== */
+
 .footer {
   background: var(--bg-surface);
   border-top: 1px solid var(--border-color);
@@ -2058,9 +2026,7 @@ body.page-map-view {
   line-height: 1.5;
 }
 
-/* ==========================================================================
-   MOBILE BOTTOM BAR & DRAWER
-   ========================================================================== */
+
 .mobile-bottom-bar {
   display: none;
   position: fixed;
@@ -2172,7 +2138,7 @@ body.page-map-view {
   color: var(--text-main);
 }
 
-/* Legal Pages */
+
 .legal-main {
   max-width: 860px;
   margin: 0 auto;
@@ -2228,9 +2194,7 @@ body.page-map-view {
   margin-bottom: 6px;
 }
 
-/* ==========================================================================
-   RESPONSIVENESS
-   ========================================================================== */
+
 @media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
@@ -2505,9 +2469,7 @@ body.page-map-view {
   }
 }
 
-/* ==========================================================================
-   DEDICATED POSTING & DISCORD SUBMISSION PAGES (FLAT, NO BOXES)
-   ========================================================================== */
+
 .posting-page-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
@@ -2650,9 +2612,7 @@ body.page-map-view {
   padding: 48px 16px;
 }
 
-/* ==========================================================================
-   RESERVED GOOGLE ADSENSE SPACES (INVISIBLE CONTAINER, ZERO BOX)
-   ========================================================================== */
+
 .adsense-slot {
   background: transparent;
   border: none;
@@ -2696,9 +2656,7 @@ body.page-map-view {
   }
 }
 
-/* ==========================================================================
-   BREADCRUMBS, RESPONSE TIME PROMISE, CUSTOM 404 & THANK YOU PAGES
-   ========================================================================== */
+
 .breadcrumb-nav {
   display: flex;
   align-items: center;
@@ -2787,9 +2745,7 @@ body.page-map-view {
   flex-wrap: wrap;
 }
 
-/* ==========================================================================
-   PASSWORD VISIBILITY EYE TOGGLE (LOGIN, REGISTER & SETTINGS)
-   ========================================================================== */
+
 .password-input-wrap {
   position: relative;
   display: flex;
@@ -2822,9 +2778,7 @@ body.page-map-view {
   color: var(--text-main);
 }
 
-/* ==========================================================================
-   NAVBAR AUTH USER PILL & SETTINGS LINK
-   ========================================================================== */
+
 .nav-user-pill {
   display: inline-flex;
   align-items: center;
@@ -2871,9 +2825,7 @@ body.page-map-view {
   color: var(--text-main);
 }
 
-/* ==========================================================================
-   FULL-PAGE CENTERED USER PROFILE (FLAT, NO BOXY CLUTTER)
-   ========================================================================== */
+
 .profile-fullpage-main {
   max-width: 860px;
   margin: 0 auto;
@@ -3117,9 +3069,7 @@ body.page-map-view {
   border-color: #ffffff;
 }
 
-/* ==========================================================================
-   FULL-SCREEN DISCORD-STYLE CIRCULAR PFP CROP & PREVIEW OVERLAY (NO BOXES)
-   ========================================================================== */
+
 .fullscreen-crop-overlay {
   position: fixed;
   inset: 0;
@@ -3237,9 +3187,7 @@ body.page-map-view {
   cursor: pointer;
 }
 
-/* ==========================================================================
-   FULL-SCREEN DISCORD-STYLE DRAGGABLE & ZOOMABLE IMAGE LIGHTBOX
-   ========================================================================== */
+
 .discord-media-viewer {
   position: fixed;
   inset: 0;
@@ -3328,9 +3276,7 @@ body.page-map-view {
   will-change: transform;
 }
 
-/* ==========================================================================
-   DEDICATED ACCOUNT SETTINGS PAGE (FLAT SECTIONS)
-   ========================================================================== */
+
 .settings-sections-stack {
   display: flex;
   flex-direction: column;
@@ -3384,5 +3330,125 @@ body.page-map-view {
 
   .nav-user-name {
     display: none;
+  }
+}
+
+.admin-flat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.admin-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+}
+
+.admin-row-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.share-bottom-popup {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 140%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2200;
+  width: calc(100% - 24px);
+  max-width: 560px;
+  background: rgba(22, 27, 34, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 2px solid var(--accent-pink);
+  padding: 14px 16px;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+.share-bottom-popup.show {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.share-popup-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.share-popup-copied {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.share-popup-close {
+  color: var(--text-muted);
+  font-size: 1rem;
+  padding: 4px 6px;
+}
+
+.share-popup-close:hover {
+  color: var(--text-main);
+}
+
+.share-popup-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.share-platform-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 2px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.share-platform-btn:hover {
+  background: var(--accent-pink);
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .share-bottom-popup {
+    bottom: 66px;
+    padding: 12px;
+  }
+
+  .admin-row-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-row-actions {
+    justify-content: flex-start;
   }
 }

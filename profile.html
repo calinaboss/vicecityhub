@@ -16,11 +16,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
 </head>
 <body>
 
-  <!-- TOP NAVBAR -->
   <header class="site-header">
     <div class="header-container">
       <span class="mobile-brand-title">VICECITYHUB</span>
@@ -45,10 +44,8 @@
     </div>
   </header>
 
-  <!-- FULL-PAGE CENTERED PROFILE -->
   <main class="site-main profile-fullpage-main">
 
-    <!-- CUSTOMIZABLE HEX COLOR BANNER + CENTERED AVATAR -->
     <section class="profile-hero-wrap" aria-label="Member Profile Header">
       <div class="profile-banner-strip" id="profile-banner-strip" style="background: linear-gradient(135deg, #ff2a85 0%, #161b22 100%);">
         <button type="button" class="profile-banner-color-trigger" id="btn-open-profile-editor" style="display: none;" title="Customize Banner Color &amp; Profile">
@@ -56,7 +53,6 @@
         </button>
       </div>
 
-      <!-- Centered PFP + Username + Follow Stats + Bio + Socials -->
       <div class="profile-center-column">
         <div class="profile-avatar-shell">
           <img src="assets/brand/favicon-192x192.png" alt="User Avatar" id="profile-avatar-img" class="profile-avatar-large">
@@ -66,13 +62,11 @@
           <input type="file" id="profile-avatar-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
         </div>
 
-        <!-- Centered Username & Role Badge -->
         <div class="profile-name-row">
           <h1 class="profile-username-heading" id="profile-username-display">Loading...</h1>
           <span class="badge-pill verified" id="profile-role-badge">MEMBER</span>
         </div>
 
-        <!-- Followers & Following Counters -->
         <div class="profile-follow-stats">
           <div class="follow-stat-item">
             <strong id="profile-followers-count">0</strong>
@@ -85,15 +79,12 @@
           </div>
         </div>
 
-        <!--Centered Bio -->
         <p class="profile-bio-text" id="profile-bio-display">
           ViceCityHub community member exploring Leonida &amp; Vice City.
         </p>
 
-        <!-- Centered Social Links & Click-to-Copy Discord Handle -->
         <div class="profile-socials-bar" id="profile-socials-bar"></div>
 
-        <!-- Centered Action Buttons (Follow for visitors / Edit & Account Settings for owner) -->
         <div class="profile-actions-row" id="profile-owner-actions" style="display: none;">
           <button type="button" class="btn-secondary" id="btn-toggle-edit-panel">
             <i class="fa-solid fa-sliders"></i> Edit Profile &amp; Socials
@@ -111,7 +102,6 @@
       </div>
     </section>
 
-    <!-- FULL-SCREEN DISCORD-STYLE CIRCULAR PFP CROP & PREVIEW OVERLAY (NO BOXES, DRAG & ZOOM) -->
     <div class="fullscreen-crop-overlay" id="avatar-crop-modal" aria-hidden="true">
       <div class="fullscreen-crop-topbar">
         <span class="fullscreen-crop-title">
@@ -147,7 +137,6 @@
       </div>
     </div>
 
-    <!-- INLINE CUSTOMIZE PROFILE PANEL (HEX BANNER PICKER, BIO, DISCORD, SOCIAL LINKS) -->
     <section class="profile-edit-section" id="profile-edit-panel" style="display: none;" aria-label="Edit Profile Details">
       <form id="profile-update-form" class="dedicated-form" autocomplete="off">
         <div class="page-header-strip" style="margin-top: 0;">
@@ -159,7 +148,6 @@
           </div>
         </div>
 
-        <!-- Full HEX Color Scale Picker for Banner -->
         <div class="form-group">
           <label for="banner-hex-input" class="form-label">Banner Color (Full HEX Spectrum)</label>
           <div class="hex-picker-row">
@@ -177,7 +165,6 @@
           </div>
         </div>
 
-        <!-- Bio -->
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <label for="profile-bio-input" class="form-label">Bio</label>
@@ -186,7 +173,6 @@
           <textarea id="profile-bio-input" class="form-textarea" maxlength="300" placeholder="Tell the ViceCityHub community about yourself, your play style, or your GTA VI crew..."></textarea>
         </div>
 
-        <!-- Click-to-Copy Discord Username -->
         <div class="form-group">
           <label for="profile-discord-input" class="form-label">
             <i class="fa-brands fa-discord" style="color: var(--color-discord);"></i> Discord Username (Visitors click to copy)
@@ -194,7 +180,6 @@
           <input type="text" id="profile-discord-input" class="form-input" maxlength="36" placeholder="e.g. tommyvercetti_86">
         </div>
 
-        <!-- Social Links Grid (OWASP Validated) -->
         <div class="form-row-two">
           <div class="form-group">
             <label for="social-x-input" class="form-label"><i class="fa-brands fa-x-twitter"></i> X / Twitter (Handle or URL)</label>
@@ -223,7 +208,7 @@
         </div>
 
         <div class="form-group">
-          <label for="social-website-input" class="form-label"><i class="fa-solid fa-globe"></i> Personal Website (HTTPS Only &bull; OWASP Verified)</label>
+          <label for="social-website-input" class="form-label"><i class="fa-solid fa-globe"></i> Personal Website (HTTPS Only &bull; Verified)</label>
           <input type="url" id="social-website-input" class="form-input" maxlength="200" placeholder="https://yoursite.com">
         </div>
 
@@ -238,7 +223,6 @@
       </form>
     </section>
 
-    <!-- USER'S RECENT COMMUNITY POSTS -->
     <section class="profile-posts-section" aria-label="Member Community Posts">
       <div class="page-header-strip">
         <h2 class="page-title" style="font-size: 1.12rem;">
@@ -250,7 +234,6 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-bottom-bar" style="margin-top: 0; border-top: none;">
       <p class="footer-disclaimer-text">&copy; 2026 ViceCityHub.eu &bull; Unofficial GTA VI Community Hub.</p>
@@ -261,7 +244,6 @@
     </div>
   </footer>
 
-  <!-- MOBILE STICKY BOTTOM BAR -->
   <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
     <a href="index.html" class="mobile-nav-item">
       <i class="fa-solid fa-layer-group"></i>
@@ -284,13 +266,12 @@
     </a>
   </nav>
 
-  <!-- TOAST -->
   <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
     <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
     <span id="toast-text">Action completed!</span>
   </div>
 
-  <script src="assets/js/app.js?v=3.4"></script>
-  <script src="assets/js/profile.js?v=3.4"></script>
+  <script src="assets/js/app.js?v=3.5"></script>
+  <script src="assets/js/profile.js?v=3.5"></script>
 </body>
 </html>

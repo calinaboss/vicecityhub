@@ -18,7 +18,7 @@ const ALLOWED_MEDIA_MIMES = new Set([
   'video/webm'
 ]);
 
-const MAX_MEDIA_BYTES = 15 * 1024 * 1024; // 15 MB strict OWASP ceiling
+const MAX_MEDIA_BYTES = 15 * 1024 * 1024;
 
 function verifyMagicBytes(mime, b64Chunk) {
   let binStr;
@@ -44,11 +44,11 @@ function verifyMagicBytes(mime, b64Chunk) {
     return b(0) === 0x47 && b(1) === 0x49 && b(2) === 0x46 && b(3) === 0x38;
   }
   if (mime === 'video/mp4') {
-    // ISO Base Media File Format: 'ftyp' at bytes 4..7
+
     return b(4) === 0x66 && b(5) === 0x74 && b(6) === 0x79 && b(7) === 0x70;
   }
   if (mime === 'video/webm') {
-    // EBML header: 1A 45 DF A3
+
     return b(0) === 0x1a && b(1) === 0x45 && b(2) === 0xdf && b(3) === 0xa3;
   }
   return false;
@@ -63,9 +63,6 @@ export async function onRequest(context) {
       return jsonResponse({ error: 'Database not configured' }, 500);
     }
 
-    // ------------------------------------------------------------------------
-    // GET /api/media?id=<uuid> -> Stream binary image/video with OWASP headers
-    // ------------------------------------------------------------------------
     if (request.method === 'GET') {
       const mediaId = (url.searchParams.get('id') || '').trim();
       if (!/^[0-9a-fA-F-]{20,40}$/.test(mediaId)) {
@@ -128,9 +125,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ------------------------------------------------------------------------
-    // POST /api/media?action=init or action=chunk -> Authenticated OWASP Upload
-    // ------------------------------------------------------------------------
     if (request.method === 'POST') {
       const ip = getClientIp(request);
       const ipHash = await sha256Hex(ip);

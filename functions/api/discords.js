@@ -80,7 +80,6 @@ export async function onRequest(context) {
       return jsonResponse({ error: 'Invalid JSON request body' }, 400);
     }
 
-    // OWASP Honeypot Check
     if (body.discord_hp_url && String(body.discord_hp_url).trim().length > 0) {
       return jsonResponse({ error: 'Automated bot submission rejected' }, 400);
     }
@@ -88,13 +87,14 @@ export async function onRequest(context) {
     const turnstileToken = body.cfTurnstileResponse || body['cf-turnstile-response'] || '';
     const turnstileCheck = await verifyTurnstileToken(env, turnstileToken, ip, 'submit_discord');
     if (!turnstileCheck.valid) {
-      return jsonResponse({ error: turnstileCheck.error || 'Turnstile verification failed.' }, 403);
+      return jsonResponse({ error: turnstileCheck.error || 'Security verification failed.' }, 403);
     }
 
     const authUser = await getAuthenticatedUser(request, env);
     if (!authUser) {
       return jsonResponse({ error: 'Authentication required. Please log in or create an account to share a Discord server.' }, 401);
     }
+
     const name = sanitizePlainText(body.name, 60);
     const inviteUrl = (body.inviteUrl || '').trim();
     const rawCat = (body.category || 'general').toLowerCase().trim();
@@ -107,11 +107,14 @@ export async function onRequest(context) {
       return jsonResponse({ error: 'Server name must be at least 3 characters.' }, 400);
     }
     if (!DISCORD_REGEX.test(inviteUrl)) {
-      return jsonResponse({ error: 'OWASP Guard: Invalid Discord invite! Must be https://discord.gg/... or https://discord.com/invite/...' }, 400);
+      return jsonResponse({ error: 'Invalid Discord invite URL. Must be https://discord.gg/... or https://discord.com/invite/...' }, 400);
     }
     if (desc.length < 15) {
       return jsonResponse({ error: 'Server description must be at least 15 characters.' }, 400);
     }
+
+    const requiresApproval = authUser.role !== 'admin';
+    const serverStatus = requiresApproval ? 'pending' : 'approved';
 
     const serverId = generateUuid();
     const serverObj = {
@@ -123,31 +126,38 @@ export async function onRequest(context) {
       countryLabel: COUNTRY_MAP[country] || 'International',
       inviteUrl,
       members: 'Verified Community',
-      desc
+      desc,
+      status: serverStatus
     };
 
     if (isTursoConfigured(env)) {
       try {
         await runTursoSql(
           env,
-          `INSERT INTO discord_servers (id, user_id, name, tag, category, country, country_label, invite_url, description)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO discord_servers (id, user_id, name, tag, category, country, country_label, invite_url, description, status)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             serverId,
-            authUser ? authUser.id : null,
+            authUser.id,
             name,
             serverObj.tag,
             category,
             country,
             serverObj.countryLabel,
             inviteUrl,
-            desc
+            desc,
+            serverStatus
           ]
         );
       } catch (e) {}
     }
 
-    return jsonResponse({ ok: true, server: serverObj }, 201);
+    return jsonResponse({
+      ok: true,
+      pending: requiresApproval,
+      message: requiresApproval ? 'Waiting for the moderators approval' : 'Discord server published',
+      server: serverObj
+    }, 201);
   }
 
   return jsonResponse({ error: 'Method not allowed' }, 405);

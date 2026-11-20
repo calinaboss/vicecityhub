@@ -1,29 +1,20 @@
-/**
- * VICECITYHUB.EU - Master Client-side Controller
- * Modular, vanilla JavaScript - OWASP compliant, zero emojis.
- * Supports: Clean text feed, Interactive Leaflet Leonida map, GTA VI Cheats, and Discord filters.
- */
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Common Elements
+
   const toast = document.getElementById('toast-notification');
   const toastText = document.getElementById('toast-text');
   const mobileMenuBtn = document.getElementById('mobile-menu-toggle');
   const mobileDrawer = document.getElementById('mobile-drawer');
   const closeDrawerBtn = document.getElementById('close-drawer');
 
-  // Modals
   const postModal = document.getElementById('create-post-modal');
   const discordModal = document.getElementById('submit-discord-modal');
   const openPostModalBtns = document.querySelectorAll('.trigger-new-post');
   const openDiscordModalBtns = document.querySelectorAll('.trigger-add-discord');
   const closeModalBtns = document.querySelectorAll('.trigger-close-modal');
 
-  // Forms
   const postForm = document.getElementById('new-post-form');
   const discordForm = document.getElementById('new-discord-form');
 
-  // Page-specific containers
   const feedContainer = document.getElementById('community-feed');
   const filterChips = document.querySelectorAll('.filter-chip');
   const searchInput = document.getElementById('search-input');
@@ -41,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const leafletMapContainer = document.getElementById('leonida-leaflet-map');
   const poiPills = document.querySelectorAll('[data-poi]');
 
-  // Helper Escape HTML
   function escapeHtml(str) {
     if (!str) return '';
     return String(str)
@@ -52,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/'/g, '&#039;');
   }
 
-  // Toast Function
   function showToast(message) {
     if (!toast) return;
     toastText.textContent = message;
@@ -63,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2800);
   }
 
-  // Modal Controllers
   function openModal(m) {
     if (!m) return;
     m.classList.add('open');
@@ -105,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Mobile Drawer
   function openDrawer() {
     if (mobileDrawer) {
       mobileDrawer.classList.add('open');
@@ -126,9 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // 1. CLEAN TEXT-ONLY FEED (index.html - LIVE BACKEND, NO PREVIEW POSTS)
-  // ==========================================
   let posts = [];
 
   let currentCategory = 'all';
@@ -197,9 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
               <i class="fa-regular fa-comment"></i>
               <span>${post.comments.length}</span>
             </button>
-            <button class="action-btn btn-share" data-id="${post.id}">
+            <button class="action-btn btn-share" data-id="${post.id}" data-title="${escapeHtml(post.title)}">
               <i class="fa-solid fa-share-nodes"></i> Share
             </button>
+            ${isCurrentUserAdmin() ? `
+              <button class="action-btn btn-admin-pin" data-id="${post.id}" title="${post.pinned ? 'Unpin Post' : 'Pin Post'}">
+                <i class="fa-solid fa-thumbtack" style="color: ${post.pinned ? 'var(--accent-pink)' : 'inherit'};"></i>
+              </button>
+              <button class="action-btn btn-admin-delete" data-id="${post.id}" title="Delete Post">
+                <i class="fa-solid fa-trash-can" style="color: #fca5a5;"></i>
+              </button>
+            ` : ''}
           </div>
           <button class="action-btn btn-bookmark ${post.isBookmarked ? 'active-bookmark' : ''}" data-id="${post.id}">
             <i class="${post.isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
@@ -219,13 +211,48 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
   }
 
+  function isCurrentUserAdmin() {
+    try {
+      const u = JSON.parse(localStorage.getItem('vicecityhub_user') || 'null');
+      return Boolean(u && u.role === 'admin');
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function renderTrendingFeed() {
+    const trendingContainer = document.getElementById('trending-feed-list');
+    if (!trendingContainer) return;
+
+    const likedPosts = [...posts]
+      .filter(p => Number(p.likes || 0) > 0)
+      .sort((a, b) => Number(b.likes || 0) - Number(a.likes || 0))
+      .slice(0, 5);
+
+    if (likedPosts.length === 0) {
+      trendingContainer.innerHTML = `
+        <p style="font-size: 0.78rem; color: var(--text-dim);">Posts receiving likes from the community will appear here.</p>
+      `;
+      return;
+    }
+
+    trendingContainer.innerHTML = likedPosts.map(p => `
+      <a href="#post-${escapeHtml(p.id)}" class="trending-item" data-trend-id="${escapeHtml(p.id)}">
+        <span class="trending-tag">${escapeHtml(p.categoryLabel || p.category || 'Discussions')}</span>
+        <span class="trending-title">${escapeHtml(p.title)}</span>
+        <span class="trending-stats"><i class="fa-solid fa-thumbs-up" style="color: var(--accent-pink);"></i> ${Number(p.likes || 0)} likes &bull; @${escapeHtml(p.username || p.author)}</span>
+      </a>
+    `).join('');
+  }
+
   function renderFeed() {
+    renderTrendingFeed();
     if (!feedContainer) return;
     const query = (searchInput?.value || '').toLowerCase().trim();
     const filtered = posts.filter(post => {
       const matchCat = currentCategory === 'all' || post.category === currentCategory;
-      const matchSearch = !query || 
-        post.title.toLowerCase().includes(query) || 
+      const matchSearch = !query ||
+        post.title.toLowerCase().includes(query) ||
         post.text.toLowerCase().includes(query) ||
         post.author.toLowerCase().includes(query);
       return matchCat && matchSearch;
@@ -327,44 +354,78 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const shareBtn = e.target.closest('.btn-share');
       if (shareBtn) {
-        navigator.clipboard.writeText(`${window.location.origin}/#${shareBtn.dataset.id}`).then(() => {
+        const shareUrl = `${window.location.origin}/index.html#post-${shareBtn.dataset.id}`;
+        const shareTitle = shareBtn.dataset.title || 'GTA VI Community Post on ViceCityHub';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(shareUrl).catch(() => {});
+        }
+        if (typeof window.openShareBottomPopup === 'function') {
+          window.openShareBottomPopup(shareUrl, shareTitle);
+        } else {
           showToast('Link copied to clipboard');
-        });
+        }
+        return;
+      }
+
+      const adminPinBtn = e.target.closest('.btn-admin-pin');
+      if (adminPinBtn) {
+        const pid = adminPinBtn.dataset.id;
+        fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ action: 'pin_post', targetId: pid })
+        }).then(r => r.json()).then(d => {
+          if (d && d.ok) {
+            const p = posts.find(item => item.id === pid);
+            if (p) p.pinned = !p.pinned;
+            posts.sort((a, b) => Number(b.pinned) - Number(a.pinned));
+            renderFeed();
+            showToast('Post pin status updated');
+          }
+        }).catch(() => {});
+        return;
+      }
+
+      const adminDelBtn = e.target.closest('.btn-admin-delete');
+      if (adminDelBtn) {
+        const pid = adminDelBtn.dataset.id;
+        if (!window.confirm('Delete this post permanently?')) return;
+        fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ action: 'delete_post', targetId: pid })
+        }).then(r => r.json()).then(d => {
+          if (d && d.ok) {
+            posts = posts.filter(item => item.id !== pid);
+            renderFeed();
+            showToast('Post deleted');
+          }
+        }).catch(() => {});
         return;
       }
     });
 
-    // Load any custom user posts from localStorage + API
-    try {
-      const savedPosts = JSON.parse(localStorage.getItem('vicecityhub_custom_posts') || '[]');
-      if (Array.isArray(savedPosts) && savedPosts.length > 0) {
-        posts = [...savedPosts, ...posts];
-      }
-    } catch (e) {}
-
+    localStorage.removeItem('vicecityhub_custom_posts');
     renderFeed();
 
     fetch('/api/posts')
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (data && Array.isArray(data.posts) && data.posts.length > 0) {
-          const existingIds = new Set(posts.map(p => p.id));
-          const fresh = data.posts.filter(p => !existingIds.has(p.id)).map(p => ({
+        if (data && Array.isArray(data.posts)) {
+          posts = data.posts.map(p => ({
             ...p,
             time: p.time || 'Recently',
-            avatar: p.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+            avatar: p.avatar || 'assets/brand/favicon-192x192.png',
             comments: Array.isArray(p.comments) ? p.comments : []
           }));
-          if (fresh.length > 0) {
-            posts = [...fresh, ...posts];
-            renderFeed();
-          }
+          renderFeed();
         }
       })
       .catch(() => {});
   }
 
-  // Dedicated Post Creation Page (post.html) - Max 15 MB Image/Video Upload
   const dedicatedPostForm = document.getElementById('dedicated-post-form');
   const postContentInput = document.getElementById('post-content-input');
   const postCharCounter = document.getElementById('post-char-counter');
@@ -394,7 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function uploadBinaryInChunks(uint8, mimeType, statusEl) {
-    const CHUNK_BYTE_SIZE = 540 * 1024; // ~720 KB base64 per chunk
+    const CHUNK_BYTE_SIZE = 540 * 1024;
     const totalBytes = uint8.byteLength;
     const totalChunks = Math.max(1, Math.ceil(totalBytes / CHUNK_BYTE_SIZE));
 
@@ -514,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
 
-      const MAX_BYTES = 15 * 1024 * 1024; // 15 MB
+      const MAX_BYTES = 15 * 1024 * 1024;
       if (file.size > MAX_BYTES) {
         showToast('File exceeds the 15 MB limit. Please choose a file under 15 MB.');
         postMediaFileInput.value = '';
@@ -664,16 +725,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (res.ok) {
           const data = await res.json();
-          if (data && data.post) {
-            newPost.id = data.post.id || newPost.id;
+          if (data && data.pending) {
+            const modBanner = document.getElementById('post-moderation-banner');
+            if (modBanner) {
+              modBanner.style.display = 'block';
+              modBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            dedicatedPostForm.reset();
+            showToast('Waiting for the moderators approval');
+            return;
           }
         }
-      } catch (err) {}
-
-      try {
-        const savedPosts = JSON.parse(localStorage.getItem('vicecityhub_custom_posts') || '[]');
-        savedPosts.unshift(newPost);
-        localStorage.setItem('vicecityhub_custom_posts', JSON.stringify(savedPosts.slice(0, 30)));
       } catch (err) {}
 
       showToast('Post published! Redirecting to Feed...');
@@ -683,9 +745,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // 2. DISCORD DIRECTORY & FILTERS (discords.html - LIVE BACKEND, NO PREVIEW SERVERS)
-  // ==========================================
   const DISCORD_REGEX = /^https:\/\/(discord\.gg\/[a-zA-Z0-9_-]{2,32}|discord\.com\/invite\/[a-zA-Z0-9_-]{2,32})$/;
 
   let discordServers = [];
@@ -742,25 +801,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (discordGrid) {
-    try {
-      const savedDiscords = JSON.parse(localStorage.getItem('vicecityhub_custom_discords') || '[]');
-      if (Array.isArray(savedDiscords) && savedDiscords.length > 0) {
-        discordServers = [...savedDiscords, ...discordServers];
-      }
-    } catch (e) {}
-
+    localStorage.removeItem('vicecityhub_custom_discords');
     renderDiscords();
 
     fetch('/api/discords')
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (data && Array.isArray(data.servers) && data.servers.length > 0) {
-          const existingIds = new Set(discordServers.map(s => s.id));
-          const fresh = data.servers.filter(s => !existingIds.has(s.id));
-          if (fresh.length > 0) {
-            discordServers = [...fresh, ...discordServers];
-            renderDiscords();
-          }
+        if (data && Array.isArray(data.servers)) {
+          discordServers = data.servers;
+          renderDiscords();
         }
       })
       .catch(() => {});
@@ -770,7 +819,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (discordTypeFilter) discordTypeFilter.addEventListener('change', renderDiscords);
   }
 
-  // Dedicated Discord Server Submission Page (submit-discord.html)
   const dedicatedDiscordForm = document.getElementById('dedicated-discord-form');
   if (dedicatedDiscordForm) {
     dedicatedDiscordForm.addEventListener('submit', async (e) => {
@@ -833,6 +881,10 @@ document.addEventListener('DOMContentLoaded', () => {
             cfTurnstileResponse
           })
         });
+        if (res.status === 401) {
+          window.location.href = 'login.html?tab=signup';
+          return;
+        }
         if (res.status === 403 || res.status === 400 || res.status === 429) {
           const errData = await res.json().catch(() => ({}));
           showToast(errData.error || 'Security verification failed. Please retry.');
@@ -841,16 +893,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (res.ok) {
           const data = await res.json();
-          if (data && data.server) {
-            newServer.id = data.server.id || newServer.id;
+          if (data && data.pending) {
+            const modBanner = document.getElementById('discord-moderation-banner');
+            if (modBanner) {
+              modBanner.style.display = 'block';
+              modBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            dedicatedDiscordForm.reset();
+            showToast('Waiting for the moderators approval');
+            return;
           }
         }
-      } catch (err) {}
-
-      try {
-        const savedDiscords = JSON.parse(localStorage.getItem('vicecityhub_custom_discords') || '[]');
-        savedDiscords.unshift(newServer);
-        localStorage.setItem('vicecityhub_custom_discords', JSON.stringify(savedDiscords.slice(0, 30)));
       } catch (err) {}
 
       showToast('Discord server listed! Redirecting to Directory...');
@@ -860,9 +913,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // 3. GTA VI CHEAT CODES (PS5 & XBOX SERIES X/S ONLY - D-PAD SEQUENCES)
-  // ==========================================
   const cheatsData = [
     {
       id: 'cheat-1',
@@ -1020,15 +1070,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // 4. LEAFLET INTERACTIVE LEONIDA MAP (map.html)
-  // ==========================================
   if (leafletMapContainer && typeof L !== 'undefined') {
-    // Coordinate dimensions
+
     const mapWidth = 3000;
     const mapHeight = 2200;
 
-    // Use Leaflet Simple CRS for gaming map
     const map = L.map('leonida-leaflet-map', {
       crs: L.CRS.Simple,
       minZoom: -1,
@@ -1039,12 +1085,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const bounds = [[0, 0], [mapHeight, mapWidth]];
 
-    // Map base background layer (Dark coordinate canvas with Leonida mapping base)
     const mapImage = L.imageOverlay('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&auto=format&fit=crop&q=80', bounds).addTo(map);
 
     map.fitBounds(bounds);
 
-    // Points of Interest (POI) Database
     const pois = [
       {
         id: 'poi-1',
@@ -1165,9 +1209,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================
-  // 5. NAVBAR USER PROFILE & AUTH STATE SYNC
-  // ==========================================
   function renderNavbarAuthUser(user) {
     if (!user || !user.username) return;
     const navRight = document.querySelector('.header-nav-right');
@@ -1200,9 +1241,23 @@ document.addEventListener('DOMContentLoaded', () => {
           navRight.appendChild(settingsLink);
         }
       }
+
+      if (user.role === 'admin' && !navRight.querySelector('.nav-admin-icon')) {
+        const adminLink = document.createElement('a');
+        adminLink.href = 'admin.html';
+        adminLink.className = 'nav-settings-icon nav-admin-icon';
+        adminLink.title = 'Admin Panel';
+        adminLink.setAttribute('aria-label', 'Admin Panel');
+        adminLink.innerHTML = '<i class="fa-solid fa-shield-halved" style="color: var(--accent-pink);"></i>';
+        const mobileBtn = navRight.querySelector('.mobile-menu-btn');
+        if (mobileBtn) {
+          navRight.insertBefore(adminLink, mobileBtn);
+        } else {
+          navRight.appendChild(adminLink);
+        }
+      }
     }
 
-    // Also pre-fill author input on post.html if present
     const postAuthorInput = document.getElementById('post-author-input');
     if (postAuthorInput && !postAuthorInput.value) {
       postAuthorInput.value = user.username;
@@ -1224,7 +1279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderNavbarAuthUser(data.user);
       } else if (data && data.authenticated === false) {
         localStorage.removeItem('vicecityhub_user');
-        // If user is currently on post.html or submit-discord.html without an account, redirect to login.html
+
         const path = window.location.pathname.toLowerCase();
         if (path.endsWith('/post.html') || path.endsWith('/submit-discord.html') || path.endsWith('/post') || path.endsWith('/submit-discord')) {
           window.location.href = 'login.html?tab=signup';
@@ -1233,7 +1288,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(() => {});
 
-  // Intercept clicks on "New Post" or "Share Discord Server" when not logged in
   document.addEventListener('click', (e) => {
     const postLink = e.target.closest('a[href*="post.html"], a[href*="submit-discord.html"]');
     if (postLink) {
@@ -1245,7 +1299,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Open Fullscreen Discord-Style Draggable & Zoomable Image Preview when clicking any post image
     const mediaBox = e.target.closest('.post-media-container[data-full-img]');
     if (mediaBox) {
       const src = mediaBox.getAttribute('data-full-img');
@@ -1256,10 +1309,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ==========================================================================
-  // 6. FULL-SCREEN DISCORD-STYLE DRAGGABLE & ZOOMABLE IMAGE VIEWER
-  // Hold mouse down or drag with finger on phone to move image around freely
-  // ==========================================================================
   window.openDiscordMediaViewer = function(imgSrc) {
     if (!imgSrc) return;
     let viewer = document.getElementById('discord-media-viewer');
@@ -1355,7 +1404,6 @@ document.addEventListener('DOMContentLoaded', () => {
       updateTransform();
     };
 
-    // Mobile Touch Drag & Pinch-to-Zoom
     let pinchDist = 0;
     let pinchScale = 1;
 
@@ -1395,5 +1443,86 @@ document.addEventListener('DOMContentLoaded', () => {
       isDragging = false;
       pinchDist = 0;
     };
+  };
+
+  window.openShareBottomPopup = function(shareUrl, shareTitle) {
+    let sheet = document.getElementById('share-bottom-popup');
+    if (!sheet) {
+      sheet = document.createElement('div');
+      sheet.id = 'share-bottom-popup';
+      sheet.className = 'share-bottom-popup';
+      sheet.innerHTML = `
+        <div class="share-popup-inner">
+          <div class="share-popup-head">
+            <span class="share-popup-copied">
+              <i class="fa-solid fa-circle-check" style="color: #34d399;"></i> Link copied! Share on:
+            </span>
+            <button type="button" class="share-popup-close" id="btn-close-share-popup" aria-label="Close">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="share-popup-links" id="share-popup-links"></div>
+        </div>
+      `;
+      document.body.appendChild(sheet);
+    }
+
+    const linksBox = document.getElementById('share-popup-links');
+    const closeBtn = document.getElementById('btn-close-share-popup');
+    const encUrl = encodeURIComponent(shareUrl);
+    const encText = encodeURIComponent(`${shareTitle} - ${shareUrl}`);
+    const encTitle = encodeURIComponent(shareTitle);
+
+    linksBox.innerHTML = `
+      <a href="https://api.whatsapp.com/send?text=${encText}" target="_blank" rel="noopener noreferrer" class="share-platform-btn">
+        <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> <span>WhatsApp</span>
+      </a>
+      <button type="button" class="share-platform-btn" id="share-btn-instagram">
+        <i class="fa-brands fa-instagram" style="color: #e1306c;"></i> <span>Instagram</span>
+      </button>
+      <a href="https://x.com/intent/tweet?url=${encUrl}&text=${encTitle}" target="_blank" rel="noopener noreferrer" class="share-platform-btn">
+        <i class="fa-brands fa-x-twitter"></i> <span>X / Twitter</span>
+      </a>
+      <a href="https://t.me/share/url?url=${encUrl}&text=${encTitle}" target="_blank" rel="noopener noreferrer" class="share-platform-btn">
+        <i class="fa-brands fa-telegram" style="color: #24A1DE;"></i> <span>Telegram</span>
+      </a>
+      <button type="button" class="share-platform-btn" id="share-btn-discord">
+        <i class="fa-brands fa-discord" style="color: #5865f2;"></i> <span>Discord</span>
+      </button>
+      <a href="mailto:?subject=${encTitle}&body=${encText}" class="share-platform-btn">
+        <i class="fa-solid fa-envelope" style="color: var(--accent-pink);"></i> <span>Email</span>
+      </a>
+    `;
+
+    const igBtn = document.getElementById('share-btn-instagram');
+    if (igBtn) {
+      igBtn.onclick = () => {
+        if (navigator.share) {
+          navigator.share({ title: shareTitle, url: shareUrl }).catch(() => {});
+        } else {
+          window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer');
+        }
+      };
+    }
+
+    const dcBtn = document.getElementById('share-btn-discord');
+    if (dcBtn) {
+      dcBtn.onclick = () => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(`${shareTitle} ${shareUrl}`).catch(() => {});
+        }
+        showToast('Formatted link copied for Discord!');
+      };
+    }
+
+    if (closeBtn) {
+      closeBtn.onclick = () => sheet.classList.remove('show');
+    }
+
+    sheet.classList.add('show');
+    clearTimeout(window.__sharePopupTimer);
+    window.__sharePopupTimer = setTimeout(() => {
+      sheet.classList.remove('show');
+    }, 9000);
   };
 });

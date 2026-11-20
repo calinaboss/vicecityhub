@@ -100,9 +100,6 @@ export async function onRequest(context) {
 
     await ensureTursoSchema(env);
 
-    // ------------------------------------------------------------------------
-    // GET PROFILE (Own profile or public profile via ?u=username)
-    // ------------------------------------------------------------------------
     if (request.method === 'GET') {
       const requestedUsername = (url.searchParams.get('u') || '').trim();
       const viewer = await getAuthenticatedUser(request, env);
@@ -144,7 +141,6 @@ export async function onRequest(context) {
         } catch (e) {}
       }
 
-      // Fetch user's recent community posts
       let recentPosts = [];
       try {
         const { rows: pRows } = await runTursoSql(
@@ -182,9 +178,6 @@ export async function onRequest(context) {
       });
     }
 
-    // ------------------------------------------------------------------------
-    // POST ACTIONS
-    // ------------------------------------------------------------------------
     if (request.method === 'POST') {
       const allowed = await checkRateLimit(env, `profile_${ipHash}`, 25, 60000);
       if (!allowed) {
@@ -200,7 +193,6 @@ export async function onRequest(context) {
 
       const viewer = await getAuthenticatedUser(request, env);
 
-      // 1. UPDATE PROFILE (PFP, Banner Hex Color, Bio, Discord Handle, Social Links)
       if (action === 'update') {
         if (!viewer) {
           return jsonResponse({ error: 'Authentication required. Please log in.' }, 401);
@@ -250,7 +242,6 @@ export async function onRequest(context) {
         });
       }
 
-      // 2. FOLLOW / UNFOLLOW USER
       if (action === 'follow') {
         if (!viewer) {
           return jsonResponse({ error: 'Please log in to follow community members.' }, 401);
@@ -321,7 +312,6 @@ export async function onRequest(context) {
         });
       }
 
-      // 3. CHANGE USERNAME (Account Settings)
       if (action === 'change_username') {
         if (!viewer) {
           return jsonResponse({ error: 'Authentication required.' }, 401);
@@ -374,7 +364,6 @@ export async function onRequest(context) {
         });
       }
 
-      // 4. CHANGE PASSWORD (Account Settings)
       if (action === 'change_password') {
         if (!viewer) {
           return jsonResponse({ error: 'Authentication required.' }, 401);
@@ -402,7 +391,6 @@ export async function onRequest(context) {
         return jsonResponse({ ok: true });
       }
 
-      // 5. SUBMIT ACCOUNT SUPPORT / ASSISTANCE TICKET
       if (action === 'support') {
         const email = ((viewer && viewer.email) || body.email || '').trim().toLowerCase();
         const category = sanitizePlainText(body.category || 'account', 40);

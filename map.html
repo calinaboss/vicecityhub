@@ -7,7 +7,9 @@
   <meta name="description" content="Explore the interactive map of Leonida and Vice City for Grand Theft Auto VI. Complete with identified landmarks, in-game photos, and coordinate navigation.">
   <meta name="theme-color" content="#0d1117">
   <meta http-equiv="refresh" content="0; url=https://map.vicecityhub.eu">
-  <script>window.location.replace("https://map.vicecityhub.eu");</script>
+  <script>
+window.location.replace("https://map.vicecityhub.eu");
+</script>
 
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
@@ -17,11 +19,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
 </head>
 <body class="page-map-view">
 
-  <!-- STICKY TOP NAVBAR -->
   <header class="site-header">
     <div class="header-container">
       <span class="mobile-brand-title">VICECITYHUB</span>
@@ -48,9 +49,8 @@
     </div>
   </header>
 
-  <!-- MAIN -->
   <main class="site-main" style="padding-top: 8px;">
-    <!-- Compact Top Bar (Title Centered + Controls) -->
+
     <div style="text-align: center; padding: 14px 0 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 12px;">
       <h1 style="font-size: 26px; font-weight: 800; letter-spacing: -0.4px; color: var(--text-main); margin-bottom: 8px;">
         State of Leonida Interactive Map
@@ -65,18 +65,15 @@
       </div>
     </div>
 
-    <!-- Embedded Interactive Map Frame -->
     <div style="margin-bottom: 8px;">
       <iframe id="leonida-map-frame" src="https://map.vicecityhub.eu" class="interactive-map-frame" title="GTA VI Leonida Interactive Map" tabindex="-1" allowfullscreen></iframe>
     </div>
 
-    <!-- Submission Notice (Compact, Flat) -->
     <div style="text-align: center; padding: 6px 12px; font-size: 12px; color: var(--text-muted);">
       Discovered a new easter egg, shop, or secret location? Send coordinates to <a href="mailto:info@vicecityhub.eu" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600;">info@vicecityhub.eu</a> &bull; Verified by admins.
     </div>
   </main>
 
-  <!-- MOBILE BOTTOM BAR -->
   <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
     <a href="index.html" class="mobile-nav-item">
       <i class="fa-solid fa-house"></i>
@@ -96,7 +93,6 @@
     </a>
   </nav>
 
-  <!-- MOBILE DRAWER -->
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-panel">
       <div class="drawer-header">
@@ -115,7 +111,6 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-brand">
@@ -173,10 +168,9 @@
     </div>
   </footer>
 
-  <script src="assets/js/app.js?v=3.4"></script>
+  <script src="assets/js/app.js?v=3.5"></script>
   <script>
-    // Fullscreen Toggle
-    const fsBtn = document.getElementById('toggle-map-fullscreen');
+const fsBtn = document.getElementById('toggle-map-fullscreen');
     const mapFrame = document.getElementById('leonida-map-frame');
     if (fsBtn && mapFrame) {
       fsBtn.addEventListener('click', () => {
@@ -193,6 +187,6 @@
         }
       });
     }
-  </script>
+</script>
 </body>
 </html>

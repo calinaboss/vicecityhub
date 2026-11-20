@@ -1,12 +1,5 @@
--- ============================================================================
--- VICECITYHUB.EU - COMPLETE TURSO (libSQL / SQLite) DATABASE SCHEMA
--- Instance: libsql://vicecityhub-calinaboss.aws-eu-central-1.turso.io
--- Security: OWASP Hardened, Indexed for Turso Free Tier Quota Optimization
--- ============================================================================
-
 PRAGMA foreign_keys = ON;
 
--- 1. USERS TABLE (PBKDF2-HMAC-SHA256 100,000 iterations)
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
@@ -27,7 +20,6 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 
--- 2. SESSIONS TABLE (SHA-256 hashed tokens, HttpOnly + Secure cookies)
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
@@ -41,7 +33,6 @@ CREATE TABLE IF NOT EXISTS sessions (
 CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token_hash);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
 
--- 3. COMMUNITY POSTS TABLE (Feed discussions, Map discoveries, Official news)
 CREATE TABLE IF NOT EXISTS community_posts (
   id TEXT PRIMARY KEY,
   user_id TEXT,
@@ -66,7 +57,6 @@ CREATE TABLE IF NOT EXISTS community_posts (
 CREATE INDEX IF NOT EXISTS idx_posts_feed ON community_posts(status, pinned DESC, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_posts_category ON community_posts(category, created_at DESC);
 
--- 4. POST LIKES TABLE (Unique constraint prevents duplicate like spam)
 CREATE TABLE IF NOT EXISTS post_likes (
   id TEXT PRIMARY KEY,
   post_id TEXT NOT NULL,
@@ -79,7 +69,6 @@ CREATE TABLE IF NOT EXISTS post_likes (
 
 CREATE INDEX IF NOT EXISTS idx_post_likes_post ON post_likes(post_id);
 
--- 5. POST BOOKMARKS TABLE
 CREATE TABLE IF NOT EXISTS post_bookmarks (
   id TEXT PRIMARY KEY,
   post_id TEXT NOT NULL,
@@ -92,7 +81,6 @@ CREATE TABLE IF NOT EXISTS post_bookmarks (
 
 CREATE INDEX IF NOT EXISTS idx_post_bookmarks_post ON post_bookmarks(post_id);
 
--- 6. COMMUNITY COMMENTS TABLE
 CREATE TABLE IF NOT EXISTS community_comments (
   id TEXT PRIMARY KEY,
   post_id TEXT NOT NULL,
@@ -107,7 +95,6 @@ CREATE TABLE IF NOT EXISTS community_comments (
 
 CREATE INDEX IF NOT EXISTS idx_comments_post ON community_comments(post_id, created_at ASC);
 
--- 7. DISCORD SERVERS DIRECTORY TABLE
 CREATE TABLE IF NOT EXISTS discord_servers (
   id TEXT PRIMARY KEY,
   user_id TEXT,
@@ -127,7 +114,6 @@ CREATE TABLE IF NOT EXISTS discord_servers (
 CREATE INDEX IF NOT EXISTS idx_discords_list ON discord_servers(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_discords_filter ON discord_servers(country, category);
 
--- 8. CONTENT REPORTS / EU DSA TAKEDOWN REQUESTS TABLE
 CREATE TABLE IF NOT EXISTS security_reports (
   id TEXT PRIMARY KEY,
   target_type TEXT NOT NULL,
@@ -138,7 +124,6 @@ CREATE TABLE IF NOT EXISTS security_reports (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
--- 9. DISTRIBUTED RATE LIMITING TABLE (OWASP DoS & Brute-Force Protection)
 CREATE TABLE IF NOT EXISTS rate_limits (
   key TEXT PRIMARY KEY,
   count INTEGER NOT NULL DEFAULT 1,
@@ -147,7 +132,6 @@ CREATE TABLE IF NOT EXISTS rate_limits (
 
 CREATE INDEX IF NOT EXISTS idx_rate_limits_reset ON rate_limits(reset_at);
 
--- 10. CYBERSECURITY AUDIT LOGS TABLE
 CREATE TABLE IF NOT EXISTS audit_logs (
   id TEXT PRIMARY KEY,
   event_type TEXT NOT NULL,
@@ -159,7 +143,6 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created ON audit_logs(created_at DESC);
 
--- 11. USER FOLLOWS TABLE (Followers & Following Graph)
 CREATE TABLE IF NOT EXISTS user_follows (
   id TEXT PRIMARY KEY,
   follower_id TEXT NOT NULL,
@@ -173,7 +156,6 @@ CREATE TABLE IF NOT EXISTS user_follows (
 CREATE INDEX IF NOT EXISTS idx_follows_follower ON user_follows(follower_id);
 CREATE INDEX IF NOT EXISTS idx_follows_following ON user_follows(following_id);
 
--- 12. ACCOUNT SUPPORT & ASSISTANCE TICKETS TABLE
 CREATE TABLE IF NOT EXISTS support_tickets (
   id TEXT PRIMARY KEY,
   user_id TEXT,
@@ -187,7 +169,6 @@ CREATE TABLE IF NOT EXISTS support_tickets (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
--- 13. MEDIA UPLOADS & CHUNKS (Images & Videos up to 15 MB, OWASP Magic-Byte Verified)
 CREATE TABLE IF NOT EXISTS media_uploads (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,

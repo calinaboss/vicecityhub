@@ -15,12 +15,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="header-container">
       <span class="mobile-brand-title">VICECITYHUB</span>
@@ -47,7 +46,6 @@
         <p style="font-size: 0.82rem; color: var(--text-muted);" id="auth-subtitle">Log in to your ViceCityHub account</p>
       </div>
 
-      <!-- Auth Tabs -->
       <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
         <button type="button" id="tab-login" class="nav-link active" style="flex: 1; justify-content: center;">Log in</button>
         <button type="button" id="tab-signup" class="nav-link" style="flex: 1; justify-content: center;">Sign in / Register</button>
@@ -76,7 +74,6 @@
           </div>
         </div>
 
-        <!-- Cloudflare Turnstile Anti-Bot Widget -->
         <div class="form-group" style="display: flex; justify-content: center;">
           <div class="cf-turnstile" data-sitekey="0x4AAAAAAGKbR5q-KyH7QJsw" data-theme="dark" data-size="flexible"></div>
         </div>
@@ -92,7 +89,6 @@
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-bottom-bar" style="margin-top: 0; border-top: none;">
       <p class="footer-disclaimer-text">&copy; 2026 ViceCityHub.eu &bull; Unofficial GTA VI Community Portal.</p>
@@ -101,7 +97,7 @@
   </footer>
 
   <script>
-    let currentAuthMode = 'login';
+let currentAuthMode = 'login';
     const tabLogin = document.getElementById('tab-login');
     const tabSignup = document.getElementById('tab-signup');
     const authTitle = document.getElementById('auth-title');
@@ -135,7 +131,6 @@
     tabLogin.addEventListener('click', () => setTab('login'));
     tabSignup.addEventListener('click', () => setTab('signup'));
 
-    // Password Eye Toggle
     const authPasswordInput = document.getElementById('auth-password');
     const toggleAuthPasswordBtn = document.getElementById('toggle-auth-password');
     if (toggleAuthPasswordBtn && authPasswordInput) {
@@ -202,6 +197,6 @@
         authFeedback.textContent = err && err.message ? `Connection error: ${err.message}` : 'Network error. Please try again.';
       }
     });
-  </script>
+</script>
 </body>
 </html>

@@ -7,7 +7,6 @@
   <meta name="description" content="Submit and list your GTA VI Discord server in the ViceCityHub directory. Connect with Roleplay, Heist, and Modding communities.">
   <meta name="theme-color" content="#0d1117">
 
-  <!-- Open Graph / Social Share Image -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Share Your GTA VI Discord Server &bull; ViceCityHub.eu">
   <meta property="og:description" content="List your GTA VI Roleplay, Heist, Modding, or Community server in the ViceCityHub directory.">
@@ -15,7 +14,6 @@
   <meta property="og:image" content="https://vicecityhub.eu/assets/brand/logo.png">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- BreadcrumbList JSON-LD Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -37,12 +35,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
-  <!-- TOP NAVBAR -->
   <header class="site-header">
     <div class="header-container">
       <span class="mobile-brand-title">VICECITYHUB</span>
@@ -67,7 +64,6 @@
     </div>
   </header>
 
-  <!-- MAIN DEDICATED DISCORD SUBMISSION PAGE -->
   <main class="site-main">
     <nav class="breadcrumb-nav" aria-label="Breadcrumb">
       <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
@@ -96,10 +92,10 @@
     </div>
 
     <div class="posting-page-grid">
-      <!-- LEFT: DEDICATED DISCORD SUBMISSION FORM -->
+
       <section class="posting-form-card" aria-label="Submit Discord Server Form">
         <form id="dedicated-discord-form" class="dedicated-form" autocomplete="off">
-          <!-- OWASP Honeypot Field (Anti-Bot) -->
+
           <div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
             <label for="discord_hp_url">Leave this field blank</label>
             <input type="text" id="discord_hp_url" name="discord_hp_url" tabindex="-1" autocomplete="off">
@@ -113,7 +109,7 @@
           <div class="form-group">
             <label for="discord-url-input" class="form-label">Official Discord Invite URL <span style="color: var(--accent-pink);">*</span></label>
             <input type="url" id="discord-url-input" class="form-input" placeholder="https://discord.gg/yourcode" required pattern="https://(discord\.gg|discord\.com/invite)/[a-zA-Z0-9_-]{2,32}" title="Must be a valid Discord invite (https://discord.gg/... or https://discord.com/invite/...)">
-            <span style="font-size: 0.72rem; color: var(--text-dim);">OWASP Validation: Only official <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code> links are permitted.</span>
+            <span style="font-size: 0.72rem; color: var(--text-dim);">Disclaimer: Only official <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code> links are permitted. Every submitted server enters the moderation queue (Waiting for the moderators' approval) before appearing in the public directory.</span>
           </div>
 
           <div class="form-row-two">
@@ -151,9 +147,13 @@
             </label>
           </div>
 
-          <!-- Cloudflare Turnstile Anti-Bot Widget -->
           <div class="form-group">
             <div class="cf-turnstile" data-sitekey="0x4AAAAAAGKbR5q-KyH7QJsw" data-action="submit_discord" data-theme="dark" data-size="flexible"></div>
+          </div>
+
+          <div id="discord-moderation-banner" style="display: none; padding: 12px 14px; border-left: 3px solid var(--color-discord); background: rgba(88, 101, 242, 0.1); color: var(--text-main); font-size: 0.85rem;">
+            <strong style="display: block; color: #a5b4fc; margin-bottom: 3px;"><i class="fa-solid fa-clock"></i> Waiting for the moderators' approval</strong>
+            <span>Your Discord server has been submitted and is currently waiting for the moderators' approval before appearing in the directory.</span>
           </div>
 
           <div class="posting-form-actions">
@@ -165,7 +165,6 @@
         </form>
       </section>
 
-      <!-- RIGHT: DISCORD LISTING RULES & OWASP VERIFICATION + ADSENSE SLOT -->
       <aside class="posting-rules-sidebar" aria-label="Discord Directory Rules">
         <div class="widget-card rules-card-highlight">
           <div class="widget-header">
@@ -174,7 +173,7 @@
             </h2>
           </div>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.45;">
-            Every server submitted to the directory undergoes automated OWASP validation and must follow these rules:
+            Every server submitted to the directory is verified by our moderators before publication and must follow these rules:
           </p>
           <ul class="posting-rules-list">
             <li>
@@ -208,19 +207,16 @@
           </ul>
         </div>
 
-        <!-- Reserved Google AdSense Sidebar Slot -->
         <div class="adsense-slot adsense-sidebar" aria-label="Sponsored Space"></div>
       </aside>
     </div>
   </main>
 
-  <!-- TOAST NOTIFICATION -->
   <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
     <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
     <span id="toast-text">Discord server listed!</span>
   </div>
 
-  <!-- MOBILE BOTTOM BAR -->
   <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
     <a href="index.html" class="mobile-nav-item">
       <i class="fa-solid fa-house"></i>
@@ -243,7 +239,6 @@
     </a>
   </nav>
 
-  <!-- MOBILE DRAWER -->
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-panel">
       <div class="drawer-header">
@@ -262,6 +257,6 @@
     </div>
   </div>
 
-  <script src="assets/js/app.js?v=3.4"></script>
+  <script src="assets/js/app.js?v=3.5"></script>
 </body>
 </html>

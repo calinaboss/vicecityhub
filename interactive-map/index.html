@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="leaflet/leaflet.css">
 
   <style>
-    :root {
+:root {
       --bg-dark: #0d1117;
       --bg-surface: #161b22;
       --bg-elevated: #21262d;
@@ -48,7 +48,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* APP LAYOUT */
     .map-app-container {
       display: flex;
       flex-direction: column;
@@ -58,7 +57,6 @@
       background: transparent;
     }
 
-    /* TOP HEADER */
     .map-header {
       height: 52px;
       background: var(--bg-surface);
@@ -89,7 +87,6 @@
       opacity: 0.85;
     }
 
-    /* SEARCH BAR */
     .search-wrapper {
       position: relative;
       flex: 1;
@@ -175,7 +172,6 @@
       color: var(--text-muted);
     }
 
-    /* ACTIONS */
     .header-actions {
       display: flex;
       align-items: center;
@@ -212,7 +208,6 @@
       color: var(--accent-cyan);
     }
 
-    /* MAP BODY (FLEX LAYOUT WITH CLEAN SIDEBAR) */
     .map-body {
       display: flex;
       flex: 1;
@@ -223,7 +218,6 @@
       background: transparent;
     }
 
-    /* CLEAN MODERN SIDEBAR (NON-SLOP, WHATSCR STYLE) */
     .map-sidebar {
       width: 250px;
       background: rgba(13, 17, 23, 0.95);
@@ -337,7 +331,6 @@
       color: var(--text-muted);
     }
 
-    /* MAP CANVAS */
     .map-canvas-wrapper {
       flex: 1;
       width: 100%;
@@ -357,7 +350,6 @@
       font-family: var(--font-main) !important;
     }
 
-    /* LEAFLET ZOOM BAR */
     .leaflet-bar {
       border: 1px solid var(--border-color) !important;
       border-radius: 6px !important;
@@ -379,7 +371,6 @@
       color: var(--accent-pink) !important;
     }
 
-    /* MARKER SYMBOLS */
     .symbol-marker-pin {
       display: flex;
       align-items: center;
@@ -414,7 +405,6 @@
       transform: scale(1.5);
     }
 
-    /* POPUP STYLING */
     .leaflet-popup-content-wrapper {
       background: var(--bg-surface) !important;
       color: var(--text-main) !important;
@@ -496,7 +486,6 @@
       color: var(--text-main);
     }
 
-    /* HUD BOTTOM BAR: Small, plain gray text */
     .map-hud-bar {
       position: absolute;
       bottom: 8px;
@@ -509,7 +498,6 @@
       user-select: none;
     }
 
-    /* TOAST */
     .toast-notice {
       position: absolute;
       bottom: 20px;
@@ -527,7 +515,6 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
     }
 
-    /* MOBILE ADJUSTMENTS */
     @media (max-width: 768px) {
       .map-sidebar {
         position: absolute;
@@ -539,19 +526,17 @@
       .search-wrapper { max-width: 180px; }
       .map-hud-bar { bottom: 8px; right: 8px; font-size: 10px; padding: 4px 8px; }
     }
-  </style>
+</style>
 </head>
 <body>
 
   <div class="map-app-container">
 
-    <!-- TOP HEADER -->
     <header class="map-header">
       <a href="../map.html" class="brand-section" title="Return to ViceCityHub">
         <img src="images/logo.webp" alt="ViceCityHub" class="header-logo-img">
       </a>
 
-      <!-- SEARCH BAR -->
       <div class="search-wrapper">
         <div class="search-input-box">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -560,7 +545,6 @@
         <div class="search-dropdown" id="search-dropdown"></div>
       </div>
 
-      <!-- HEADER ACTIONS -->
       <div class="header-actions">
         <button id="btn-toggle-sidebar" class="map-btn map-btn-active" title="Toggle Filters Sidebar">
           <i class="fa-solid fa-filter"></i>
@@ -572,30 +556,25 @@
       </div>
     </header>
 
-    <!-- MAP BODY: SIDEBAR + CANVAS -->
     <div class="map-body">
 
-      <!-- CLEAN LATERAL SIDEBAR -->
       <aside class="map-sidebar" id="map-sidebar">
         <div class="sidebar-head">
           <span class="sidebar-head-title">Categories</span>
           <button class="sidebar-reset-btn" id="btn-filter-reset">Show All</button>
         </div>
         <div class="sidebar-list" id="sidebar-categories-list">
-          <!-- Populated by script -->
+
         </div>
       </aside>
 
-      <!-- CANVAS -->
       <div class="map-canvas-wrapper">
         <div id="map"></div>
 
-        <!-- HUD BAR (Plain small gray coordinates) -->
         <div class="map-hud-bar">
           <span id="hud-coords-text">X: 0.0 | Y: 0.0</span>
         </div>
 
-        <!-- TOAST NOTICE -->
         <div id="map-toast" class="toast-notice"></div>
       </div>
 
@@ -603,15 +582,13 @@
 
   </div>
 
-  <!-- LEAFLET & EMBEDDED LANDMARK DATA -->
   <script src="leaflet/leaflet.js"></script>
   <script src="data/landmarks.js"></script>
 
   <script>
-    (function() {
+(function() {
       'use strict';
 
-      // AUTHENTIC CATEGORY CONFIGURATION (From GTADB dataset)
       const CAT_CONFIG = {
         stripclub: { label: 'Strip Clubs', color: '#ff2a85', icon: 'fa-venus', priority: 1 },
         nightlife: { label: 'Nightclubs & Bars', color: '#c084fc', icon: 'fa-martini-glass', priority: 1 },
@@ -629,7 +606,6 @@
         general: { label: 'Other Mapped Buildings', color: '#94a3b8', icon: 'fa-city', priority: 3 }
       };
 
-      // 1. INITIALIZE LEAFLET MAP (Hardware-Accelerated & Ultra-Smooth)
       const MAP_SIZE = 10000;
       const fullBounds = [[0, 0], [MAP_SIZE, MAP_SIZE]];
       const islandBounds = [[-1500, -500], [11500, 11500]];
@@ -648,16 +624,13 @@
         scrollWheelZoom: true
       });
 
-      // Basemap overlay
       const basemap = L.imageOverlay('images/basemap.webp', fullBounds, {
         interactive: false,
         alt: 'Leonida Basemap'
       }).addTo(map);
 
-      // Open with full State of Leonida visible at a glance
       map.setView([5000, 6000], -2.0);
 
-      // Prevent iframe auto-focus from scrolling or jumping parent page
       const mapContainer = map.getContainer();
       mapContainer.tabIndex = -1;
       mapContainer.style.outline = 'none';
@@ -665,7 +638,6 @@
         e.preventDefault();
       }, true);
 
-      // 2. HUD COORDINATES
       const hudCoords = document.getElementById('hud-coords-text');
 
       map.on('mousemove', function(e) {
@@ -678,7 +650,6 @@
         }
       });
 
-      // 3. TOAST HELPER
       function showToast(msg) {
         const toast = document.getElementById('map-toast');
         if (!toast) return;
@@ -701,8 +672,6 @@
         }
       };
 
-      // 4. LOAD & RENDER LANDMARKS WITH SYMBOLS
-      // Start with ONLY Strip Clubs active by default to guarantee 60 FPS and zero startup lag!
       let allLandmarks = window.LEONIDA_LANDMARKS || [];
       let activeCategories = new Set(['stripclub']);
 
@@ -753,7 +722,6 @@
 
         const filtered = allLandmarks.filter(item => activeCategories.has(item.cat));
 
-        // If rendering bulk markers (> 150), use canvas circle markers for 60fps performance
         const useCanvas = filtered.length > 150;
 
         filtered.forEach(item => {
@@ -784,7 +752,6 @@
         });
       }
 
-      // 5. BUILD CLEAN SIDEBAR
       function buildSidebar() {
         const listEl = document.getElementById('sidebar-categories-list');
         if (!listEl) return;
@@ -816,9 +783,9 @@
         listEl.querySelectorAll('.sidebar-item').forEach(item => {
           item.addEventListener('click', function() {
             const cat = this.getAttribute('data-cat');
-            // Toggle or isolate category
+
             if (activeCategories.has(cat) && activeCategories.size === 1) {
-              // If already the only active one, switch to Strip Clubs
+
               activeCategories = new Set(['stripclub']);
             } else {
               activeCategories = new Set([cat]);
@@ -850,7 +817,7 @@
       const btnFilterReset = document.getElementById('btn-filter-reset');
       if (btnFilterReset) {
         btnFilterReset.addEventListener('click', function() {
-          // Switch to all key places with canvas rendering
+
           activeCategories = new Set([
             'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
             'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
@@ -861,7 +828,6 @@
         });
       }
 
-      // Sidebar Toggle
       const sidebarEl = document.getElementById('map-sidebar');
       const toggleSidebarBtn = document.getElementById('btn-toggle-sidebar');
 
@@ -880,7 +846,6 @@
       buildSidebar();
       renderMarkers();
 
-      // 6. REAL-TIME SEARCH AUTOCOMPLETE
       const searchInput = document.getElementById('map-search-input');
       const searchDropdown = document.getElementById('search-dropdown');
 
@@ -958,7 +923,6 @@
         });
       }
 
-      // 7. CONTROLS
       const fsBtn = document.getElementById('btn-toggle-fullscreen');
       if (fsBtn) {
         fsBtn.addEventListener('click', function() {
@@ -971,6 +935,6 @@
       }
 
     })();
-  </script>
+</script>
 </body>
 </html>

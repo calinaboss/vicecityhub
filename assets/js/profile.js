@@ -1,9 +1,3 @@
-// ============================================================================
-// VICECITYHUB.EU - FULL-PAGE CENTERED PROFILE & WHATSCR CIRCULAR AVATAR CROPPER
-// Max 5MB input -> Auto-compressed 256x256 WebP/JPEG (~18KB) + 100% EXIF stripped
-// Zero Unicode Emojis - 100% FontAwesome 6 Vector Icons - OWASP Hardened
-// ============================================================================
-
 document.addEventListener('DOMContentLoaded', () => {
   const bannerStrip = document.getElementById('profile-banner-strip');
   const btnOpenEditor = document.getElementById('btn-open-profile-editor');
@@ -26,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveFeedback = document.getElementById('profile-save-feedback');
   const postsListEl = document.getElementById('profile-posts-list');
 
-  // Form inputs
   const bannerColorPicker = document.getElementById('banner-color-picker');
   const bannerHexInput = document.getElementById('banner-hex-input');
   const bioInput = document.getElementById('profile-bio-input');
@@ -40,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const socialGithubInput = document.getElementById('social-github-input');
   const socialWebsiteInput = document.getElementById('social-website-input');
 
-  // Circular Crop Modal elements
   const cropModal = document.getElementById('avatar-crop-modal');
   const cropCanvas = document.getElementById('avatar-crop-canvas');
   const cropZoomSlider = document.getElementById('crop-zoom-slider');
@@ -88,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const links = profile.social_links || {};
     const discordHandle = (profile.discord_handle || '').trim();
 
-    // 1. Click-to-Copy Discord Handle Badge
     if (discordHandle) {
       const discordBtn = document.createElement('button');
       discordBtn.type = 'button';
@@ -109,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
       socialsBar.appendChild(discordBtn);
     }
 
-    // 2. Social Links Icons (OWASP verified HTTPS links)
     const iconMap = [
       { key: 'x', icon: 'fa-brands fa-x-twitter', label: 'X / Twitter' },
       { key: 'youtube', icon: 'fa-brands fa-youtube', label: 'YouTube' },
@@ -225,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (btnTriggerAvatar) btnTriggerAvatar.style.display = 'flex';
       if (btnOpenEditor) btnOpenEditor.style.display = 'inline-flex';
 
-      // Sync localStorage user
       const cached = JSON.parse(localStorage.getItem('vicecityhub_user') || '{}');
       cached.id = currentProfile.id;
       cached.username = currentProfile.username;
@@ -234,7 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
       cached.banner_color = currentProfile.banner_color;
       localStorage.setItem('vicecityhub_user', JSON.stringify(cached));
 
-      // Populate edit form
       const hex = currentProfile.banner_color || '#ff2a85';
       if (bannerColorPicker) bannerColorPicker.value = hex;
       if (bannerHexInput) bannerHexInput.value = hex;
@@ -301,7 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadProfile();
 
-  // Follow / Unfollow Toggle
   if (btnFollowToggle) {
     btnFollowToggle.addEventListener('click', async () => {
       if (!currentProfile) return;
@@ -329,7 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Toggle Customize Profile Panel
   function toggleEditPanel(forceOpen) {
     if (!editPanel) return;
     const isHidden = editPanel.style.display === 'none';
@@ -344,7 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnOpenEditor) btnOpenEditor.addEventListener('click', () => toggleEditPanel(true));
   if (btnCancelEdit) btnCancelEdit.addEventListener('click', () => toggleEditPanel(false));
 
-  // HEX Banner Color Picker Live Sync
   if (bannerColorPicker && bannerHexInput) {
     bannerColorPicker.addEventListener('input', () => {
       bannerHexInput.value = bannerColorPicker.value.toLowerCase();
@@ -377,9 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ==========================================================================
-  // WHATSCR-STYLE CIRCULAR PFP CROPPER + AUTO COMPRESSION & EXIF STRIPPING
-  // ==========================================================================
   let cropImageObj = null;
   let cropScale = 1;
   let cropBaseScale = 1;
@@ -403,7 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawW = cropImageObj.width * totalScale;
     const drawH = cropImageObj.height * totalScale;
 
-    // Clamp offsets so the circle is always covered
     const maxOffsetX = Math.max(0, (drawW - W) / 2);
     const maxOffsetY = Math.max(0, (drawH - H) / 2);
     cropOffsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, cropOffsetX));
@@ -419,8 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function exportOptimizedAvatarDataUrl() {
     if (!cropCanvas || !cropImageObj) return '';
-    // Re-encode onto an exact 256x256 output canvas to strip 100% EXIF/GPS metadata
-    // and compress 5MB photos down to ~15-22 KB WebP/JPEG
+
     const outCanvas = document.createElement('canvas');
     outCanvas.width = 256;
     outCanvas.height = 256;
@@ -447,7 +427,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
 
-      // Enforce 5 MB max input file size
       const MAX_BYTES = 5 * 1024 * 1024;
       if (file.size > MAX_BYTES) {
         showToast('Image exceeds 5 MB limit. Please choose a file under 5 MB.');
@@ -524,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
     window.addEventListener('mouseup', endDrag);
 
-    // Mouse wheel zoom inside fullscreen Discord-style cropper
     cropCanvas.addEventListener('wheel', (e) => {
       e.preventDefault();
       const delta = e.deltaY < 0 ? 0.12 : -0.12;
@@ -586,7 +564,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (avatarImg) avatarImg.src = optimizedDataUrl;
       closeCropModal();
 
-      // Immediately save new avatar to backend
       await saveProfileToServer(true);
     });
   }
@@ -644,7 +621,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       renderSocialsBar(currentProfile);
 
-      // Update localStorage user cache so navbar avatar updates immediately
       const cached = JSON.parse(localStorage.getItem('vicecityhub_user') || '{}');
       cached.avatar_url = currentProfile.avatar_url;
       cached.banner_color = currentProfile.banner_color;

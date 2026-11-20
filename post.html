@@ -7,7 +7,6 @@
   <meta name="description" content="Publish a new GTA VI community discussion, map coordinate discovery, or news topic on ViceCityHub.eu.">
   <meta name="theme-color" content="#0d1117">
 
-  <!-- Open Graph / Social Share Image -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Create New Community Post &bull; ViceCityHub.eu">
   <meta property="og:description" content="Share your Vice City discoveries, map coordinates, and gameplay discussions with the GTA VI community.">
@@ -15,7 +14,6 @@
   <meta property="og:image" content="https://vicecityhub.eu/assets/brand/logo.png">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- BreadcrumbList JSON-LD Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -36,12 +34,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
-  <!-- TOP NAVBAR -->
   <header class="site-header">
     <div class="header-container">
       <span class="mobile-brand-title">VICECITYHUB</span>
@@ -66,7 +63,6 @@
     </div>
   </header>
 
-  <!-- MAIN DEDICATED POSTING PAGE -->
   <main class="site-main">
     <nav class="breadcrumb-nav" aria-label="Breadcrumb">
       <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
@@ -93,10 +89,10 @@
     </div>
 
     <div class="posting-page-grid">
-      <!-- LEFT: DEDICATED POST CREATION FORM -->
+
       <section class="posting-form-card" aria-label="New Post Form">
         <form id="dedicated-post-form" class="dedicated-form" autocomplete="off">
-          <!-- OWASP Honeypot Field (Anti-Bot) -->
+
           <div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
             <label for="website_url_hp">Leave this field blank</label>
             <input type="text" id="website_url_hp" name="website_url_hp" tabindex="-1" autocomplete="off">
@@ -113,8 +109,9 @@
               <select id="post-category-select" class="form-select" required>
                 <option value="discussions">Discussions &amp; Theories</option>
                 <option value="leaks">Map &amp; Coordinates</option>
-                <option value="official">Official News &amp; Updates</option>
+                <option value="official">Official News &amp; Updates (Moderated)</option>
               </select>
+              <span style="font-size: 0.72rem; color: var(--text-dim);">Disclaimer: Official News posts are reviewed before appearing in the feed and will remain waiting for the moderators' approval. Discussions and Map posts publish immediately.</span>
             </div>
           </div>
 
@@ -144,7 +141,6 @@
             </div>
             <input type="file" id="post-media-file-input" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" style="display: none;">
 
-            <!-- Inline Preview of Attached Image or Video (Click Image for Fullscreen Discord-Style Pan/Zoom) -->
             <div id="post-media-preview-box" style="display: none; margin-top: 10px;"></div>
           </div>
 
@@ -160,9 +156,13 @@
             </label>
           </div>
 
-          <!-- Cloudflare Turnstile Anti-Bot Widget -->
           <div class="form-group">
             <div class="cf-turnstile" data-sitekey="0x4AAAAAAGKbR5q-KyH7QJsw" data-action="create_post" data-theme="dark" data-size="flexible"></div>
+          </div>
+
+          <div id="post-moderation-banner" style="display: none; padding: 12px 14px; border-left: 3px solid var(--accent-pink); background: rgba(255, 42, 133, 0.08); color: var(--text-main); font-size: 0.85rem;">
+            <strong style="display: block; color: var(--accent-pink); margin-bottom: 3px;"><i class="fa-solid fa-clock"></i> Waiting for the moderators' approval</strong>
+            <span>Your Official News post has been submitted and is currently waiting for the moderators' approval before appearing in the public feed.</span>
           </div>
 
           <div class="posting-form-actions">
@@ -174,7 +174,6 @@
         </form>
       </section>
 
-      <!-- RIGHT: COMMUNITY RULES & POSTING GUIDELINES + ADSENSE SLOT -->
       <aside class="posting-rules-sidebar" aria-label="Posting Rules and Guidelines">
         <div class="widget-card rules-card-highlight">
           <div class="widget-header">
@@ -211,7 +210,7 @@
               <i class="fa-solid fa-circle-check"></i>
               <div>
                 <strong>4. No Scams, Malware, or Fake Generators</strong>
-                <p>Phishing links, fake money generators, or external executables are strictly prohibited and blocked by our OWASP firewall.</p>
+                <p>Phishing links, fake money generators, or external executables are strictly prohibited and automatically blocked.</p>
               </div>
             </li>
             <li>
@@ -224,19 +223,16 @@
           </ul>
         </div>
 
-        <!-- Reserved Google AdSense Sidebar Slot -->
         <div class="adsense-slot adsense-sidebar" aria-label="Sponsored Space"></div>
       </aside>
     </div>
   </main>
 
-  <!-- TOAST NOTIFICATION -->
   <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
     <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
     <span id="toast-text">Post published!</span>
   </div>
 
-  <!-- MOBILE BOTTOM BAR -->
   <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
     <a href="index.html" class="mobile-nav-item">
       <i class="fa-solid fa-house"></i>
@@ -259,7 +255,6 @@
     </a>
   </nav>
 
-  <!-- MOBILE DRAWER -->
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-panel">
       <div class="drawer-header">
@@ -278,7 +273,6 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-brand">
@@ -327,6 +321,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/app.js?v=3.4"></script>
+  <script src="assets/js/app.js?v=3.5"></script>
 </body>
 </html>

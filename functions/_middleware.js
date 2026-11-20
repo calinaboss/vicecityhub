@@ -17,7 +17,6 @@ export async function onRequest(context) {
   const origin = request.headers.get('Origin') || '';
   const isAllowedOrigin = checkAllowedOrigin(origin);
 
-  // OWASP DoS Prevention: Reject oversized API JSON payloads (> 64 KB)
   const contentLength = parseInt(request.headers.get('Content-Length') || '0', 10);
   if (contentLength > 65536 && new URL(request.url).pathname.startsWith('/api/')) {
     return new Response(JSON.stringify({ error: 'Payload too large (max 64KB)' }), {
@@ -26,7 +25,6 @@ export async function onRequest(context) {
     });
   }
 
-  // OWASP CSRF / Cross-Origin Mutation Guard on state-changing requests (Origin + Sec-Fetch-Site)
   const secFetchSite = request.headers.get('Sec-Fetch-Site') || '';
   if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
     if ((origin && !isAllowedOrigin) || (secFetchSite === 'cross-site' && !isAllowedOrigin)) {

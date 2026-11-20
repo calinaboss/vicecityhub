@@ -1,8 +1,3 @@
-// ============================================================================
-// TURSO (libSQL over HTTPS) CLIENT & OWASP SECURITY CORE FOR CLOUDFLARE PAGES
-// Zero secrets in code. Uses env.TURSO_DATABASE_URL and env.TURSO_AUTH_TOKEN.
-// ============================================================================
-
 const edgeRateMap = new Map();
 
 export function getClientIp(request) {
@@ -55,10 +50,6 @@ export function jsonResponse(data, status = 200, extraHeaders = {}) {
   });
 }
 
-/**
- * Converts a JS primitive into a Turso HTTP v2 pipeline typed argument
- * Prevents all forms of SQL injection via strict type binding.
- */
 function toTursoArg(val) {
   if (val === null || val === undefined) {
     return { type: 'null' };
@@ -75,9 +66,6 @@ function toTursoArg(val) {
   return { type: 'text', value: String(val) };
 }
 
-/**
- * Parses Turso HTTP v2 pipeline result rows into plain JS objects
- */
 function parseTursoResult(execResult) {
   if (!execResult || !execResult.cols || !Array.isArray(execResult.rows)) {
     return [];
@@ -162,9 +150,6 @@ export function isTursoConfigured(env) {
   return Boolean(getTursoUrl(env) && getAllTursoTokens(env).length > 0);
 }
 
-/**
- * Executes a parameterized SQL query against Turso HTTP v2 Pipeline API
- */
 export async function runTursoSql(env, sql, params = []) {
   const tokens = getAllTursoTokens(env);
   if (!getTursoUrl(env) || tokens.length === 0) {
@@ -235,9 +220,6 @@ export async function runTursoSql(env, sql, params = []) {
   throw lastError || new Error('Turso authentication failed (401)');
 }
 
-/**
- * Executes a batch of SQL statements in a single HTTP roundtrip to save Turso quota & latency
- */
 export async function runTursoBatch(env, statements) {
   if (!isTursoConfigured(env)) return;
   const rawUrl = getTursoUrl(env);
@@ -388,13 +370,9 @@ export async function ensureTursoSchema(env) {
   } catch (e) {}
 }
 
-/**
- * Distributed + Edge Rate Limiter (OWASP API4:2023 Unrestricted Resource Consumption)
- */
 export async function checkRateLimit(env, key, maxRequests = 20, windowMs = 60000) {
   const nowMs = Date.now();
 
-  // Fast first-line in-memory check per isolate (saves Turso row reads against floods)
   const memEntry = edgeRateMap.get(key);
   if (memEntry && memEntry.resetAt > nowMs) {
     memEntry.count += 1;
@@ -464,12 +442,6 @@ export function sanitizeHexColor(rawVal) {
   return '#ff2a85';
 }
 
-/**
- * OWASP Image Upload Validator:
- * - Only accepts compressed WebP/JPEG/PNG data URLs (client canvas strips 100% EXIF/GPS metadata)
- * - Enforces max ~85 KB compressed payload
- * - Verifies actual binary magic bytes (RIFF..WEBP, FFD8FF, 89504E47) to prevent SVG/XSS polyglots
- */
 export function validateAndSanitizeAvatarDataUrl(rawVal) {
   if (!rawVal || typeof rawVal !== 'string') return '';
   const val = rawVal.trim();
@@ -600,11 +572,6 @@ export function sanitizeExternalUrl(rawVal) {
   }
 }
 
-/**
- * Canonical Server-Side Cloudflare Turnstile Siteverify
- * Reads secret strictly from env.TURNSTILE_SECRET_KEY (or env.TURNSTILE_SECRET).
- * Zero secrets stored in source code.
- */
 export async function verifyTurnstileToken(env, token, remoteIp, expectedAction = '') {
   const secretKey = (
     env?.TURNSTILE_SECRET_KEY ||

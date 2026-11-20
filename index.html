@@ -7,7 +7,6 @@
   <meta name="description" content="ViceCityHub.eu - GTA VI's community hub. Browse discussions, map guides, cheats, and find verified GTA 6 Discord servers.">
   <meta name="theme-color" content="#0d1117">
 
-  <!-- Open Graph / Social Share Image -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="ViceCityHub &bull; GTA VI's Community">
   <meta property="og:description" content="Browse GTA VI discussions, explore the interactive Leonida map, check PS5 &amp; Xbox D-pad cheat codes, and join verified Discord servers.">
@@ -18,7 +17,6 @@
   <meta name="twitter:description" content="GTA VI community hub, Leonida interactive map, PS5/Xbox cheat codes, and Discord directory.">
   <meta name="twitter:image" content="https://vicecityhub.eu/assets/brand/logo.png">
 
-  <!-- JSON-LD Structured Data Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -50,26 +48,21 @@
   }
   </script>
 
-  <!-- Favicons -->
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/favicon-192x192.png">
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
   <link rel="shortcut icon" href="favicon.ico">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
 
-  <!-- FontAwesome 6+ (Zero Emojis - Vector Icons Only) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Site Stylesheet -->
-  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
 </head>
 <body>
 
-  <!-- STICKY TOP NAVBAR (WHATSR-STYLE) -->
   <header class="site-header">
     <div class="header-container">
       <span class="mobile-brand-title">VICECITYHUB</span>
@@ -96,7 +89,6 @@
     </div>
   </header>
 
-  <!-- CENTERED HERO (LOGO + GTA VI'S COMMUNITY + SEARCH BOX) -->
   <section class="hero-center-section" aria-label="Hero Search">
     <img src="assets/brand/logo.png" alt="ViceCityHub" class="hero-center-logo">
     <div class="hero-subtitle">gta VI's community</div>
@@ -110,10 +102,8 @@
     </div>
   </section>
 
-  <!-- CENTERED MAIN CONTENT -->
   <main class="site-main">
 
-    <!-- HORIZONTAL FILTER CHIPS -->
     <div class="filter-bar" role="tablist" aria-label="Filter discussions by category">
       <button class="filter-chip active" data-category="all" role="tab">
         All
@@ -129,20 +119,25 @@
       </button>
     </div>
 
-    <!-- MAIN TWO-COLUMN CONTENT GRID -->
     <div class="content-grid">
 
-      <!-- LEFT: FEED WITH DISCUSSIONS & NEWS -->
       <section class="feed-wrapper" aria-label="Community Feed">
         <div class="feed-container" id="community-feed">
-          <!-- Populated via assets/js/app.js -->
+
         </div>
       </section>
 
-      <!-- RIGHT: CLEAN SIDEBAR (NO HEAVY BOXES / NO SERVER HEALTH) -->
       <aside class="sidebar-wrapper" aria-label="Sidebar">
 
-        <!-- Discord Directory Quick Link -->
+        <div class="widget-card">
+          <div class="widget-header">
+            <h3 class="widget-title">
+              <i class="fa-solid fa-fire" style="color: var(--accent-pink);"></i> Trending Feed
+            </h3>
+          </div>
+          <div id="trending-feed-list" class="trending-list"></div>
+        </div>
+
         <div class="widget-card">
           <div class="widget-header">
             <h3 class="widget-title">
@@ -162,7 +157,6 @@
           </div>
         </div>
 
-        <!-- Reserved Google AdSense Sidebar Slot (300x250) -->
         <div class="adsense-slot adsense-sidebar" aria-label="Sponsored Space"></div>
 
       </aside>
@@ -170,13 +164,11 @@
     </div>
   </main>
 
-  <!-- TOAST NOTIFICATION -->
   <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
     <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
     <span id="toast-text">Action completed</span>
   </div>
 
-  <!-- MOBILE BOTTOM BAR -->
   <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
     <a href="index.html" class="mobile-nav-item active">
       <i class="fa-solid fa-house"></i>
@@ -199,7 +191,6 @@
     </a>
   </nav>
 
-  <!-- MOBILE DRAWER -->
   <div class="mobile-drawer" id="mobile-drawer">
     <div class="drawer-panel">
       <div class="drawer-header">
@@ -221,7 +212,6 @@
     </div>
   </div>
 
-  <!-- FOOTER (WHATSR-STYLE, NO WIFI ICON) -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-brand">
@@ -279,6 +269,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/app.js?v=3.4"></script>
+  <script src="assets/js/app.js?v=3.5"></script>
 </body>
 </html>

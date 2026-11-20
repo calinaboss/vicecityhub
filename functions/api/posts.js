@@ -51,9 +51,6 @@ export async function onRequest(context) {
     await ensureTursoSchema(env);
   }
 
-  // =========================================================================
-  // GET /api/posts - Fetch community posts and their comments
-  // =========================================================================
   if (request.method === 'GET') {
     const allowed = await checkRateLimit(env, `posts_get_${ipHash}`, 120, 60000);
     if (!allowed) {
@@ -112,9 +109,6 @@ export async function onRequest(context) {
     }
   }
 
-  // =========================================================================
-  // POST /api/posts - Create Post, Comment, Like, or Bookmark
-  // =========================================================================
   if (request.method === 'POST') {
     let body;
     try {
@@ -123,7 +117,6 @@ export async function onRequest(context) {
       return jsonResponse({ error: 'Invalid JSON request body' }, 400);
     }
 
-    // OWASP Honeypot Anti-Bot Verification
     if (body.website_url_hp && String(body.website_url_hp).trim().length > 0) {
       return jsonResponse({ error: 'Automated bot submission rejected' }, 400);
     }
@@ -131,7 +124,6 @@ export async function onRequest(context) {
     const authUser = await getAuthenticatedUser(request, env);
     const actorFingerprint = authUser ? `user_${authUser.id}` : `ip_${ipHash}`;
 
-    // 1. CREATE NEW POST (Authenticated Users Only)
     if (action === 'create' || action === 'list') {
       if (!authUser) {
         return jsonResponse({ error: 'Authentication required. Please log in or create an account to publish a post.' }, 401);
@@ -145,7 +137,7 @@ export async function onRequest(context) {
       const turnstileToken = body.cfTurnstileResponse || body['cf-turnstile-response'] || '';
       const turnstileCheck = await verifyTurnstileToken(env, turnstileToken, ip, 'create_post');
       if (!turnstileCheck.valid) {
-        return jsonResponse({ error: turnstileCheck.error || 'Turnstile verification failed.' }, 403);
+        return jsonResponse({ error: turnstileCheck.error || 'Security verification failed.' }, 403);
       }
 
       const title = sanitizePlainText(body.title, 120);
@@ -173,6 +165,9 @@ export async function onRequest(context) {
         return jsonResponse({ error: 'Post content must be at least 12 characters long.' }, 400);
       }
 
+      const requiresModApproval = category === 'official' && authUser.role !== 'admin';
+      const postStatus = requiresModApproval ? 'pending' : 'approved';
+
       const postId = generateUuid();
       const postObj = {
         id: postId,
@@ -189,6 +184,7 @@ export async function onRequest(context) {
         text,
         mediaUrl,
         mediaType,
+        status: postStatus,
         likes: 1,
         isLiked: true,
         bookmarks: 0,
@@ -200,8 +196,8 @@ export async function onRequest(context) {
         try {
           await runTursoSql(
             env,
-            `INSERT INTO community_posts (id, user_id, category, category_label, author, username, badge, badge_class, title, content, media_url, media_type, author_avatar)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO community_posts (id, user_id, category, category_label, author, username, badge, badge_class, title, content, media_url, media_type, author_avatar, status)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
               postId,
               authUser.id,
@@ -215,16 +211,21 @@ export async function onRequest(context) {
               text,
               mediaUrl || null,
               mediaType,
-              authorAvatar
+              authorAvatar,
+              postStatus
             ]
           );
         } catch (e) {}
       }
 
-      return jsonResponse({ ok: true, post: postObj }, 201);
+      return jsonResponse({
+        ok: true,
+        pending: requiresModApproval,
+        message: requiresModApproval ? 'Waiting for the moderators approval' : 'Post published to Feed',
+        post: postObj
+      }, 201);
     }
 
-    // 2. ADD COMMENT TO POST
     if (action === 'comment') {
       const allowed = await checkRateLimit(env, `posts_comment_${ipHash}`, 20, 60000);
       if (!allowed) {
@@ -263,7 +264,6 @@ export async function onRequest(context) {
       }, 201);
     }
 
-    // 3. TOGGLE LIKE ON POST
     if (action === 'like') {
       const allowed = await checkRateLimit(env, `posts_like_${ipHash}`, 40, 60000);
       if (!allowed) {
@@ -308,7 +308,6 @@ export async function onRequest(context) {
       return jsonResponse({ ok: true });
     }
 
-    // 4. TOGGLE BOOKMARK ON POST
     if (action === 'bookmark') {
       const postId = sanitizePlainText(body.postId, 64);
       if (!postId) return jsonResponse({ error: 'postId required' }, 400);

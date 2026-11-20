@@ -17,11 +17,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
 </head>
 <body>
 
-  <!-- TOP NAVBAR -->
   <header class="site-header">
     <div class="header-container">
       <span class="mobile-brand-title">VICECITYHUB</span>
@@ -44,7 +43,6 @@
     </div>
   </header>
 
-  <!-- MAIN ACCOUNT SETTINGS PAGE -->
   <main class="site-main" style="max-width: 780px;">
     <nav class="breadcrumb-nav" aria-label="Breadcrumb">
       <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
@@ -72,7 +70,6 @@
 
     <div class="settings-sections-stack">
 
-      <!-- 1. CHANGE USERNAME -->
       <section class="settings-flat-section" aria-labelledby="heading-change-username">
         <h2 class="settings-section-title" id="heading-change-username">
           <i class="fa-solid fa-user-pen" style="color: var(--accent-pink);"></i> Change Username
@@ -109,7 +106,6 @@
         </form>
       </section>
 
-      <!-- 2. CHANGE PASSWORD -->
       <section class="settings-flat-section" aria-labelledby="heading-change-password">
         <h2 class="settings-section-title" id="heading-change-password">
           <i class="fa-solid fa-key" style="color: var(--accent-cyan);"></i> Change Password
@@ -161,7 +157,6 @@
         </form>
       </section>
 
-      <!-- 3. ACCOUNT SUPPORT & ASSISTANCE -->
       <section class="settings-flat-section" aria-labelledby="heading-assistance">
         <h2 class="settings-section-title" id="heading-assistance">
           <i class="fa-solid fa-headset" style="color: #34d399;"></i> Support &amp; Assistance
@@ -216,7 +211,6 @@
         </form>
       </section>
 
-      <!-- 4. SESSION & LOG OUT -->
       <section class="settings-flat-section" aria-label="Session Controls">
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
           <div>
@@ -236,7 +230,6 @@
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-bottom-bar" style="margin-top: 0; border-top: none;">
       <p class="footer-disclaimer-text">&copy; 2026 ViceCityHub.eu &bull; Unofficial GTA VI Community Hub.</p>
@@ -245,8 +238,7 @@
   </footer>
 
   <script>
-    // Password Eye Toggle for all fields with [data-toggle-pw]
-    document.querySelectorAll('[data-toggle-pw]').forEach(btn => {
+document.querySelectorAll('[data-toggle-pw]').forEach(btn => {
       btn.addEventListener('click', () => {
         const inputId = btn.getAttribute('data-toggle-pw');
         const input = document.getElementById(inputId);
@@ -276,7 +268,6 @@
       el.textContent = msg;
     }
 
-    // Load current user info
     async function initSettingsPage() {
       try {
         const res = await fetch('/api/auth?action=me', { credentials: 'same-origin' });
@@ -298,7 +289,6 @@
 
     initSettingsPage();
 
-    // 1. Change Username handler
     const formUsername = document.getElementById('form-change-username');
     const usernameFeedback = document.getElementById('username-feedback');
     if (formUsername) {
@@ -330,7 +320,6 @@
       });
     }
 
-    // 2. Change Password handler
     const formPassword = document.getElementById('form-change-password');
     const passwordFeedback = document.getElementById('password-feedback');
     if (formPassword) {
@@ -359,14 +348,13 @@
             return;
           }
           formPassword.reset();
-          showBoxFeedback(passwordFeedback, 'success', 'Password updated with OWASP PBKDF2-SHA256!');
+          showBoxFeedback(passwordFeedback, 'success', 'Password updated with PBKDF2-SHA256!');
         } catch (err) {
           showBoxFeedback(passwordFeedback, 'error', 'Network error while updating password.');
         }
       });
     }
 
-    // 3. Support Ticket handler
     const formSupport = document.getElementById('form-support-ticket');
     const supportFeedback = document.getElementById('support-feedback');
     if (formSupport) {
@@ -399,7 +387,6 @@
       });
     }
 
-    // 4. Logout handler
     async function performLogout() {
       try {
         await fetch('/api/auth?action=logout', { method: 'POST', credentials: 'same-origin' });
@@ -412,6 +399,6 @@
     const btnLogoutBottom = document.getElementById('btn-logout-bottom');
     if (btnLogoutTop) btnLogoutTop.addEventListener('click', performLogout);
     if (btnLogoutBottom) btnLogoutBottom.addEventListener('click', performLogout);
-  </script>
+</script>
 </body>
 </html>
