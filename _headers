@@ -45,3 +45,6 @@
 
 /sitemap.xml
   Cache-Control: public, max-age=3600, must-revalidate
+
+/d/*
+  Cache-Control: public, max-age=0, must-revalidate

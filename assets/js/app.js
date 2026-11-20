@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="post-category-tag">${escapeHtml(post.categoryLabel)}</span>
         </div>
 
-        <h2 class="post-title">${escapeHtml(post.title)}</h2>
+        <h2 class="post-title"><a href="/d/${encodeURIComponent(post.id)}" class="post-title-link">${escapeHtml(post.title)}</a></h2>
         <p class="post-text">${escapeHtml(post.text)}</p>
         ${mediaHtml}
 
@@ -247,6 +247,9 @@ document.addEventListener('DOMContentLoaded', () => {
               <i class="fa-regular fa-comment"></i>
               <span>${post.comments.length}</span>
             </button>
+            <a href="/d/${encodeURIComponent(post.id)}" class="action-btn" title="Open full discussion thread">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Thread
+            </a>
             <button class="action-btn btn-share" data-id="${post.id}" data-title="${escapeHtml(post.title)}">
               <i class="fa-solid fa-share-nodes"></i> Share
             </button>
@@ -555,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const shareBtn = e.target.closest('.btn-share');
       if (shareBtn) {
-        const shareUrl = `${window.location.origin}/index.html#post-${shareBtn.dataset.id}`;
+        const shareUrl = `${window.location.origin}/d/${shareBtn.dataset.id}`;
         const shareTitle = shareBtn.dataset.title || 'GTA VI Community Post on ViceCityHub';
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(shareUrl).catch(() => {});

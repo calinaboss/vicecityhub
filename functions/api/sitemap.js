@@ -35,10 +35,10 @@ export async function onRequest(context) {
       for (const p of (posts || [])) {
         const mod = (p.created_at || today).slice(0, 10);
         urls.push({
-          loc: `https://vicecityhub.eu/index.html#post-${encodeURIComponent(p.id)}`,
+          loc: `https://vicecityhub.eu/d/${encodeURIComponent(p.id)}`,
           lastmod: mod,
           changefreq: 'daily',
-          priority: '0.80'
+          priority: '0.85'
         });
         if (p.username) {
           urls.push({
