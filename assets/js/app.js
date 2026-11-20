@@ -84,6 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
   openDiscordModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(discordModal)));
   openClipModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(clipModal)));
 
+  if (discordModal && (window.location.search.includes('action=submit') || window.location.hash === '#submit')) {
+    openModal(discordModal);
+  }
+
   closeModalBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       closeModal(postModal);
