@@ -1,6 +1,11 @@
-.DS_Store
-Thumbs.db
-node_modules/
-*.log
+# Security: Never commit local environment secrets or keys to the public repository
 .env
 .env.*
+.dev.vars
+*.pem
+*.key
+*.secret
+node_modules/
+.wrangler/
+.DS_Store
+Thumbs.db

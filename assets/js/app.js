@@ -419,6 +419,11 @@ document.addEventListener('DOMContentLoaded', () => {
           p.isLiked = !p.isLiked;
           p.likes += p.isLiked ? 1 : -1;
           renderFeed();
+          fetch('/api/posts?action=like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ postId: p.id })
+          }).catch(() => {});
         }
         return;
       }
@@ -430,6 +435,11 @@ document.addEventListener('DOMContentLoaded', () => {
           p.isBookmarked = !p.isBookmarked;
           renderFeed();
           showToast(p.isBookmarked ? 'Saved to bookmarks' : 'Removed from bookmarks');
+          fetch('/api/posts?action=bookmark', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ postId: p.id })
+          }).catch(() => {});
         }
         return;
       }
@@ -455,6 +465,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const updatedDrawer = document.getElementById(`comments-${p.id}`);
           if (updatedDrawer) updatedDrawer.classList.add('open');
           showToast('Comment published');
+          fetch('/api/posts?action=comment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ postId: p.id, text: val })
+          }).catch(() => {});
         }
         return;
       }

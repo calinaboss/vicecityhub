@@ -1,4 +1,16 @@
-import { checkRateLimit, sanitizeExternalUrl } from './auth.js';
+import {
+  getClientIp,
+  sha256Hex,
+  generateUuid,
+  jsonResponse,
+  isTursoConfigured,
+  runTursoSql,
+  ensureTursoSchema,
+  checkRateLimit,
+  getAuthenticatedUser,
+  sanitizePlainText,
+  sanitizeExternalUrl
+} from './_turso.js';
 
 const RESERVED_NAMES = [
   'admin', 'administrator', 'system', 'vicecityhub', 'whatscr',
@@ -13,17 +25,10 @@ const CATEGORY_LABELS = {
   official: 'Official News'
 };
 
-function sanitizePlainText(input, maxLen = 2000) {
-  if (!input || typeof input !== 'string') return '';
-  return input
-    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
-    .replace(/<\/?[a-z][^>]*>/gi, '')
-    .trim()
-    .slice(0, maxLen);
-}
-
-function sanitizeAuthorName(rawName) {
+function sanitizeAuthorName(rawName, authUser) {
+  if (authUser && authUser.username) {
+    return authUser.username;
+  }
   if (!rawName || typeof rawName !== 'string') {
     return `VicePlayer_${Math.floor(100 + Math.random() * 900)}`;
   }
@@ -34,122 +39,81 @@ function sanitizeAuthorName(rawName) {
   return clean;
 }
 
-async function runNeonSql(databaseUrl, sql, params = []) {
-  const dbUrl = new URL(databaseUrl);
-  const endpoint = `https://${dbUrl.host}/sql`;
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 8000);
-
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Neon-Connection-String': databaseUrl
-    },
-    body: JSON.stringify({ query: sql, params }),
-    signal: controller.signal
-  });
-
-  clearTimeout(timeoutId);
-  if (!res.ok) {
-    const errText = await res.text().catch(() => '');
-    throw new Error(`Database query failed (${res.status}): ${errText.slice(0, 200)}`);
-  }
-  const data = await res.json();
-  if (data && Array.isArray(data.rows)) return data.rows;
-  if (Array.isArray(data) && data[0] && Array.isArray(data[0].rows)) return data[0].rows;
-  return [];
-}
-
-let postsSchemaInitialized = false;
-async function ensurePostsTables(databaseUrl) {
-  if (postsSchemaInitialized || !databaseUrl) return;
-  const statements = [
-    `CREATE TABLE IF NOT EXISTS community_posts (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      category VARCHAR(32) NOT NULL DEFAULT 'discussions',
-      category_label VARCHAR(48) NOT NULL DEFAULT 'Discussions',
-      pinned BOOLEAN DEFAULT FALSE,
-      author VARCHAR(48) NOT NULL,
-      username VARCHAR(48) NOT NULL,
-      badge VARCHAR(32) DEFAULT 'Member',
-      badge_class VARCHAR(32) DEFAULT 'verified',
-      title VARCHAR(140) NOT NULL,
-      content VARCHAR(2000) NOT NULL,
-      media_url VARCHAR(350),
-      likes INT DEFAULT 1,
-      bookmarks INT DEFAULT 0,
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    )`,
-    `CREATE INDEX IF NOT EXISTS idx_community_posts_created ON community_posts(created_at DESC)`,
-    `CREATE TABLE IF NOT EXISTS community_comments (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      post_id UUID NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE,
-      author VARCHAR(48) NOT NULL,
-      content VARCHAR(500) NOT NULL,
-      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    )`,
-    `CREATE INDEX IF NOT EXISTS idx_community_comments_post ON community_comments(post_id, created_at ASC)`
-  ];
-  for (const stmt of statements) {
-    try {
-      await runNeonSql(databaseUrl, stmt);
-    } catch (e) {}
-  }
-  postsSchemaInitialized = true;
-}
-
-function jsonResponse(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store'
-    }
-  });
-}
-
 export async function onRequest(context) {
   const { request, env } = context;
-  const ip = request.headers.get('CF-Connecting-IP') || 'anonymous';
+  const ip = getClientIp(request);
+  const ipHash = await sha256Hex(ip);
   const url = new URL(request.url);
   const action = url.searchParams.get('action') || 'list';
 
-  if (env.DATABASE_URL) {
-    await ensurePostsTables(env.DATABASE_URL);
+  if (isTursoConfigured(env)) {
+    await ensureTursoSchema(env);
   }
 
+  // =========================================================================
+  // GET /api/posts - Fetch community posts and their comments
+  // =========================================================================
   if (request.method === 'GET') {
-    const allowed = await checkRateLimit(env.DATABASE_URL, `posts_get_${ip}`, 120, 60000);
+    const allowed = await checkRateLimit(env, `posts_get_${ipHash}`, 120, 60000);
     if (!allowed) {
       return jsonResponse({ error: 'Rate limit exceeded. Please slow down.' }, 429);
     }
 
-    if (!env.DATABASE_URL) {
+    if (!isTursoConfigured(env)) {
       return jsonResponse({ posts: [], mode: 'edge_local' });
     }
 
     try {
-      const rows = await runNeonSql(
-        env.DATABASE_URL,
-        `SELECT id, category, category_label as "categoryLabel", pinned, author, username, badge, badge_class as "badgeClass",
-                title, content as text, media_url as "mediaUrl", likes, bookmarks, created_at
+      const { rows: postRows } = await runTursoSql(
+        env,
+        `SELECT id, category, category_label as categoryLabel, pinned, author, username,
+                badge, badge_class as badgeClass, title, content as text, media_url as mediaUrl,
+                likes_count as likes, bookmarks_count as bookmarks, created_at
          FROM community_posts
+         WHERE status = 'approved'
          ORDER BY pinned DESC, created_at DESC
          LIMIT 50`
       );
-      return jsonResponse({ posts: rows || [] });
+
+      const { rows: commentRows } = await runTursoSql(
+        env,
+        `SELECT id, post_id, author, content as text, created_at
+         FROM community_comments
+         WHERE status = 'approved'
+         ORDER BY created_at ASC
+         LIMIT 250`
+      );
+
+      const commentsByPost = {};
+      for (const c of commentRows) {
+        if (!commentsByPost[c.post_id]) commentsByPost[c.post_id] = [];
+        commentsByPost[c.post_id].push({
+          id: c.id,
+          author: c.author,
+          time: c.created_at || 'Recently',
+          text: c.text
+        });
+      }
+
+      const formatted = postRows.map(p => ({
+        ...p,
+        pinned: Number(p.pinned) === 1,
+        likes: Number(p.likes) || 0,
+        bookmarks: Number(p.bookmarks) || 0,
+        time: p.created_at || 'Recently',
+        comments: commentsByPost[p.id] || []
+      }));
+
+      return jsonResponse({ posts: formatted });
     } catch (e) {
       return jsonResponse({ posts: [], error: 'Failed to load posts' }, 500);
     }
   }
 
+  // =========================================================================
+  // POST /api/posts - Create Post, Comment, Like, or Bookmark
+  // =========================================================================
   if (request.method === 'POST') {
-    const allowed = await checkRateLimit(env.DATABASE_URL, `posts_post_${ip}`, 8, 60000);
-    if (!allowed) {
-      return jsonResponse({ error: 'Too many posts submitted. Please wait 1 minute.' }, 429);
-    }
-
     let body;
     try {
       body = await request.json();
@@ -157,18 +121,27 @@ export async function onRequest(context) {
       return jsonResponse({ error: 'Invalid JSON request body' }, 400);
     }
 
-    // OWASP Honeypot Check: reject automated bot submissions silently or with 400
+    // OWASP Honeypot Anti-Bot Verification
     if (body.website_url_hp && String(body.website_url_hp).trim().length > 0) {
       return jsonResponse({ error: 'Automated bot submission rejected' }, 400);
     }
 
+    const authUser = await getAuthenticatedUser(request, env);
+    const actorFingerprint = authUser ? `user_${authUser.id}` : `ip_${ipHash}`;
+
+    // 1. CREATE NEW POST
     if (action === 'create' || action === 'list') {
+      const allowed = await checkRateLimit(env, `posts_create_${ipHash}`, 8, 60000);
+      if (!allowed) {
+        return jsonResponse({ error: 'Too many posts submitted. Please wait 1 minute.' }, 429);
+      }
+
       const title = sanitizePlainText(body.title, 120);
       const text = sanitizePlainText(body.text || body.content, 2000);
       const rawCat = (body.category || 'discussions').toLowerCase().trim();
       const category = ALLOWED_CATEGORIES.includes(rawCat) ? rawCat : 'discussions';
       const categoryLabel = CATEGORY_LABELS[category] || 'Discussions';
-      const author = sanitizeAuthorName(body.author);
+      const author = sanitizeAuthorName(body.author, authUser);
       const username = author.toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20) || 'viceplayer';
       const mediaUrl = body.mediaUrl ? sanitizeExternalUrl(body.mediaUrl) : '';
 
@@ -179,15 +152,16 @@ export async function onRequest(context) {
         return jsonResponse({ error: 'Post content must be at least 12 characters long.' }, 400);
       }
 
+      const postId = generateUuid();
       const postObj = {
-        id: `post-${Date.now()}`,
+        id: postId,
         category,
         categoryLabel,
         pinned: false,
         author,
         username,
-        badge: 'Member',
-        badgeClass: 'verified',
+        badge: authUser?.role === 'admin' ? 'Official' : 'Member',
+        badgeClass: authUser?.role === 'admin' ? 'mod' : 'verified',
         time: 'Just now',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
         title,
@@ -200,22 +174,153 @@ export async function onRequest(context) {
         comments: []
       };
 
-      if (env.DATABASE_URL) {
+      if (isTursoConfigured(env)) {
         try {
-          const inserted = await runNeonSql(
-            env.DATABASE_URL,
-            `INSERT INTO community_posts (category, category_label, author, username, title, content, media_url)
-             VALUES ($1, $2, $3, $4, $5, $6, $7)
-             RETURNING id`,
-            [category, categoryLabel, author, username, title, text, mediaUrl || null]
+          await runTursoSql(
+            env,
+            `INSERT INTO community_posts (id, user_id, category, category_label, author, username, badge, badge_class, title, content, media_url)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [
+              postId,
+              authUser ? authUser.id : null,
+              category,
+              categoryLabel,
+              author,
+              username,
+              postObj.badge,
+              postObj.badgeClass,
+              title,
+              text,
+              mediaUrl || null
+            ]
           );
-          if (inserted && inserted[0]) {
-            postObj.id = inserted[0].id;
-          }
         } catch (e) {}
       }
 
       return jsonResponse({ ok: true, post: postObj }, 201);
+    }
+
+    // 2. ADD COMMENT TO POST
+    if (action === 'comment') {
+      const allowed = await checkRateLimit(env, `posts_comment_${ipHash}`, 20, 60000);
+      if (!allowed) {
+        return jsonResponse({ error: 'Too many comments. Please slow down.' }, 429);
+      }
+
+      const postId = sanitizePlainText(body.postId, 64);
+      const content = sanitizePlainText(body.text || body.content, 500);
+      const author = sanitizeAuthorName(body.author, authUser);
+      const username = author.toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20) || 'viceplayer';
+
+      if (!postId || content.length < 2) {
+        return jsonResponse({ error: 'Comment is too short.' }, 400);
+      }
+
+      const commentId = generateUuid();
+      if (isTursoConfigured(env)) {
+        try {
+          await runTursoSql(
+            env,
+            `INSERT INTO community_comments (id, post_id, user_id, author, username, content)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [commentId, postId, authUser ? authUser.id : null, author, username, content]
+          );
+          await runTursoSql(
+            env,
+            `UPDATE community_posts SET comments_count = comments_count + 1 WHERE id = ?`,
+            [postId]
+          );
+        } catch (e) {}
+      }
+
+      return jsonResponse({
+        ok: true,
+        comment: { id: commentId, postId, author, time: 'Just now', text: content }
+      }, 201);
+    }
+
+    // 3. TOGGLE LIKE ON POST
+    if (action === 'like') {
+      const allowed = await checkRateLimit(env, `posts_like_${ipHash}`, 40, 60000);
+      if (!allowed) {
+        return jsonResponse({ error: 'Rate limit exceeded' }, 429);
+      }
+
+      const postId = sanitizePlainText(body.postId, 64);
+      if (!postId) return jsonResponse({ error: 'postId required' }, 400);
+
+      if (isTursoConfigured(env)) {
+        try {
+          const { rows: existing } = await runTursoSql(
+            env,
+            'SELECT id FROM post_likes WHERE post_id = ? AND actor_fingerprint = ? LIMIT 1',
+            [postId, actorFingerprint]
+          );
+
+          if (existing.length > 0) {
+            await runTursoSql(env, 'DELETE FROM post_likes WHERE id = ?', [existing[0].id]);
+            await runTursoSql(
+              env,
+              'UPDATE community_posts SET likes_count = MAX(0, likes_count - 1) WHERE id = ?',
+              [postId]
+            );
+            return jsonResponse({ ok: true, liked: false });
+          } else {
+            await runTursoSql(
+              env,
+              'INSERT INTO post_likes (id, post_id, user_id, actor_fingerprint) VALUES (?, ?, ?, ?)',
+              [generateUuid(), postId, authUser ? authUser.id : null, actorFingerprint]
+            );
+            await runTursoSql(
+              env,
+              'UPDATE community_posts SET likes_count = likes_count + 1 WHERE id = ?',
+              [postId]
+            );
+            return jsonResponse({ ok: true, liked: true });
+          }
+        } catch (e) {}
+      }
+
+      return jsonResponse({ ok: true });
+    }
+
+    // 4. TOGGLE BOOKMARK ON POST
+    if (action === 'bookmark') {
+      const postId = sanitizePlainText(body.postId, 64);
+      if (!postId) return jsonResponse({ error: 'postId required' }, 400);
+
+      if (isTursoConfigured(env)) {
+        try {
+          const { rows: existing } = await runTursoSql(
+            env,
+            'SELECT id FROM post_bookmarks WHERE post_id = ? AND actor_fingerprint = ? LIMIT 1',
+            [postId, actorFingerprint]
+          );
+          if (existing.length > 0) {
+            await runTursoSql(env, 'DELETE FROM post_bookmarks WHERE id = ?', [existing[0].id]);
+            await runTursoSql(
+              env,
+              'UPDATE community_posts SET bookmarks_count = MAX(0, bookmarks_count - 1) WHERE id = ?',
+              [postId]
+            );
+            return jsonResponse({ ok: true, bookmarked: false });
+          } else {
+            await runTursoSql(
+              env,
+              'INSERT INTO post_bookmarks (id, post_id, user_id, actor_fingerprint) VALUES (?, ?, ?, ?)',
+              [generateUuid(), postId, authUser ? authUser.id : null, actorFingerprint]
+            );
+            await runTursoSql(
+              env,
+              'UPDATE community_posts SET bookmarks_count = bookmarks_count + 1 WHERE id = ?',
+              [postId]
+            );
+            return jsonResponse({ ok: true, bookmarked: true });
+          }
+        } catch (e) {}
+      }
+
+      return jsonResponse({ ok: true });
     }
   }
 
