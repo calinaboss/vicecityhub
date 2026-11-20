@@ -7,7 +7,7 @@ const ALLOWED_ORIGINS = [
 function checkAllowedOrigin(origin) {
   if (!origin) return true;
   if (ALLOWED_ORIGINS.includes(origin)) return true;
-  if (origin.endsWith('.vicecityhub.pages.dev')) return true;
+  if (origin.endsWith('vicecityhub.eu') || origin.endsWith('.pages.dev')) return true;
   if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) return true;
   return false;
 }

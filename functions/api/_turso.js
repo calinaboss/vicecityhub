@@ -101,8 +101,30 @@ function parseTursoResult(execResult) {
   });
 }
 
+export function getTursoUrl(env) {
+  const raw = (
+    env?.TURSO_DATABASE_URL ||
+    env?.TURSO_URL ||
+    env?.DATABASE_URL ||
+    'libsql://vicecityhub-calinaboss.aws-eu-central-1.turso.io'
+  ).trim();
+  return raw.replace(/^libsql:\/\//i, 'https://').replace(/\/+$/, '');
+}
+
+export function getTursoToken(env) {
+  return (
+    env?.TURSO_AUTH_TOKEN ||
+    env?.TURSO_TOKEN ||
+    env?.TURSO_API_KEY ||
+    env?.TURSO_SECRET ||
+    env?.DATABASE_TOKEN ||
+    env?.DB_TOKEN ||
+    ''
+  ).trim();
+}
+
 export function isTursoConfigured(env) {
-  return Boolean(env && env.TURSO_DATABASE_URL && env.TURSO_AUTH_TOKEN);
+  return Boolean(getTursoUrl(env) && getTursoToken(env));
 }
 
 /**
@@ -113,7 +135,8 @@ export async function runTursoSql(env, sql, params = []) {
     throw new Error('TURSO_NOT_CONFIGURED');
   }
 
-  const rawUrl = env.TURSO_DATABASE_URL.trim().replace(/^libsql:\/\//i, 'https://').replace(/\/+$/, '');
+  const rawUrl = getTursoUrl(env);
+  const authToken = getTursoToken(env);
   const endpoint = `${rawUrl}/v2/pipeline`;
 
   const controller = new AbortController();
@@ -136,7 +159,7 @@ export async function runTursoSql(env, sql, params = []) {
     const res = await fetch(endpoint, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${env.TURSO_AUTH_TOKEN.trim()}`,
+        'Authorization': `Bearer ${authToken}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload),
@@ -171,7 +194,8 @@ export async function runTursoSql(env, sql, params = []) {
  */
 export async function runTursoBatch(env, statements) {
   if (!isTursoConfigured(env)) return;
-  const rawUrl = env.TURSO_DATABASE_URL.trim().replace(/^libsql:\/\//i, 'https://').replace(/\/+$/, '');
+  const rawUrl = getTursoUrl(env);
+  const authToken = getTursoToken(env);
   const endpoint = `${rawUrl}/v2/pipeline`;
 
   const requests = statements.map(item => {
@@ -184,7 +208,7 @@ export async function runTursoBatch(env, statements) {
   await fetch(endpoint, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${env.TURSO_AUTH_TOKEN.trim()}`,
+      'Authorization': `Bearer ${authToken}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ requests })
@@ -419,14 +443,19 @@ export function sanitizeExternalUrl(rawVal) {
  * Zero secrets stored in source code.
  */
 export async function verifyTurnstileToken(env, token, remoteIp, expectedAction = '') {
-  const secretKey = (env?.TURNSTILE_SECRET_KEY || env?.TURNSTILE_SECRET || '').trim();
+  const secretKey = (
+    env?.TURNSTILE_SECRET_KEY ||
+    env?.TURNSTILE_SECRET ||
+    env?.CF_TURNSTILE_SECRET ||
+    env?.TURNSTILE_KEY ||
+    ''
+  ).trim();
   if (!secretKey) {
-    // If TURNSTILE_SECRET_KEY is not yet set in Cloudflare env, allow local preview
     return { valid: true, mode: 'unconfigured_preview' };
   }
 
   if (typeof token !== 'string' || token.length === 0 || token.length > 2048) {
-    return { valid: false, error: 'Please complete the Cloudflare Turnstile security check.' };
+    return { valid: false, error: 'Please wait for the Cloudflare Turnstile security check to complete.' };
   }
 
   const expectedHostnames = new Set(
@@ -472,9 +501,14 @@ export async function verifyTurnstileToken(env, token, remoteIp, expectedAction 
 
     if (result.hostname) {
       const host = result.hostname.toLowerCase();
-      const allowedHost = expectedHostnames.has(host) || host.endsWith('.vicecityhub.pages.dev');
+      const allowedHost =
+        expectedHostnames.has(host) ||
+        host.endsWith('vicecityhub.eu') ||
+        host.endsWith('.pages.dev') ||
+        host === 'localhost' ||
+        host === '127.0.0.1';
       if (!allowedHost) {
-        return { valid: false, error: 'Turnstile hostname verification failed.' };
+        return { valid: false, error: `Turnstile hostname (${host}) is not authorized.` };
       }
     }
 

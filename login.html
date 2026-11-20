@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.0">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.1">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
@@ -81,7 +81,6 @@
       </form>
 
       <div style="text-align: center; margin-top: 18px; font-size: 0.78rem; color: var(--text-dim);">
-        Protected by Cloudflare Turnstile &amp; OWASP PBKDF2-SHA256.<br>
         By continuing, you agree to our <a href="terms.html" style="color: var(--accent-pink);">Terms</a> and <a href="privacy.html" style="color: var(--accent-pink);">Privacy Policy</a>.
       </div>
     </div>
@@ -146,7 +145,7 @@
       authFeedback.style.display = 'block';
       authFeedback.style.background = 'rgba(59, 130, 246, 0.14)';
       authFeedback.style.color = '#93c5fd';
-      authFeedback.textContent = 'Verifying credentials with Cloudflare Turnstile...';
+      authFeedback.textContent = 'Verifying credentials...';
 
       try {
         const res = await fetch(`/api/auth?action=${currentAuthMode}`, {
@@ -154,11 +153,17 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, username, cfTurnstileResponse })
         });
-        const data = await res.json();
+        const rawText = await res.text();
+        let data = {};
+        try {
+          data = JSON.parse(rawText);
+        } catch (parseErr) {
+          data = { error: `Server returned status ${res.status}. Please wait a few seconds for Cloudflare Pages deployment to finish.` };
+        }
         if (!res.ok) {
           authFeedback.style.background = 'rgba(239, 68, 68, 0.16)';
           authFeedback.style.color = '#fca5a5';
-          authFeedback.textContent = data.error || 'Authentication failed.';
+          authFeedback.textContent = data.error || `Error (${res.status}): Authentication failed.`;
           if (window.turnstile) window.turnstile.reset();
           return;
         }
@@ -174,7 +179,7 @@
       } catch (err) {
         authFeedback.style.background = 'rgba(239, 68, 68, 0.16)';
         authFeedback.style.color = '#fca5a5';
-        authFeedback.textContent = 'Network error. Please try again.';
+        authFeedback.textContent = err && err.message ? `Connection error: ${err.message}` : 'Network error. Please try again.';
       }
     });
   </script>
