@@ -15,16 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Modals
   const postModal = document.getElementById('create-post-modal');
   const discordModal = document.getElementById('submit-discord-modal');
-  const clipModal = document.getElementById('post-clip-modal');
   const openPostModalBtns = document.querySelectorAll('.trigger-new-post');
   const openDiscordModalBtns = document.querySelectorAll('.trigger-add-discord');
-  const openClipModalBtns = document.querySelectorAll('.trigger-post-clip');
   const closeModalBtns = document.querySelectorAll('.trigger-close-modal');
 
   // Forms
   const postForm = document.getElementById('new-post-form');
   const discordForm = document.getElementById('new-discord-form');
-  const clipForm = document.getElementById('new-clip-form');
 
   // Page-specific containers
   const feedContainer = document.getElementById('community-feed');
@@ -41,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const cheatSearchInput = document.getElementById('cheat-search-input');
   const platformPills = document.querySelectorAll('[data-platform]');
 
-  const clipsGrid = document.getElementById('clips-page-grid');
   const leafletMapContainer = document.getElementById('leonida-leaflet-map');
   const poiPills = document.querySelectorAll('[data-poi]');
 
@@ -82,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   openPostModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(postModal)));
   openDiscordModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(discordModal)));
-  openClipModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(clipModal)));
 
   if (discordModal && (window.location.search.includes('action=submit') || window.location.hash === '#submit')) {
     openModal(discordModal);
@@ -92,11 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       closeModal(postModal);
       closeModal(discordModal);
-      closeModal(clipModal);
     });
   });
 
-  [postModal, discordModal, clipModal].forEach(m => {
+  [postModal, discordModal].forEach(m => {
     if (!m) return;
     m.addEventListener('click', (e) => {
       if (e.target === m) closeModal(m);
@@ -107,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       closeModal(postModal);
       closeModal(discordModal);
-      closeModal(clipModal);
       if (mobileDrawer && mobileDrawer.classList.contains('open')) closeDrawer();
     }
   });
@@ -203,8 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       id: 'post-4',
-      category: 'clips',
-      categoryLabel: 'Clips & Media',
+      category: 'discussions',
+      categoryLabel: 'Discussions',
       pinned: false,
       author: 'NeonRacer_XX',
       username: 'neon_racer',
@@ -488,7 +481,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const catMap = {
         discussions: 'Discussions',
         leaks: 'Map',
-        clips: 'Clips & Media',
         official: 'Official News'
       };
 
@@ -1004,204 +996,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const cat = pill.dataset.poi || 'all';
         renderMapMarkers(cat);
       });
-    });
-  }
-
-  // ==========================================
-  // 5. CLIPS SHOWCASE (CATEGORIES: ALL, BUGS, GLITCHES, FUNNY, CLIPS & LIST VIEW)
-  // ==========================================
-  let activeClipCategory = 'all';
-  let clipSearchQuery = '';
-
-  let clips = [
-    {
-      id: 'clip-1',
-      title: 'Night Drift down Ocean Beach in 4K with raytracing',
-      category: 'clips',
-      categoryLabel: 'Clips',
-      author: 'Speedy_VC',
-      views: '3.4k views',
-      thumb: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1000&auto=format&fit=crop&q=80',
-      time: '2 hours ago'
-    },
-    {
-      id: 'clip-2',
-      title: 'Swamp alligators attacking police cruiser during pursuit',
-      category: 'funny',
-      categoryLabel: 'Funny',
-      author: 'GatorBaiter',
-      views: '8.9k views',
-      thumb: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1000&auto=format&fit=crop&q=80',
-      time: '4 hours ago'
-    },
-    {
-      id: 'clip-3',
-      title: 'Invisible barrier collision bug on Gellhorn Overpass',
-      category: 'bugs',
-      categoryLabel: 'Bugs',
-      author: 'LeonidaTester',
-      views: '2.1k views',
-      thumb: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?w=1000&auto=format&fit=crop&q=80',
-      time: '7 hours ago'
-    },
-    {
-      id: 'clip-4',
-      title: 'Physics engine glitch: NPC launched into stratosphere with scooter',
-      category: 'glitches',
-      categoryLabel: 'Glitches',
-      author: 'VicePhysix',
-      views: '12.4k views',
-      thumb: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1000&auto=format&fit=crop&q=80',
-      time: '1 day ago'
-    },
-    {
-      id: 'clip-5',
-      title: 'Precision helicopter landing on top of Starfish Island penthouse',
-      category: 'clips',
-      categoryLabel: 'Clips',
-      author: 'TacticalPilot',
-      views: '4.6k views',
-      thumb: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1000&auto=format&fit=crop&q=80',
-      time: '1 day ago'
-    },
-    {
-      id: 'clip-6',
-      title: 'NPC pedestrian walking backwards talking to telephone pole',
-      category: 'funny',
-      categoryLabel: 'Funny',
-      author: 'CluckinBellFan',
-      views: '6.7k views',
-      thumb: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1000&auto=format&fit=crop&q=80',
-      time: '2 days ago'
-    },
-    {
-      id: 'clip-7',
-      title: 'Water mesh render glitch in Grassrivers Everglades stream',
-      category: 'glitches',
-      categoryLabel: 'Glitches',
-      author: 'Dataminer_VI',
-      views: '3.1k views',
-      thumb: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1000&auto=format&fit=crop&q=80',
-      time: '3 days ago'
-    },
-    {
-      id: 'clip-8',
-      title: 'Traffic lights cycling backwards causing 40-car highway pileup',
-      category: 'bugs',
-      categoryLabel: 'Bugs',
-      author: 'FloridaMan_6',
-      views: '15.3k views',
-      thumb: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1000&auto=format&fit=crop&q=80',
-      time: '3 days ago'
-    }
-  ];
-
-  function renderClips() {
-    if (!clipsGrid) return;
-
-    const filtered = clips.filter(c => {
-      const matchCat = activeClipCategory === 'all' || c.category === activeClipCategory;
-      const matchQuery = !clipSearchQuery ||
-        c.title.toLowerCase().includes(clipSearchQuery) ||
-        c.author.toLowerCase().includes(clipSearchQuery);
-      return matchCat && matchQuery;
-    });
-
-    if (filtered.length === 0) {
-      clipsGrid.innerHTML = `
-        <div class="widget-card" style="text-align: center; padding: 40px 20px;">
-          <p style="color: var(--text-muted); margin-bottom: 12px;">No clips matching your filter.</p>
-          <button class="btn-post trigger-post-clip"><i class="fa-solid fa-upload"></i> Post Your Clip</button>
-        </div>
-      `;
-      return;
-    }
-
-    clipsGrid.innerHTML = filtered.map(c => `
-      <div class="clip-list-item" onclick="alert('Viewing clip: ${escapeHtml(c.title)}')">
-        <div class="clip-list-thumb">
-          <img src="${escapeHtml(c.thumb)}" alt="${escapeHtml(c.title)}" loading="lazy">
-          <div class="clip-list-play-overlay">
-            <i class="fa-solid fa-play"></i>
-          </div>
-        </div>
-        <div class="clip-list-info">
-          <div class="clip-list-badge-row">
-            <span class="clip-badge clip-badge-${escapeHtml(c.category)}">${escapeHtml(c.categoryLabel || c.category)}</span>
-          </div>
-          <h3 class="clip-list-title">${escapeHtml(c.title)}</h3>
-          <div class="clip-list-meta">
-            <span><i class="fa-solid fa-user"></i> @${escapeHtml(c.author)}</span>
-            <span>&bull;</span>
-            <span><i class="fa-solid fa-eye"></i> ${escapeHtml(c.views)}</span>
-            <span>&bull;</span>
-            <span><i class="fa-solid fa-clock"></i> ${escapeHtml(c.time)}</span>
-          </div>
-        </div>
-        <div class="clip-list-right">
-          <button class="btn-watch-clip" aria-label="Watch Clip">
-            <i class="fa-solid fa-play"></i> Watch
-          </button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  const clipCatPills = document.querySelectorAll('.clip-cat-pill');
-  const clipSearchInput = document.getElementById('clip-search-input');
-
-  if (clipsGrid) {
-    renderClips();
-
-    if (clipCatPills.length > 0) {
-      clipCatPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-          clipCatPills.forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-          activeClipCategory = pill.dataset.category || 'all';
-          renderClips();
-        });
-      });
-    }
-
-    if (clipSearchInput) {
-      clipSearchInput.addEventListener('input', () => {
-        clipSearchQuery = clipSearchInput.value.toLowerCase().trim();
-        renderClips();
-      });
-    }
-  }
-
-  if (clipForm) {
-    clipForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const title = document.getElementById('clip-title-input').value.trim();
-      const thumb = document.getElementById('clip-thumb-input').value.trim();
-      const categorySelect = document.getElementById('clip-category-select');
-      const selectedCat = categorySelect ? categorySelect.value : 'clips';
-
-      const catLabelMap = {
-        clips: 'Clips',
-        bugs: 'Bugs',
-        glitches: 'Glitches',
-        funny: 'Funny'
-      };
-
-      clips.unshift({
-        id: `clip-${Date.now()}`,
-        title: title,
-        category: selectedCat,
-        categoryLabel: catLabelMap[selectedCat] || 'Clips',
-        author: 'You',
-        views: '1 view',
-        thumb: thumb || 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1000&auto=format&fit=crop&q=80',
-        time: 'Just now'
-      });
-
-      closeModal(clipModal);
-      clipForm.reset();
-      renderClips();
-      showToast('Clip posted to community!');
     });
   }
 });
