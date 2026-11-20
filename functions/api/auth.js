@@ -2,6 +2,7 @@ import {
   getClientIp,
   sha256Hex,
   generateUuid,
+  parseCookies,
   jsonResponse,
   isTursoConfigured,
   runTursoSql,
@@ -121,8 +122,11 @@ export async function onRequest(context) {
         return jsonResponse({ error: turnstileCheck.error || 'Turnstile verification failed.' }, 403);
       }
 
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 120) {
+      if (action === 'register' && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 120)) {
         return jsonResponse({ error: 'Invalid email address format' }, 400);
+      }
+      if (action === 'login' && (email.length < 3 || email.length > 120)) {
+        return jsonResponse({ error: 'Please enter your email or username' }, 400);
       }
       if (typeof password !== 'string' || password.length < 8 || password.length > 128) {
         return jsonResponse({ error: 'Password must be between 8 and 128 characters' }, 400);
@@ -180,7 +184,7 @@ export async function onRequest(context) {
       if (action === 'login') {
         const { rows } = await runTursoSql(
           env,
-          'SELECT id, username, email, password_hash, role, is_banned FROM users WHERE LOWER(email) = ? OR LOWER(username) = LOWER(?) LIMIT 1',
+          'SELECT id, username, email, password_hash, role, avatar_url, banner_color, is_banned FROM users WHERE LOWER(email) = ? OR LOWER(username) = LOWER(?) LIMIT 1',
           [email, email]
         );
         if (rows.length === 0) {
@@ -207,7 +211,17 @@ export async function onRequest(context) {
         );
 
         return jsonResponse(
-          { ok: true, user: { id: user.id, username: user.username, email: user.email, role: user.role } },
+          {
+            ok: true,
+            user: {
+              id: user.id,
+              username: user.username,
+              email: user.email,
+              role: user.role,
+              avatar_url: user.avatar_url || 'assets/brand/favicon-192x192.png',
+              banner_color: user.banner_color || '#ff2a85'
+            }
+          },
           200,
           {
             'Set-Cookie': `vicecityhub_session=${rawToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`
@@ -217,6 +231,13 @@ export async function onRequest(context) {
     }
 
     if (request.method === 'POST' && action === 'logout') {
+      try {
+        const cookies = parseCookies(request.headers.get('Cookie'));
+        if (cookies.vicecityhub_session) {
+          const tokenHash = await sha256Hex(cookies.vicecityhub_session);
+          await runTursoSql(env, 'DELETE FROM sessions WHERE token_hash = ?', [tokenHash]);
+        }
+      } catch (e) {}
       return jsonResponse(
         { ok: true },
         200,

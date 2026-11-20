@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Profile &bull; ViceCityHub.eu</title>
+  <meta name="description" content="ViceCityHub community member profile, bio, social links, followers, and GTA VI posts.">
+  <meta name="theme-color" content="#0d1117">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/favicon-192x192.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.3">
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="site-header">
+    <div class="header-container">
+      <span class="mobile-brand-title">VICECITYHUB</span>
+
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="https://map.vicecityhub.eu" class="nav-link">Map</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
+      </nav>
+
+      <div class="header-nav-right">
+        <a href="post.html" class="btn-post" aria-label="New Post">
+          <i class="fa-solid fa-plus"></i> New Post
+        </a>
+        <a href="login.html" class="nav-auth-link">Log in</a>
+        <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- FULL-PAGE CENTERED PROFILE -->
+  <main class="site-main profile-fullpage-main">
+
+    <!-- CUSTOMIZABLE HEX COLOR BANNER + CENTERED AVATAR -->
+    <section class="profile-hero-wrap" aria-label="Member Profile Header">
+      <div class="profile-banner-strip" id="profile-banner-strip" style="background: linear-gradient(135deg, #ff2a85 0%, #161b22 100%);">
+        <button type="button" class="profile-banner-color-trigger" id="btn-open-profile-editor" style="display: none;" title="Customize Banner Color &amp; Profile">
+          <i class="fa-solid fa-palette"></i> Customize Profile
+        </button>
+      </div>
+
+      <!-- Centered PFP + Username + Follow Stats + Bio + Socials -->
+      <div class="profile-center-column">
+        <div class="profile-avatar-shell">
+          <img src="assets/brand/favicon-192x192.png" alt="User Avatar" id="profile-avatar-img" class="profile-avatar-large">
+          <button type="button" class="profile-avatar-edit-badge" id="btn-trigger-avatar-upload" style="display: none;" title="Change Profile Picture (Max 5MB, Auto-Optimized &amp; EXIF Stripped)">
+            <i class="fa-solid fa-camera"></i>
+          </button>
+          <input type="file" id="profile-avatar-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
+        </div>
+
+        <!-- Centered Username & Role Badge -->
+        <div class="profile-name-row">
+          <h1 class="profile-username-heading" id="profile-username-display">Loading...</h1>
+          <span class="badge-pill verified" id="profile-role-badge">MEMBER</span>
+        </div>
+
+        <!-- Followers & Following Counters -->
+        <div class="profile-follow-stats">
+          <div class="follow-stat-item">
+            <strong id="profile-followers-count">0</strong>
+            <span>Followers</span>
+          </div>
+          <span class="follow-stat-dot">&bull;</span>
+          <div class="follow-stat-item">
+            <strong id="profile-following-count">0</strong>
+            <span>Following</span>
+          </div>
+        </div>
+
+        <!--Centered Bio -->
+        <p class="profile-bio-text" id="profile-bio-display">
+          ViceCityHub community member exploring Leonida &amp; Vice City.
+        </p>
+
+        <!-- Centered Social Links & Click-to-Copy Discord Handle -->
+        <div class="profile-socials-bar" id="profile-socials-bar"></div>
+
+        <!-- Centered Action Buttons (Follow for visitors / Edit & Account Settings for owner) -->
+        <div class="profile-actions-row" id="profile-owner-actions" style="display: none;">
+          <button type="button" class="btn-secondary" id="btn-toggle-edit-panel">
+            <i class="fa-solid fa-sliders"></i> Edit Profile &amp; Socials
+          </button>
+          <a href="settings.html" class="btn-secondary">
+            <i class="fa-solid fa-gear"></i> Account Settings
+          </a>
+        </div>
+
+        <div class="profile-actions-row" id="profile-visitor-actions" style="display: none;">
+          <button type="button" class="btn-post-submit" id="btn-follow-toggle">
+            <i class="fa-solid fa-user-plus"></i> <span>Follow</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHATSCR-STYLE CIRCULAR PFP CROP & PREVIEW MODAL (MAX 5MB -> AUTO COMPRESSED + EXIF STRIPPED) -->
+    <div class="modal-overlay" id="avatar-crop-modal" aria-hidden="true">
+      <div class="modal-container" style="max-width: 420px; text-align: center;">
+        <div class="modal-header">
+          <h2 class="modal-title">
+            <i class="fa-solid fa-circle-user" style="color: var(--accent-pink);"></i> Adjust Profile Picture
+          </h2>
+          <button type="button" class="modal-close-btn" id="btn-close-crop-modal" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
+          Drag the image to center it inside the circle. Metadata (EXIF/GPS) is automatically stripped and quality is optimized for fast loading.
+        </p>
+
+        <!-- Circular Preview Viewport (WhatsCR style) -->
+        <div class="crop-stage-wrapper">
+          <canvas id="avatar-crop-canvas" width="256" height="256" class="avatar-crop-canvas"></canvas>
+          <div class="crop-circle-guide"></div>
+        </div>
+
+        <!-- Zoom Slider -->
+        <div class="crop-zoom-row">
+          <i class="fa-solid fa-magnifying-glass-minus" style="color: var(--text-dim); font-size: 0.85rem;"></i>
+          <input type="range" id="crop-zoom-slider" min="1" max="3" step="0.02" value="1" class="crop-zoom-slider" aria-label="Zoom Profile Picture">
+          <i class="fa-solid fa-magnifying-glass-plus" style="color: var(--text-dim); font-size: 0.85rem;"></i>
+        </div>
+
+        <div id="crop-size-badge" style="font-size: 0.74rem; color: var(--text-dim); margin-bottom: 14px;">
+          Optimized output: ~18 KB (EXIF removed)
+        </div>
+
+        <div class="posting-form-actions" style="justify-content: center;">
+          <button type="button" class="btn-secondary" id="btn-cancel-crop">Cancel</button>
+          <button type="button" class="btn-post-submit" id="btn-apply-crop">
+            <i class="fa-solid fa-check"></i> Apply Picture
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INLINE CUSTOMIZE PROFILE PANEL (HEX BANNER PICKER, BIO, DISCORD, SOCIAL LINKS) -->
+    <section class="profile-edit-section" id="profile-edit-panel" style="display: none;" aria-label="Edit Profile Details">
+      <form id="profile-update-form" class="dedicated-form" autocomplete="off">
+        <div class="page-header-strip" style="margin-top: 0;">
+          <div>
+            <h2 class="page-title" style="font-size: 1.15rem;">
+              <i class="fa-solid fa-pen" style="color: var(--accent-pink);"></i> Customize Your Profile
+            </h2>
+            <p class="page-desc">Choose any HEX banner color, write your bio, and link your verified social profiles.</p>
+          </div>
+        </div>
+
+        <!-- Full HEX Color Scale Picker for Banner -->
+        <div class="form-group">
+          <label for="banner-hex-input" class="form-label">Banner Color (Full HEX Spectrum)</label>
+          <div class="hex-picker-row">
+            <input type="color" id="banner-color-picker" value="#ff2a85" class="hex-color-native" title="Pick any color">
+            <input type="text" id="banner-hex-input" class="form-input" value="#ff2a85" maxlength="7" pattern="^#[0-9a-fA-F]{6}$" placeholder="#ff2a85" style="max-width: 140px; font-family: monospace;">
+            <div class="hex-swatches-row" aria-label="Quick Color Presets">
+              <button type="button" class="hex-swatch" data-hex="#ff2a85" style="background: #ff2a85;" title="Vice Pink"></button>
+              <button type="button" class="hex-swatch" data-hex="#00d2ff" style="background: #00d2ff;" title="Leonida Cyan"></button>
+              <button type="button" class="hex-swatch" data-hex="#5865f2" style="background: #5865f2;" title="Discord Blurple"></button>
+              <button type="button" class="hex-swatch" data-hex="#9333ea" style="background: #9333ea;" title="Ocean Drive Purple"></button>
+              <button type="button" class="hex-swatch" data-hex="#10b981" style="background: #10b981;" title="Emerald Neon"></button>
+              <button type="button" class="hex-swatch" data-hex="#f59e0b" style="background: #f59e0b;" title="Sunset Gold"></button>
+              <button type="button" class="hex-swatch" data-hex="#ef4444" style="background: #ef4444;" title="Crimson"></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label for="profile-bio-input" class="form-label">Bio</label>
+            <span id="bio-char-count" style="font-size: 0.72rem; color: var(--text-dim);">0 / 300</span>
+          </div>
+          <textarea id="profile-bio-input" class="form-textarea" maxlength="300" placeholder="Tell the ViceCityHub community about yourself, your play style, or your GTA VI crew..."></textarea>
+        </div>
+
+        <!-- Click-to-Copy Discord Username -->
+        <div class="form-group">
+          <label for="profile-discord-input" class="form-label">
+            <i class="fa-brands fa-discord" style="color: var(--color-discord);"></i> Discord Username (Visitors click to copy)
+          </label>
+          <input type="text" id="profile-discord-input" class="form-input" maxlength="36" placeholder="e.g. tommyvercetti_86">
+        </div>
+
+        <!-- Social Links Grid (OWASP Validated) -->
+        <div class="form-row-two">
+          <div class="form-group">
+            <label for="social-x-input" class="form-label"><i class="fa-brands fa-x-twitter"></i> X / Twitter (Handle or URL)</label>
+            <input type="text" id="social-x-input" class="form-input" maxlength="120" placeholder="@username or https://x.com/...">
+          </div>
+          <div class="form-group">
+            <label for="social-youtube-input" class="form-label"><i class="fa-brands fa-youtube"></i> YouTube (Handle or URL)</label>
+            <input type="text" id="social-youtube-input" class="form-input" maxlength="120" placeholder="@channel or https://youtube.com/...">
+          </div>
+          <div class="form-group">
+            <label for="social-twitch-input" class="form-label"><i class="fa-brands fa-twitch"></i> Twitch (Handle or URL)</label>
+            <input type="text" id="social-twitch-input" class="form-input" maxlength="120" placeholder="username or https://twitch.tv/...">
+          </div>
+          <div class="form-group">
+            <label for="social-instagram-input" class="form-label"><i class="fa-brands fa-instagram"></i> Instagram (Handle or URL)</label>
+            <input type="text" id="social-instagram-input" class="form-input" maxlength="120" placeholder="@username or https://instagram.com/...">
+          </div>
+          <div class="form-group">
+            <label for="social-tiktok-input" class="form-label"><i class="fa-brands fa-tiktok"></i> TikTok (Handle or URL)</label>
+            <input type="text" id="social-tiktok-input" class="form-input" maxlength="120" placeholder="@username or https://tiktok.com/@...">
+          </div>
+          <div class="form-group">
+            <label for="social-github-input" class="form-label"><i class="fa-brands fa-github"></i> GitHub (Handle or URL)</label>
+            <input type="text" id="social-github-input" class="form-input" maxlength="120" placeholder="username or https://github.com/...">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="social-website-input" class="form-label"><i class="fa-solid fa-globe"></i> Personal Website (HTTPS Only &bull; OWASP Verified)</label>
+          <input type="url" id="social-website-input" class="form-input" maxlength="200" placeholder="https://yoursite.com">
+        </div>
+
+        <div id="profile-save-feedback" style="display: none; padding: 10px 12px; border-radius: 6px; font-size: 0.82rem;"></div>
+
+        <div class="posting-form-actions">
+          <button type="button" class="btn-secondary" id="btn-cancel-profile-edit">Close</button>
+          <button type="submit" class="btn-post-submit" id="btn-save-profile">
+            <i class="fa-solid fa-floppy-disk"></i> Save Profile Changes
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- USER'S RECENT COMMUNITY POSTS -->
+    <section class="profile-posts-section" aria-label="Member Community Posts">
+      <div class="page-header-strip">
+        <h2 class="page-title" style="font-size: 1.12rem;">
+          <i class="fa-solid fa-layer-group" style="color: var(--accent-pink);"></i> Community Posts
+        </h2>
+      </div>
+      <div id="profile-posts-list" class="profile-posts-list"></div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-bottom-bar" style="margin-top: 0; border-top: none;">
+      <p class="footer-disclaimer-text">&copy; 2026 ViceCityHub.eu &bull; Unofficial GTA VI Community Hub.</p>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+        <a href="settings.html" style="color: var(--text-muted); font-size: 0.82rem;">Account Settings</a>
+        <a href="index.html" style="color: var(--accent-pink); font-size: 0.82rem;">Return to Feed</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE STICKY BOTTOM BAR -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="mobile-nav-item">
+      <i class="fa-solid fa-layer-group"></i>
+      <span>Feed</span>
+    </a>
+    <a href="discords.html" class="mobile-nav-item">
+      <i class="fa-brands fa-discord"></i>
+      <span>Discords</span>
+    </a>
+    <a href="post.html" class="mobile-nav-item highlight" aria-label="Create Post">
+      <i class="fa-solid fa-plus"></i>
+    </a>
+    <a href="https://map.vicecityhub.eu" class="mobile-nav-item">
+      <i class="fa-solid fa-map"></i>
+      <span>Map</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item active">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- TOAST -->
+  <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
+    <span id="toast-text">Action completed!</span>
+  </div>
+
+  <script src="assets/js/app.js?v=3.3"></script>
+  <script src="assets/js/profile.js?v=3.3"></script>
+</body>
+</html>

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.2">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.3">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
@@ -68,7 +68,12 @@
 
         <div class="form-group">
           <label for="auth-password" class="form-label">Password (min 8 characters)</label>
-          <input type="password" id="auth-password" class="form-input" placeholder="••••••••" required minlength="8" maxlength="128" autocomplete="current-password">
+          <div class="password-input-wrap">
+            <input type="password" id="auth-password" class="form-input" placeholder="••••••••" required minlength="8" maxlength="128" autocomplete="current-password">
+            <button type="button" class="password-eye-btn" id="toggle-auth-password" aria-label="Show or hide password" title="Show / Hide Password">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
         </div>
 
         <!-- Cloudflare Turnstile Anti-Bot Widget -->
@@ -130,6 +135,20 @@
     tabLogin.addEventListener('click', () => setTab('login'));
     tabSignup.addEventListener('click', () => setTab('signup'));
 
+    // Password Eye Toggle
+    const authPasswordInput = document.getElementById('auth-password');
+    const toggleAuthPasswordBtn = document.getElementById('toggle-auth-password');
+    if (toggleAuthPasswordBtn && authPasswordInput) {
+      toggleAuthPasswordBtn.addEventListener('click', () => {
+        const isPw = authPasswordInput.type === 'password';
+        authPasswordInput.type = isPw ? 'text' : 'password';
+        const icon = toggleAuthPasswordBtn.querySelector('i');
+        if (icon) {
+          icon.className = isPw ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+        }
+      });
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('tab') === 'signup' || urlParams.get('tab') === 'register') {
       setTab('signup');
@@ -175,8 +194,8 @@
           localStorage.setItem('vicecityhub_user', JSON.stringify(data.user));
         }
         setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 700);
+          window.location.href = 'profile.html';
+        }, 650);
       } catch (err) {
         authFeedback.style.background = 'rgba(239, 68, 68, 0.16)';
         authFeedback.style.color = '#fca5a5';

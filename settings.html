@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings &amp; Assistance &bull; ViceCityHub.eu</title>
+  <meta name="description" content="Manage your ViceCityHub account settings: change username, update password, and contact support assistance.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0d1117">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/favicon-192x192.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.3">
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="site-header">
+    <div class="header-container">
+      <span class="mobile-brand-title">VICECITYHUB</span>
+
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="https://map.vicecityhub.eu" class="nav-link">Map</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
+      </nav>
+
+      <div class="header-nav-right">
+        <a href="profile.html" class="btn-secondary">
+          <i class="fa-solid fa-user"></i> My Profile
+        </a>
+        <button type="button" class="btn-secondary" id="btn-logout-top">
+          <i class="fa-solid fa-right-from-bracket"></i> Log out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN ACCOUNT SETTINGS PAGE -->
+  <main class="site-main" style="max-width: 780px;">
+    <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="profile.html">Profile</a>
+      <span class="breadcrumb-sep">/</span>
+      <span aria-current="page">Account Settings</span>
+    </nav>
+
+    <div class="page-header-strip">
+      <div>
+        <h1 class="page-title">
+          <i class="fa-solid fa-gear" style="color: var(--accent-pink);"></i> Account Settings &amp; Security
+        </h1>
+        <p class="page-desc">
+          Update your username, change your password, or request direct account assistance.
+        </p>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="profile.html" class="btn-secondary">
+          <i class="fa-solid fa-arrow-left"></i> Back to Profile
+        </a>
+      </div>
+    </div>
+
+    <div class="settings-sections-stack">
+
+      <!-- 1. CHANGE USERNAME -->
+      <section class="settings-flat-section" aria-labelledby="heading-change-username">
+        <h2 class="settings-section-title" id="heading-change-username">
+          <i class="fa-solid fa-user-pen" style="color: var(--accent-pink);"></i> Change Username
+        </h2>
+        <p class="settings-section-desc">
+          Changing your username automatically updates your handle across your community posts and comments.
+        </p>
+
+        <form id="form-change-username" class="dedicated-form" autocomplete="off">
+          <div class="form-row-two">
+            <div class="form-group">
+              <label for="new-username-input" class="form-label">New Username</label>
+              <input type="text" id="new-username-input" class="form-input" placeholder="e.g. ViceLegend_86" required minlength="3" maxlength="24">
+            </div>
+
+            <div class="form-group">
+              <label for="username-current-pw" class="form-label">Current Password</label>
+              <div class="password-input-wrap">
+                <input type="password" id="username-current-pw" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+                <button type="button" class="password-eye-btn" data-toggle-pw="username-current-pw" aria-label="Show or hide password">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="username-feedback" style="display: none; padding: 10px 12px; border-radius: 6px; font-size: 0.82rem;"></div>
+
+          <div class="posting-form-actions">
+            <button type="submit" class="btn-post-submit">
+              <i class="fa-solid fa-check"></i> Update Username
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 2. CHANGE PASSWORD -->
+      <section class="settings-flat-section" aria-labelledby="heading-change-password">
+        <h2 class="settings-section-title" id="heading-change-password">
+          <i class="fa-solid fa-key" style="color: var(--accent-cyan);"></i> Change Password
+        </h2>
+        <p class="settings-section-desc">
+          Use a strong password of at least 8 characters. Click the eye icon to inspect your password while typing.
+        </p>
+
+        <form id="form-change-password" class="dedicated-form" autocomplete="off">
+          <div class="form-group">
+            <label for="pw-current-input" class="form-label">Current Password</label>
+            <div class="password-input-wrap">
+              <input type="password" id="pw-current-input" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+              <button type="button" class="password-eye-btn" data-toggle-pw="pw-current-input" aria-label="Show or hide current password">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row-two">
+            <div class="form-group">
+              <label for="pw-new-input" class="form-label">New Password (min 8 chars)</label>
+              <div class="password-input-wrap">
+                <input type="password" id="pw-new-input" class="form-input" placeholder="••••••••" required minlength="8" maxlength="128" autocomplete="new-password">
+                <button type="button" class="password-eye-btn" data-toggle-pw="pw-new-input" aria-label="Show or hide new password">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="pw-confirm-input" class="form-label">Confirm New Password</label>
+              <div class="password-input-wrap">
+                <input type="password" id="pw-confirm-input" class="form-input" placeholder="••••••••" required minlength="8" maxlength="128" autocomplete="new-password">
+                <button type="button" class="password-eye-btn" data-toggle-pw="pw-confirm-input" aria-label="Show or hide confirm password">
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="password-feedback" style="display: none; padding: 10px 12px; border-radius: 6px; font-size: 0.82rem;"></div>
+
+          <div class="posting-form-actions">
+            <button type="submit" class="btn-post-submit">
+              <i class="fa-solid fa-lock"></i> Save New Password
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 3. ACCOUNT SUPPORT & ASSISTANCE -->
+      <section class="settings-flat-section" aria-labelledby="heading-assistance">
+        <h2 class="settings-section-title" id="heading-assistance">
+          <i class="fa-solid fa-headset" style="color: #34d399;"></i> Support &amp; Assistance
+        </h2>
+        <p class="settings-section-desc">
+          Need help with your account, verification badge, bug reports, or privacy requests? Send a ticket directly below or email <a href="mailto:info@vicecityhub.eu" style="color: var(--accent-pink); font-weight: 700;">info@vicecityhub.eu</a>.
+        </p>
+
+        <div class="response-promise-badge" style="margin-bottom: 12px;">
+          <i class="fa-solid fa-clock"></i>
+          <span><strong>24h Response Time Promise:</strong> Our team replies to all account assistance requests within 24 hours.</span>
+        </div>
+
+        <form id="form-support-ticket" class="dedicated-form" autocomplete="off">
+          <div class="form-row-two">
+            <div class="form-group">
+              <label for="support-email-input" class="form-label">Your Contact Email</label>
+              <input type="email" id="support-email-input" class="form-input" placeholder="player@vicecityhub.eu" required>
+            </div>
+
+            <div class="form-group">
+              <label for="support-category-select" class="form-label">Assistance Topic</label>
+              <select id="support-category-select" class="form-select" required>
+                <option value="account">Account &amp; Login Help</option>
+                <option value="verification">Creator / Discord Verification</option>
+                <option value="bug">Technical Issue / Bug Report</option>
+                <option value="privacy">Privacy / Data Request (GDPR)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="support-subject-input" class="form-label">Subject</label>
+            <input type="text" id="support-subject-input" class="form-input" placeholder="Brief summary of your request..." required minlength="4" maxlength="120">
+          </div>
+
+          <div class="form-group">
+            <label for="support-message-input" class="form-label">Message Details</label>
+            <textarea id="support-message-input" class="form-textarea" placeholder="Describe how we can help you..." required minlength="10" maxlength="1500"></textarea>
+          </div>
+
+          <div id="support-feedback" style="display: none; padding: 10px 12px; border-radius: 6px; font-size: 0.82rem;"></div>
+
+          <div class="posting-form-actions">
+            <a href="mailto:info@vicecityhub.eu" class="btn-secondary">
+              <i class="fa-solid fa-envelope"></i> Direct Email
+            </a>
+            <button type="submit" class="btn-post-submit">
+              <i class="fa-solid fa-paper-plane"></i> Send Assistance Request
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 4. SESSION & LOG OUT -->
+      <section class="settings-flat-section" aria-label="Session Controls">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h2 class="settings-section-title" style="margin-bottom: 4px;">
+              <i class="fa-solid fa-right-from-bracket" style="color: #f87171;"></i> Active Session
+            </h2>
+            <p class="settings-section-desc" style="margin-bottom: 0;">
+              Sign out of your ViceCityHub account on this browser and revoke the active session token.
+            </p>
+          </div>
+          <button type="button" class="btn-secondary" id="btn-logout-bottom" style="border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;">
+            <i class="fa-solid fa-power-off"></i> Log Out of Account
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-bottom-bar" style="margin-top: 0; border-top: none;">
+      <p class="footer-disclaimer-text">&copy; 2026 ViceCityHub.eu &bull; Unofficial GTA VI Community Hub.</p>
+      <a href="profile.html" style="color: var(--accent-pink); font-size: 0.82rem;">Return to Profile</a>
+    </div>
+  </footer>
+
+  <script>
+    // Password Eye Toggle for all fields with [data-toggle-pw]
+    document.querySelectorAll('[data-toggle-pw]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const inputId = btn.getAttribute('data-toggle-pw');
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const isPw = input.type === 'password';
+        input.type = isPw ? 'text' : 'password';
+        const icon = btn.querySelector('i');
+        if (icon) {
+          icon.className = isPw ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+        }
+      });
+    });
+
+    function showBoxFeedback(el, type, msg) {
+      if (!el) return;
+      el.style.display = 'block';
+      if (type === 'error') {
+        el.style.background = 'rgba(239, 68, 68, 0.16)';
+        el.style.color = '#fca5a5';
+      } else if (type === 'success') {
+        el.style.background = 'rgba(16, 185, 129, 0.16)';
+        el.style.color = '#6ee7b7';
+      } else {
+        el.style.background = 'rgba(59, 130, 246, 0.14)';
+        el.style.color = '#93c5fd';
+      }
+      el.textContent = msg;
+    }
+
+    // Load current user info
+    async function initSettingsPage() {
+      try {
+        const res = await fetch('/api/auth?action=me', { credentials: 'same-origin' });
+        const data = await res.json();
+        if (data && data.authenticated && data.user) {
+          localStorage.setItem('vicecityhub_user', JSON.stringify(data.user));
+          const unameInput = document.getElementById('new-username-input');
+          const emailInput = document.getElementById('support-email-input');
+          if (unameInput) unameInput.value = data.user.username || '';
+          if (emailInput && data.user.email) emailInput.value = data.user.email;
+        } else {
+          const cached = localStorage.getItem('vicecityhub_user');
+          if (!cached) {
+            window.location.href = 'login.html';
+          }
+        }
+      } catch (e) {}
+    }
+
+    initSettingsPage();
+
+    // 1. Change Username handler
+    const formUsername = document.getElementById('form-change-username');
+    const usernameFeedback = document.getElementById('username-feedback');
+    if (formUsername) {
+      formUsername.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newUsername = document.getElementById('new-username-input').value.trim();
+        const currentPassword = document.getElementById('username-current-pw').value;
+        showBoxFeedback(usernameFeedback, 'info', 'Updating username...');
+        try {
+          const res = await fetch('/api/profile?action=change_username', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ new_username: newUsername, current_password: currentPassword })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            showBoxFeedback(usernameFeedback, 'error', data.error || 'Could not update username.');
+            return;
+          }
+          const cached = JSON.parse(localStorage.getItem('vicecityhub_user') || '{}');
+          cached.username = data.username;
+          localStorage.setItem('vicecityhub_user', JSON.stringify(cached));
+          document.getElementById('username-current-pw').value = '';
+          showBoxFeedback(usernameFeedback, 'success', `Username updated to @${data.username}!`);
+        } catch (err) {
+          showBoxFeedback(usernameFeedback, 'error', 'Network error while updating username.');
+        }
+      });
+    }
+
+    // 2. Change Password handler
+    const formPassword = document.getElementById('form-change-password');
+    const passwordFeedback = document.getElementById('password-feedback');
+    if (formPassword) {
+      formPassword.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const currentPassword = document.getElementById('pw-current-input').value;
+        const newPassword = document.getElementById('pw-new-input').value;
+        const confirmPassword = document.getElementById('pw-confirm-input').value;
+
+        if (newPassword !== confirmPassword) {
+          showBoxFeedback(passwordFeedback, 'error', 'New password and confirmation do not match.');
+          return;
+        }
+
+        showBoxFeedback(passwordFeedback, 'info', 'Updating password...');
+        try {
+          const res = await fetch('/api/profile?action=change_password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ current_password: currentPassword, new_password: newPassword })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            showBoxFeedback(passwordFeedback, 'error', data.error || 'Could not update password.');
+            return;
+          }
+          formPassword.reset();
+          showBoxFeedback(passwordFeedback, 'success', 'Password updated with OWASP PBKDF2-SHA256!');
+        } catch (err) {
+          showBoxFeedback(passwordFeedback, 'error', 'Network error while updating password.');
+        }
+      });
+    }
+
+    // 3. Support Ticket handler
+    const formSupport = document.getElementById('form-support-ticket');
+    const supportFeedback = document.getElementById('support-feedback');
+    if (formSupport) {
+      formSupport.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('support-email-input').value.trim();
+        const category = document.getElementById('support-category-select').value;
+        const subject = document.getElementById('support-subject-input').value.trim();
+        const message = document.getElementById('support-message-input').value.trim();
+
+        showBoxFeedback(supportFeedback, 'info', 'Sending assistance request...');
+        try {
+          const res = await fetch('/api/profile?action=support', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ email, category, subject, message })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            showBoxFeedback(supportFeedback, 'error', data.error || 'Could not send request.');
+            return;
+          }
+          document.getElementById('support-subject-input').value = '';
+          document.getElementById('support-message-input').value = '';
+          showBoxFeedback(supportFeedback, 'success', `Assistance ticket #${(data.ticket_id || '').slice(0, 8)} received! We will respond within 24 hours.`);
+        } catch (err) {
+          showBoxFeedback(supportFeedback, 'error', 'Network error while sending assistance request.');
+        }
+      });
+    }
+
+    // 4. Logout handler
+    async function performLogout() {
+      try {
+        await fetch('/api/auth?action=logout', { method: 'POST', credentials: 'same-origin' });
+      } catch (e) {}
+      localStorage.removeItem('vicecityhub_user');
+      window.location.href = 'index.html';
+    }
+
+    const btnLogoutTop = document.getElementById('btn-logout-top');
+    const btnLogoutBottom = document.getElementById('btn-logout-bottom');
+    if (btnLogoutTop) btnLogoutTop.addEventListener('click', performLogout);
+    if (btnLogoutBottom) btnLogoutBottom.addEventListener('click', performLogout);
+  </script>
+</body>
+</html>

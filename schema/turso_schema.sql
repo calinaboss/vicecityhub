@@ -14,7 +14,12 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash TEXT NOT NULL,
   role TEXT NOT NULL DEFAULT 'user',
   avatar_url TEXT,
+  banner_color TEXT NOT NULL DEFAULT '#ff2a85',
   bio TEXT DEFAULT '',
+  discord_handle TEXT DEFAULT '',
+  social_links TEXT DEFAULT '{}',
+  followers_count INTEGER NOT NULL DEFAULT 0,
+  following_count INTEGER NOT NULL DEFAULT 0,
   is_banned INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
@@ -153,3 +158,31 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 );
 
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created ON audit_logs(created_at DESC);
+
+-- 11. USER FOLLOWS TABLE (Followers & Following Graph)
+CREATE TABLE IF NOT EXISTS user_follows (
+  id TEXT PRIMARY KEY,
+  follower_id TEXT NOT NULL,
+  following_id TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE(follower_id, following_id),
+  FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_follows_follower ON user_follows(follower_id);
+CREATE INDEX IF NOT EXISTS idx_follows_following ON user_follows(following_id);
+
+-- 12. ACCOUNT SUPPORT & ASSISTANCE TICKETS TABLE
+CREATE TABLE IF NOT EXISTS support_tickets (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  username TEXT,
+  email TEXT NOT NULL,
+  category TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  message TEXT NOT NULL,
+  ip_hash TEXT,
+  status TEXT NOT NULL DEFAULT 'open',
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);

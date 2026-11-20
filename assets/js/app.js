@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return `
       <article class="post-card ${isPinnedClass}" data-id="${post.id}">
         <div class="post-header">
-          <div class="post-author-box">
+          <a href="profile.html?u=${encodeURIComponent(post.username || post.author)}" class="post-author-box" title="View @${escapeHtml(post.username)} profile">
             <img class="post-avatar" src="${escapeHtml(post.avatar)}" alt="${escapeHtml(post.author)}">
             <div class="post-author-info">
               <div class="author-name-row">
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <span class="post-timestamp">${escapeHtml(post.time)} &bull; @${escapeHtml(post.username)}</span>
             </div>
-          </div>
+          </a>
           <span class="post-category-tag">${escapeHtml(post.categoryLabel)}</span>
         </div>
 
@@ -921,4 +921,67 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // ==========================================
+  // 5. NAVBAR USER PROFILE & AUTH STATE SYNC
+  // ==========================================
+  function renderNavbarAuthUser(user) {
+    if (!user || !user.username) return;
+    const navRight = document.querySelector('.header-nav-right');
+    if (navRight) {
+      navRight.querySelectorAll('.nav-auth-link').forEach(el => el.remove());
+      if (!navRight.querySelector('.nav-user-pill')) {
+        const avatarSrc = user.avatar_url || 'assets/brand/favicon-192x192.png';
+        const pill = document.createElement('a');
+        pill.href = 'profile.html';
+        pill.className = 'nav-user-pill';
+        pill.title = 'My Profile';
+        pill.innerHTML = `
+          <img src="${escapeHtml(avatarSrc)}" alt="${escapeHtml(user.username)}" class="nav-user-avatar">
+          <span class="nav-user-name">${escapeHtml(user.username)}</span>
+        `;
+
+        const settingsLink = document.createElement('a');
+        settingsLink.href = 'settings.html';
+        settingsLink.className = 'nav-settings-icon';
+        settingsLink.title = 'Account Settings';
+        settingsLink.setAttribute('aria-label', 'Account Settings');
+        settingsLink.innerHTML = '<i class="fa-solid fa-gear"></i>';
+
+        const mobileBtn = navRight.querySelector('.mobile-menu-btn');
+        if (mobileBtn) {
+          navRight.insertBefore(pill, mobileBtn);
+          navRight.insertBefore(settingsLink, mobileBtn);
+        } else {
+          navRight.appendChild(pill);
+          navRight.appendChild(settingsLink);
+        }
+      }
+    }
+
+    // Also pre-fill author input on post.html if present
+    const postAuthorInput = document.getElementById('post-author-input');
+    if (postAuthorInput && !postAuthorInput.value) {
+      postAuthorInput.value = user.username;
+    }
+  }
+
+  try {
+    const cachedUser = JSON.parse(localStorage.getItem('vicecityhub_user') || 'null');
+    if (cachedUser && cachedUser.username) {
+      renderNavbarAuthUser(cachedUser);
+    }
+  } catch (e) {}
+
+  fetch('/api/auth?action=me', { credentials: 'same-origin' })
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (data && data.authenticated && data.user) {
+        localStorage.setItem('vicecityhub_user', JSON.stringify(data.user));
+        renderNavbarAuthUser(data.user);
+      } else if (data && data.authenticated === false) {
+        localStorage.removeItem('vicecityhub_user');
+      }
+    })
+    .catch(() => {});
 });

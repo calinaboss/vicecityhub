@@ -2773,3 +2773,442 @@ body.page-map-view {
   gap: 10px;
   flex-wrap: wrap;
 }
+
+/* ==========================================================================
+   PASSWORD VISIBILITY EYE TOGGLE (LOGIN, REGISTER & SETTINGS)
+   ========================================================================== */
+.password-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrap .form-input {
+  padding-right: 42px;
+}
+
+.password-eye-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.92rem;
+  background: transparent;
+  transition: color 0.15s ease;
+}
+
+.password-eye-btn:hover {
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   NAVBAR AUTH USER PILL & SETTINGS LINK
+   ========================================================================== */
+.nav-user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  color: var(--text-main);
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: color 0.15s ease;
+}
+
+.nav-user-pill:hover {
+  color: var(--accent-pink);
+}
+
+.nav-user-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.nav-user-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-settings-icon {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  padding: 6px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.nav-settings-icon:hover {
+  color: var(--text-main);
+}
+
+/* ==========================================================================
+   FULL-PAGE CENTERED USER PROFILE (FLAT, NO BOXY CLUTTER)
+   ========================================================================== */
+.profile-fullpage-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding-top: 4px;
+}
+
+.profile-hero-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 22px;
+}
+
+.profile-banner-strip {
+  width: 100%;
+  height: 170px;
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s ease;
+}
+
+.profile-banner-color-trigger {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(13, 17, 23, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--text-main);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-banner-color-trigger:hover {
+  border-color: var(--accent-pink);
+  color: var(--accent-pink);
+}
+
+.profile-center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin-top: -58px;
+  padding: 0 12px;
+  z-index: 2;
+}
+
+.profile-avatar-shell {
+  position: relative;
+  width: 116px;
+  height: 116px;
+  margin-bottom: 12px;
+}
+
+.profile-avatar-large {
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #0d1117;
+  border: 4px solid #0d1117;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+}
+
+.profile-avatar-edit-badge {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent-pink);
+  color: #ffffff;
+  border: 2px solid #0d1117;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.84rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.profile-avatar-edit-badge:hover {
+  background: var(--accent-pink-hover);
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.profile-username-heading {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.profile-follow-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.follow-stat-item strong {
+  color: var(--text-main);
+  font-weight: 800;
+  margin-right: 4px;
+}
+
+.follow-stat-dot {
+  color: var(--text-dim);
+}
+
+.profile-bio-text {
+  font-size: 0.9rem;
+  color: #c9d1d9;
+  line-height: 1.55;
+  max-width: 520px;
+  margin: 0 auto 14px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.profile-socials-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.profile-social-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.profile-social-pill:hover {
+  border-color: var(--accent-pink);
+  color: var(--accent-pink);
+}
+
+.profile-social-pill.discord-copy-pill {
+  border-color: rgba(88, 101, 242, 0.35);
+  background: rgba(88, 101, 242, 0.1);
+  color: #c7d2fe;
+}
+
+.profile-social-pill.discord-copy-pill:hover {
+  border-color: var(--color-discord);
+  color: #ffffff;
+}
+
+.profile-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.profile-actions-row .btn-secondary,
+.profile-actions-row .btn-post-submit {
+  height: 38px;
+  min-height: 38px;
+  padding: 0 16px;
+  font-size: 0.82rem;
+}
+
+.profile-edit-section {
+  padding: 16px 0 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 22px;
+}
+
+.hex-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hex-color-native {
+  width: 44px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.hex-swatches-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hex-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  transition: transform 0.12s ease;
+}
+
+.hex-swatch:hover {
+  transform: scale(1.12);
+  border-color: #ffffff;
+}
+
+/* ==========================================================================
+   WHATSCR-STYLE CIRCULAR PFP CROP & PREVIEW STAGE
+   ========================================================================== */
+.crop-stage-wrapper {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 14px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #0d1117;
+  border: 1px solid var(--border-color);
+  touch-action: none;
+  user-select: none;
+}
+
+.avatar-crop-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+}
+
+.avatar-crop-canvas:active {
+  cursor: grabbing;
+}
+
+.crop-circle-guide {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 999px rgba(13, 17, 23, 0.68);
+  border: 2px solid var(--accent-pink);
+  pointer-events: none;
+}
+
+.crop-zoom-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 240px;
+  margin: 0 auto 10px;
+}
+
+.crop-zoom-slider {
+  flex: 1;
+  accent-color: var(--accent-pink);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   DEDICATED ACCOUNT SETTINGS PAGE (FLAT SECTIONS)
+   ========================================================================== */
+.settings-sections-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settings-flat-section {
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.settings-flat-section:last-child {
+  border-bottom: none;
+}
+
+.settings-section-title {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.settings-section-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  line-height: 1.45;
+}
+
+@media (max-width: 768px) {
+  .profile-banner-strip {
+    height: 130px;
+  }
+
+  .profile-center-column {
+    margin-top: -48px;
+  }
+
+  .profile-avatar-shell,
+  .profile-avatar-large {
+    width: 96px;
+    height: 96px;
+  }
+
+  .profile-username-heading {
+    font-size: 1.28rem;
+  }
+
+  .nav-user-name {
+    display: none;
+  }
+}

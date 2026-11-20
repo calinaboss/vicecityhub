@@ -440,7 +440,8 @@ export async function getAuthenticatedUser(request, env) {
     const tokenHash = await sha256Hex(token);
     const { rows } = await runTursoSql(
       env,
-      `SELECT u.id, u.username, u.email, u.role, u.avatar_url
+      `SELECT u.id, u.username, u.email, u.role, u.avatar_url, u.banner_color, u.bio,
+              u.discord_handle, u.social_links, u.followers_count, u.following_count, u.created_at
        FROM sessions s
        JOIN users u ON s.user_id = u.id
        WHERE s.token_hash = ? AND s.expires_at > datetime('now') AND u.is_banned = 0
@@ -452,6 +453,122 @@ export async function getAuthenticatedUser(request, env) {
     }
   } catch (e) {}
   return null;
+}
+
+export function sanitizeHexColor(rawVal) {
+  if (!rawVal || typeof rawVal !== 'string') return '#ff2a85';
+  const val = rawVal.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+    return val.toLowerCase();
+  }
+  return '#ff2a85';
+}
+
+/**
+ * OWASP Image Upload Validator:
+ * - Only accepts compressed WebP/JPEG/PNG data URLs (client canvas strips 100% EXIF/GPS metadata)
+ * - Enforces max ~85 KB compressed payload
+ * - Verifies actual binary magic bytes (RIFF..WEBP, FFD8FF, 89504E47) to prevent SVG/XSS polyglots
+ */
+export function validateAndSanitizeAvatarDataUrl(rawVal) {
+  if (!rawVal || typeof rawVal !== 'string') return '';
+  const val = rawVal.trim();
+  if (!val) return '';
+
+  if (/^assets\/brand\/[a-zA-Z0-9_.-]+\.(png|webp|jpg|jpeg)$/i.test(val)) {
+    return val;
+  }
+
+  const m = val.match(/^data:image\/(webp|jpeg|png);base64,([A-Za-z0-9+/=]+)$/);
+  if (!m) {
+    throw new Error('Invalid image format. Only compressed WebP, JPEG, or PNG images are permitted.');
+  }
+
+  const mimeSub = m[1].toLowerCase();
+  const b64 = m[2];
+  if (b64.length > 130000) {
+    throw new Error('Compressed avatar exceeds maximum storage quota (95 KB).');
+  }
+
+  let binStr;
+  try {
+    binStr = atob(b64.slice(0, 32));
+  } catch (e) {
+    throw new Error('Corrupted Base64 image data.');
+  }
+
+  if (binStr.length < 12) {
+    throw new Error('Image file is too small or invalid.');
+  }
+
+  const b = (i) => binStr.charCodeAt(i) & 0xff;
+
+  if (mimeSub === 'webp') {
+    const isRiff = b(0) === 0x52 && b(1) === 0x49 && b(2) === 0x46 && b(3) === 0x46;
+    const isWebp = b(8) === 0x57 && b(9) === 0x45 && b(10) === 0x42 && b(11) === 0x50;
+    if (!isRiff || !isWebp) {
+      throw new Error('File signature mismatch: invalid WebP magic bytes.');
+    }
+  } else if (mimeSub === 'jpeg') {
+    if (!(b(0) === 0xff && b(1) === 0xd8 && b(2) === 0xff)) {
+      throw new Error('File signature mismatch: invalid JPEG magic bytes.');
+    }
+  } else if (mimeSub === 'png') {
+    if (!(b(0) === 0x89 && b(1) === 0x50 && b(2) === 0x4e && b(3) === 0x47)) {
+      throw new Error('File signature mismatch: invalid PNG magic bytes.');
+    }
+  }
+
+  return `data:image/${mimeSub};base64,${b64}`;
+}
+
+export function sanitizeSocialLinks(rawObj) {
+  if (!rawObj || typeof rawObj !== 'object') return {};
+
+  const socialConfig = {
+    x: { domains: ['x.com', 'www.x.com', 'twitter.com', 'www.twitter.com'], prefix: 'https://x.com/' },
+    youtube: { domains: ['youtube.com', 'www.youtube.com', 'youtu.be'], prefix: 'https://www.youtube.com/@' },
+    twitch: { domains: ['twitch.tv', 'www.twitch.tv'], prefix: 'https://www.twitch.tv/' },
+    instagram: { domains: ['instagram.com', 'www.instagram.com'], prefix: 'https://www.instagram.com/' },
+    tiktok: { domains: ['tiktok.com', 'www.tiktok.com'], prefix: 'https://www.tiktok.com/@' },
+    github: { domains: ['github.com', 'www.github.com'], prefix: 'https://github.com/' }
+  };
+
+  const result = {};
+
+  for (const [key, cfg] of Object.entries(socialConfig)) {
+    const raw = typeof rawObj[key] === 'string' ? rawObj[key].trim() : '';
+    if (!raw) continue;
+
+    if (/^https?:\/\//i.test(raw)) {
+      const safeUrl = sanitizeExternalUrl(raw);
+      if (!safeUrl) continue;
+      try {
+        const u = new URL(safeUrl);
+        if (cfg.domains.includes(u.hostname.toLowerCase()) && u.pathname.length > 1) {
+          result[key] = u.href;
+        }
+      } catch (e) {}
+    } else {
+      const cleanHandle = raw.replace(/^@+/, '').replace(/[^a-zA-Z0-9_.-]/g, '').slice(0, 40);
+      if (cleanHandle.length >= 2) {
+        result[key] = `${cfg.prefix}${cleanHandle}`;
+      }
+    }
+  }
+
+  if (typeof rawObj.website === 'string' && rawObj.website.trim()) {
+    let rawWeb = rawObj.website.trim();
+    if (!/^https?:\/\//i.test(rawWeb) && /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/.test(rawWeb)) {
+      rawWeb = `https://${rawWeb}`;
+    }
+    const safeWeb = sanitizeExternalUrl(rawWeb);
+    if (safeWeb) {
+      result.website = safeWeb;
+    }
+  }
+
+  return result;
 }
 
 export function sanitizePlainText(input, maxLen = 2000) {
