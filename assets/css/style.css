@@ -2288,3 +2288,185 @@ body.page-map-view {
     height: 48px;
   }
 }
+
+/* ==========================================================================
+   DEDICATED POSTING & DISCORD SUBMISSION PAGES (post.html & submit-discord.html)
+   ========================================================================== */
+.posting-page-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.posting-form-card {
+  background: rgba(22, 27, 34, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 24px;
+}
+
+.dedicated-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.rules-consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1.45;
+}
+
+.rules-consent-label input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--accent-pink);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.posting-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+}
+
+.btn-post-submit {
+  height: 42px;
+  padding: 0 22px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-pink);
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-post-submit:hover {
+  background: var(--accent-pink-hover);
+}
+
+.posting-rules-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rules-card-highlight {
+  border-top: 3px solid var(--accent-pink);
+}
+
+.posting-rules-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.posting-rules-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.posting-rules-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.posting-rules-list li i {
+  color: var(--accent-pink);
+  font-size: 0.9rem;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.posting-rules-list li strong {
+  display: block;
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.posting-rules-list li p {
+  font-size: 0.77rem;
+  color: var(--text-muted);
+  line-height: 1.42;
+}
+
+.posting-rules-list li code {
+  font-size: 0.72rem;
+  color: var(--accent-cyan);
+  background: rgba(0, 210, 255, 0.1);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ==========================================================================
+   RESERVED GOOGLE ADSENSE SPACES (SIDEBAR & HORIZONTAL BANNERS)
+   ========================================================================== */
+.adsense-slot {
+  background: rgba(13, 17, 23, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px dashed rgba(139, 148, 158, 0.25);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.adsense-sidebar {
+  min-height: 220px;
+  width: 100%;
+}
+
+.adsense-banner {
+  min-height: 90px;
+  width: 100%;
+}
+
+.adsense-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+@media (max-width: 960px) {
+  .posting-page-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row-two {
+    grid-template-columns: 1fr;
+  }
+}

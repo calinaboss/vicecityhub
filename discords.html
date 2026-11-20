@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=2.6">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.7">
 </head>
 <body>
 
@@ -34,9 +34,9 @@
       <div class="nav-divider" aria-hidden="true"></div>
 
       <div class="header-nav-right">
-        <button class="btn-discord trigger-add-discord">
+        <a href="submit-discord.html" class="btn-post">
           <i class="fa-solid fa-plus"></i> Submit Discord
-        </button>
+        </a>
         <a href="login.html" class="nav-auth-link">Log in</a>
         <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
         <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
@@ -57,9 +57,9 @@
           Browse verified gaming Discord servers for Grand Theft Auto VI. Connect with roleplay crews, heist partners, and regional communities.
         </p>
       </div>
-      <button class="btn-discord trigger-add-discord">
+      <a href="submit-discord.html" class="btn-discord">
         <i class="fa-solid fa-plus"></i> Submit Your Server
-      </button>
+      </a>
     </div>
 
     <!-- Search & Country / Type Filter Row -->
@@ -92,67 +92,11 @@
       <!-- Generated via JS -->
     </div>
 
-    <!-- Submission Notice -->
-    <div class="map-submit-callout" style="margin-top: 24px;">
-      <div>
-        <strong>Want your server verified or promoted?</strong>
-        <span> Submit via the form or email <strong>info@vicecityhub.eu</strong> and our team will review it.</span>
-      </div>
-      <a href="mailto:info@vicecityhub.eu?subject=Discord%20Server%20Verification">
-        <i class="fa-solid fa-envelope"></i> Contact info@vicecityhub.eu
-      </a>
+    <!-- Reserved Google AdSense Horizontal Banner Slot -->
+    <div class="adsense-slot adsense-banner" style="margin-top: 18px;" aria-label="Sponsored Space">
+      <span class="adsense-label">Advertisement &bull; Google AdSense Space</span>
     </div>
   </main>
-
-  <!-- SUBMIT DISCORD MODAL (OWASP SECURED) -->
-  <div class="modal-overlay" id="submit-discord-modal" role="dialog" aria-modal="true">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h2 class="modal-title">
-          <i class="fa-brands fa-discord" style="color: var(--color-discord);"></i> Submit GTA VI Discord Server
-        </h2>
-        <button class="modal-close-btn trigger-close-modal" aria-label="Close Modal">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <form id="new-discord-form" class="modal-form">
-        <div class="form-group">
-          <label for="discord-name-input" class="form-label">Server Name</label>
-          <input type="text" id="discord-name-input" class="form-input" placeholder="e.g. Vice City Roleplay Italy" required maxlength="60">
-        </div>
-
-        <div class="form-group">
-          <label for="discord-url-input" class="form-label">Discord Invite URL</label>
-          <input type="url" id="discord-url-input" class="form-input" placeholder="https://discord.gg/yourcode" required pattern="https://(discord\.gg|discord\.com/invite)/.+" title="Must be a valid Discord invite (https://discord.gg/... or https://discord.com/invite/...)">
-          <span style="font-size: 0.72rem; color: var(--text-dim);">OWASP protection: Only official https://discord.gg/ or https://discord.com/invite/ links are permitted.</span>
-        </div>
-
-        <div class="form-group">
-          <label for="discord-category-select" class="form-label">Category</label>
-          <select id="discord-category-select" class="form-select" required>
-            <option value="roleplay">Roleplay (RP)</option>
-            <option value="italian">Italian Community</option>
-            <option value="heists">Heists &amp; LFG</option>
-            <option value="general">General Community</option>
-            <option value="modding">Modding &amp; Mapping</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="discord-desc-input" class="form-label">Description</label>
-          <textarea id="discord-desc-input" class="form-textarea" placeholder="Describe server activities, voice channels, and rules..." required maxlength="280"></textarea>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-secondary trigger-close-modal">Cancel</button>
-          <button type="submit" class="btn-discord">
-            <i class="fa-solid fa-check"></i> Submit Server
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <!-- TOAST -->
   <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
@@ -170,9 +114,9 @@
       <i class="fa-brands fa-discord"></i>
       <span>Discords</span>
     </a>
-    <button class="mobile-nav-item highlight trigger-add-discord" aria-label="Add Discord">
+    <a href="submit-discord.html" class="mobile-nav-item highlight" aria-label="Add Discord">
       <i class="fa-solid fa-plus"></i>
-    </button>
+    </a>
     <a href="https://map.vicecityhub.eu" class="mobile-nav-item">
       <i class="fa-solid fa-map-location-dot"></i>
       <span>Map</span>
@@ -259,6 +203,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/app.js?v=2.6"></script>
+  <script src="assets/js/app.js?v=2.7"></script>
 </body>
 </html>

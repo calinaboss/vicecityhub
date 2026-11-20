@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Site Stylesheet -->
-  <link rel="stylesheet" href="assets/css/style.css?v=2.6">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.7">
 </head>
 <body>
 
@@ -41,9 +41,9 @@
       <div class="nav-divider" aria-hidden="true"></div>
 
       <div class="header-nav-right">
-        <button class="btn-post trigger-new-post" aria-label="New Post">
+        <a href="post.html" class="btn-post" aria-label="New Post">
           <i class="fa-solid fa-plus"></i> New Post
-        </button>
+        </a>
         <a href="login.html" class="nav-auth-link">Log in</a>
         <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
         <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
@@ -113,7 +113,7 @@
             <a href="discords.html" class="btn-discord" style="width: 100%; justify-content: center;">
               Explore Discord Servers
             </a>
-            <a href="discords.html?action=submit" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem;">
+            <a href="submit-discord.html" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem;">
               <i class="fa-solid fa-plus"></i> Share Your Server
             </a>
           </div>
@@ -145,71 +145,15 @@
           </div>
         </div>
 
-        <!-- Community Rules -->
-        <div class="widget-card">
-          <div class="widget-header">
-            <h3 class="widget-title">
-              Guidelines
-            </h3>
-          </div>
-          <ul class="rules-list">
-            <li><i class="fa-solid fa-check" style="color: var(--text-dim);"></i> Be respectful to community members.</li>
-            <li><i class="fa-solid fa-check" style="color: var(--text-dim);"></i> No unauthorized cheats or scams.</li>
-            <li><i class="fa-solid fa-check" style="color: var(--text-dim);"></i> Tag story spoilers appropriately.</li>
-          </ul>
+        <!-- Reserved Google AdSense Sidebar Slot (300x250) -->
+        <div class="adsense-slot adsense-sidebar" aria-label="Sponsored Space">
+          <span class="adsense-label">Advertisement &bull; Google AdSense</span>
         </div>
 
       </aside>
 
     </div>
   </main>
-
-  <!-- CREATE POST MODAL -->
-  <div class="modal-overlay" id="create-post-modal" role="dialog" aria-modal="true" aria-labelledby="modal-post-title">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h2 class="modal-title" id="modal-post-title">
-          <i class="fa-solid fa-pen-to-square"></i> New Discussion
-        </h2>
-        <button class="modal-close-btn trigger-close-modal" aria-label="Close Modal">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <form id="new-post-form" class="modal-form">
-        <div class="form-group">
-          <label for="post-title-input" class="form-label">Title</label>
-          <input type="text" id="post-title-input" class="form-input" placeholder="e.g. Secret underground garage found in Starfish Island" required maxlength="120">
-        </div>
-
-        <div class="form-group">
-          <label for="post-category-select" class="form-label">Category</label>
-          <select id="post-category-select" class="form-select" required>
-            <option value="discussions">Discussions</option>
-            <option value="leaks">Map</option>
-            <option value="official">Official News</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="post-content-input" class="form-label">Content</label>
-          <textarea id="post-content-input" class="form-textarea" placeholder="Share your tip, location discovery, or question..." required maxlength="2000"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="post-media-input" class="form-label">Image URL (Optional)</label>
-          <input type="url" id="post-media-input" class="form-input" placeholder="https://images.unsplash.com/...">
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn-secondary trigger-close-modal">Cancel</button>
-          <button type="submit" class="btn-post">
-            <i class="fa-solid fa-paper-plane"></i> Publish Post
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <!-- TOAST NOTIFICATION -->
   <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
@@ -227,9 +171,9 @@
       <i class="fa-brands fa-discord"></i>
       <span>Discords</span>
     </a>
-    <button class="mobile-nav-item highlight trigger-new-post" aria-label="New Post">
+    <a href="post.html" class="mobile-nav-item highlight" aria-label="New Post">
       <i class="fa-solid fa-plus"></i>
-    </button>
+    </a>
     <a href="https://map.vicecityhub.eu" class="mobile-nav-item">
       <i class="fa-solid fa-map-location-dot"></i>
       <span>Map</span>
@@ -256,9 +200,9 @@
         <li><a href="cheats.html" class="drawer-link"><i class="fa-solid fa-gamepad"></i> Cheats</a></li>
         <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
       </ul>
-      <button class="btn-post trigger-new-post" style="width: 100%; justify-content: center; margin-top: auto;">
+      <a href="post.html" class="btn-post" style="width: 100%; justify-content: center; margin-top: auto;">
         <i class="fa-solid fa-plus"></i> New Post
-      </button>
+      </a>
     </div>
   </div>
 
@@ -320,6 +264,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/app.js?v=2.6"></script>
+  <script src="assets/js/app.js?v=2.7"></script>
 </body>
 </html>

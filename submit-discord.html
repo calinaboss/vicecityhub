@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit GTA VI Discord Server &bull; ViceCityHub.eu</title>
+  <meta name="description" content="Submit and list your GTA VI Discord server in the ViceCityHub directory. Connect with Roleplay, Heist, and Modding communities.">
+  <meta name="theme-color" content="#0d1117">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/favicon-192x192.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.7">
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="site-header">
+    <div class="header-container">
+      <span class="mobile-brand-title">VICECITYHUB</span>
+
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link active">GTA VI Discords</a>
+        <a href="https://map.vicecityhub.eu" class="nav-link">Map</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
+      </nav>
+
+      <div class="header-nav-right">
+        <a href="post.html" class="btn-post" aria-label="New Post">
+          <i class="fa-solid fa-plus"></i> New Post
+        </a>
+        <a href="login.html" class="nav-auth-link">Log in</a>
+        <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DEDICATED DISCORD SUBMISSION PAGE -->
+  <main class="site-main">
+    <div class="page-header-strip">
+      <div>
+        <h1 class="page-title">
+          <i class="fa-brands fa-discord" style="color: var(--color-discord);"></i> Share Your GTA VI Discord Server
+        </h1>
+        <p class="page-desc">
+          List your GTA VI Roleplay, Heist, Modding, or Community server in the official ViceCityHub directory.
+        </p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <a href="post.html" class="btn-secondary">
+          <i class="fa-solid fa-pen-to-square"></i> Create Feed Post
+        </a>
+        <a href="discords.html" class="btn-secondary">
+          <i class="fa-solid fa-arrow-left"></i> Back to Directory
+        </a>
+      </div>
+    </div>
+
+    <div class="posting-page-grid">
+      <!-- LEFT: DEDICATED DISCORD SUBMISSION FORM -->
+      <section class="posting-form-card" aria-label="Submit Discord Server Form">
+        <form id="dedicated-discord-form" class="dedicated-form" autocomplete="off">
+          <!-- OWASP Honeypot Field (Anti-Bot) -->
+          <div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+            <label for="discord_hp_url">Leave this field blank</label>
+            <input type="text" id="discord_hp_url" name="discord_hp_url" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label for="discord-name-input" class="form-label">Discord Server Name <span style="color: var(--accent-pink);">*</span></label>
+            <input type="text" id="discord-name-input" class="form-input" placeholder="e.g. Vice City Roleplay (VCRP)" required minlength="3" maxlength="60">
+          </div>
+
+          <div class="form-group">
+            <label for="discord-url-input" class="form-label">Official Discord Invite URL <span style="color: var(--accent-pink);">*</span></label>
+            <input type="url" id="discord-url-input" class="form-input" placeholder="https://discord.gg/yourcode" required pattern="https://(discord\.gg|discord\.com/invite)/[a-zA-Z0-9_-]{2,32}" title="Must be a valid Discord invite (https://discord.gg/... or https://discord.com/invite/...)">
+            <span style="font-size: 0.72rem; color: var(--text-dim);">OWASP Validation: Only official <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code> links are permitted.</span>
+          </div>
+
+          <div class="form-row-two">
+            <div class="form-group">
+              <label for="discord-category-select" class="form-label">Server Category <span style="color: var(--accent-pink);">*</span></label>
+              <select id="discord-category-select" class="form-select" required>
+                <option value="roleplay">Roleplay (RP)</option>
+                <option value="heists">Heists &amp; LFG</option>
+                <option value="modding">Modding &amp; Mapping</option>
+                <option value="general">General Community</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="discord-country-select" class="form-label">Language / Region <span style="color: var(--accent-pink);">*</span></label>
+              <select id="discord-country-select" class="form-select" required>
+                <option value="intl">International / English</option>
+                <option value="it">Italy (IT)</option>
+                <option value="es">Spain / Latam (ES)</option>
+                <option value="de">Germany (DE)</option>
+                <option value="fr">France (FR)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="discord-desc-input" class="form-label">Server Description <span style="color: var(--accent-pink);">*</span></label>
+            <textarea id="discord-desc-input" class="form-textarea" style="min-height: 130px;" placeholder="Describe your server activities, whitelist requirements, voice channels, and rules..." required minlength="15" maxlength="280"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="rules-consent-label">
+              <input type="checkbox" id="discord-rules-consent" required>
+              <span>I confirm this server complies with Discord's Terms of Service and the <strong>ViceCityHub Directory Rules</strong>.</span>
+            </label>
+          </div>
+
+          <div class="posting-form-actions">
+            <a href="discords.html" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-discord" style="height: 42px; padding: 0 20px; font-weight: 700;">
+              <i class="fa-solid fa-check"></i> Publish Discord Server
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- RIGHT: DISCORD LISTING RULES & OWASP VERIFICATION + ADSENSE SLOT -->
+      <aside class="posting-rules-sidebar" aria-label="Discord Directory Rules">
+        <div class="widget-card rules-card-highlight">
+          <div class="widget-header">
+            <h2 class="widget-title">
+              <i class="fa-brands fa-discord" style="color: var(--color-discord);"></i> Discord Listing Rules
+            </h2>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.45;">
+            Every server submitted to the directory undergoes automated OWASP validation and must follow these rules:
+          </p>
+          <ul class="posting-rules-list">
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>1. Permanent Invite Links Only</strong>
+                <p>Set your Discord invite link to <strong>Never Expire</strong> before submitting so players can always join.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>2. Official Discord Domains Only</strong>
+                <p>Redirect URLs, URL shorteners (bit.ly), and custom domains are rejected. Only <code>discord.gg</code> and <code>discord.com/invite</code> pass validation.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>3. GTA VI &amp; Gaming Focus</strong>
+                <p>Servers must be related to Grand Theft Auto VI, Vice City Roleplay, Heists, Modding, or gaming communities.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>4. No NSFW, Scams, or Paid Cheats</strong>
+                <p>Servers selling unauthorized menus, account recovery scams, or violating Discord ToS are permanently blacklisted.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Reserved Google AdSense Sidebar Slot -->
+        <div class="adsense-slot adsense-sidebar" aria-label="Sponsored Space">
+          <span class="adsense-label">Advertisement &bull; Google AdSense</span>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
+    <span id="toast-text">Discord server listed!</span>
+  </div>
+
+  <!-- MOBILE BOTTOM BAR -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="mobile-nav-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Feed</span>
+    </a>
+    <a href="discords.html" class="mobile-nav-item active">
+      <i class="fa-brands fa-discord"></i>
+      <span>Discords</span>
+    </a>
+    <a href="post.html" class="mobile-nav-item highlight" aria-label="New Post">
+      <i class="fa-solid fa-plus"></i>
+    </a>
+    <a href="https://map.vicecityhub.eu" class="mobile-nav-item">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Map</span>
+    </a>
+    <a href="cheats.html" class="mobile-nav-item">
+      <i class="fa-solid fa-gamepad"></i>
+      <span>Cheats</span>
+    </a>
+  </nav>
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <img src="assets/brand/logo.png" alt="ViceCityHub" class="drawer-logo-img">
+        <button class="modal-close-btn" id="close-drawer" aria-label="Close Navigation">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <ul class="drawer-links">
+        <li><a href="index.html" class="drawer-link"><i class="fa-solid fa-house"></i> Feed</a></li>
+        <li><a href="discords.html" class="drawer-link active"><i class="fa-brands fa-discord"></i> GTA VI Discords</a></li>
+        <li><a href="https://map.vicecityhub.eu" class="drawer-link"><i class="fa-solid fa-map-location-dot"></i> Map</a></li>
+        <li><a href="cheats.html" class="drawer-link"><i class="fa-solid fa-gamepad"></i> Cheats</a></li>
+        <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js?v=2.7"></script>
+</body>
+</html>

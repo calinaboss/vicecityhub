@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create New Post &bull; ViceCityHub.eu</title>
+  <meta name="description" content="Publish a new GTA VI community discussion, map coordinate discovery, or news topic on ViceCityHub.eu.">
+  <meta name="theme-color" content="#0d1117">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/favicon-192x192.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=2.7">
+</head>
+<body>
+
+  <!-- TOP NAVBAR -->
+  <header class="site-header">
+    <div class="header-container">
+      <span class="mobile-brand-title">VICECITYHUB</span>
+
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="https://map.vicecityhub.eu" class="nav-link">Map</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
+      </nav>
+
+      <div class="header-nav-right">
+        <a href="post.html" class="btn-post active" aria-label="New Post">
+          <i class="fa-solid fa-plus"></i> New Post
+        </a>
+        <a href="login.html" class="nav-auth-link">Log in</a>
+        <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN DEDICATED POSTING PAGE -->
+  <main class="site-main">
+    <div class="page-header-strip">
+      <div>
+        <h1 class="page-title">
+          <i class="fa-solid fa-pen-to-square" style="color: var(--accent-pink);"></i> Create New Community Post
+        </h1>
+        <p class="page-desc">
+          Share your Vice City discoveries, map coordinates, gameplay theories, or start a discussion with the community.
+        </p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <a href="submit-discord.html" class="btn-secondary">
+          <i class="fa-brands fa-discord" style="color: var(--color-discord);"></i> Submit a Discord Server
+        </a>
+        <a href="index.html" class="btn-secondary">
+          <i class="fa-solid fa-arrow-left"></i> Back to Feed
+        </a>
+      </div>
+    </div>
+
+    <div class="posting-page-grid">
+      <!-- LEFT: DEDICATED POST CREATION FORM -->
+      <section class="posting-form-card" aria-label="New Post Form">
+        <form id="dedicated-post-form" class="dedicated-form" autocomplete="off">
+          <!-- OWASP Honeypot Field (Anti-Bot) -->
+          <div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+            <label for="website_url_hp">Leave this field blank</label>
+            <input type="text" id="website_url_hp" name="website_url_hp" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form-row-two">
+            <div class="form-group">
+              <label for="post-author-input" class="form-label">Nickname / Handle</label>
+              <input type="text" id="post-author-input" class="form-input" placeholder="e.g. ViceExplorer_86" maxlength="24">
+            </div>
+
+            <div class="form-group">
+              <label for="post-category-select" class="form-label">Topic Category</label>
+              <select id="post-category-select" class="form-select" required>
+                <option value="discussions">Discussions &amp; Theories</option>
+                <option value="leaks">Map &amp; Coordinates</option>
+                <option value="official">Official News &amp; Updates</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="post-title-input" class="form-label">Post Title <span style="color: var(--accent-pink);">*</span></label>
+            <input type="text" id="post-title-input" class="form-input" placeholder="e.g. Secret underground garage discovered on Starfish Island" required minlength="6" maxlength="120">
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <label for="post-content-input" class="form-label">Post Content <span style="color: var(--accent-pink);">*</span></label>
+              <span id="post-char-counter" style="font-size: 0.74rem; color: var(--text-dim);">0 / 2000</span>
+            </div>
+            <textarea id="post-content-input" class="form-textarea" style="min-height: 180px;" placeholder="Write your discussion, guide, or coordinate breakdown in detail..." required minlength="12" maxlength="2000"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="post-media-input" class="form-label">Image Screenshot URL (Optional &bull; HTTPS Only)</label>
+            <input type="url" id="post-media-input" class="form-input" placeholder="https://images.unsplash.com/...">
+            <span style="font-size: 0.72rem; color: var(--text-dim);">OWASP Security: Only valid HTTPS image URLs are accepted. Executable links and scripts are automatically blocked.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="rules-consent-label">
+              <input type="checkbox" id="post-rules-consent" required>
+              <span>I have read and agree to follow the <strong>ViceCityHub Posting Rules &amp; Community Guidelines</strong>.</span>
+            </label>
+          </div>
+
+          <div class="posting-form-actions">
+            <a href="index.html" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-post-submit" id="btn-submit-post">
+              <i class="fa-solid fa-paper-plane"></i> Publish Post to Feed
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- RIGHT: COMMUNITY RULES & POSTING GUIDELINES + ADSENSE SLOT -->
+      <aside class="posting-rules-sidebar" aria-label="Posting Rules and Guidelines">
+        <div class="widget-card rules-card-highlight">
+          <div class="widget-header">
+            <h2 class="widget-title">
+              <i class="fa-solid fa-shield-halved" style="color: var(--accent-pink);"></i> Posting Rules &amp; Guidelines
+            </h2>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.45;">
+            To keep ViceCityHub clean, fast, and helpful for all players, every post must follow these mandatory rules:
+          </p>
+          <ul class="posting-rules-list">
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>1. Be Respectful &amp; Constructive</strong>
+                <p>No harassment, hate speech, personal attacks, or toxic behavior toward other community members.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>2. Tag Major Story Spoilers</strong>
+                <p>If your post discusses late-game missions or endings, include <code>[SPOILER]</code> at the beginning of your title.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>3. Include Coordinates for Map Finds</strong>
+                <p>When sharing hidden locations, safehouses, or easter eggs, reference the district or coordinates from <a href="https://map.vicecityhub.eu" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan);">map.vicecityhub.eu</a>.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>4. No Scams, Malware, or Fake Generators</strong>
+                <p>Phishing links, fake money generators, or external executables are strictly prohibited and blocked by our OWASP firewall.</p>
+              </div>
+            </li>
+            <li>
+              <i class="fa-solid fa-circle-check"></i>
+              <div>
+                <strong>5. Use the Dedicated Discord Directory</strong>
+                <p>Do not spam Discord invite links in the main feed. Use the <a href="submit-discord.html" style="color: var(--color-discord); font-weight: 700;">Submit Discord Server</a> page instead.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Reserved Google AdSense Sidebar Slot -->
+        <div class="adsense-slot adsense-sidebar" aria-label="Sponsored Space">
+          <span class="adsense-label">Advertisement &bull; Google AdSense</span>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-notification" id="toast-notification" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check" style="color: var(--accent-pink);"></i>
+    <span id="toast-text">Post published!</span>
+  </div>
+
+  <!-- MOBILE BOTTOM BAR -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <a href="index.html" class="mobile-nav-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Feed</span>
+    </a>
+    <a href="discords.html" class="mobile-nav-item">
+      <i class="fa-brands fa-discord"></i>
+      <span>Discords</span>
+    </a>
+    <a href="post.html" class="mobile-nav-item highlight active" aria-label="New Post">
+      <i class="fa-solid fa-plus"></i>
+    </a>
+    <a href="https://map.vicecityhub.eu" class="mobile-nav-item">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Map</span>
+    </a>
+    <a href="cheats.html" class="mobile-nav-item">
+      <i class="fa-solid fa-gamepad"></i>
+      <span>Cheats</span>
+    </a>
+  </nav>
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <img src="assets/brand/logo.png" alt="ViceCityHub" class="drawer-logo-img">
+        <button class="modal-close-btn" id="close-drawer" aria-label="Close Navigation">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <ul class="drawer-links">
+        <li><a href="index.html" class="drawer-link"><i class="fa-solid fa-house"></i> Feed</a></li>
+        <li><a href="discords.html" class="drawer-link"><i class="fa-brands fa-discord"></i> GTA VI Discords</a></li>
+        <li><a href="https://map.vicecityhub.eu" class="drawer-link"><i class="fa-solid fa-map-location-dot"></i> Map</a></li>
+        <li><a href="cheats.html" class="drawer-link"><i class="fa-solid fa-gamepad"></i> Cheats</a></li>
+        <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="footer-logo-row">
+          <img src="assets/brand/logo.png" alt="ViceCityHub.eu" class="footer-logo-img">
+        </div>
+        <p class="footer-desc">
+          The premier independent community hub and Discord directory dedicated to Grand Theft Auto VI in Vice City and Leonida.
+        </p>
+      </div>
+      <div class="footer-cols">
+        <div class="f-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="index.html">Community Feed</a></li>
+            <li><a href="discords.html">GTA VI Discord Servers</a></li>
+            <li><a href="https://map.vicecityhub.eu" target="_blank" rel="noopener noreferrer">Interactive Map</a></li>
+            <li><a href="cheats.html">Cheat Codes</a></li>
+          </ul>
+        </div>
+        <div class="f-col">
+          <h4>About &amp; Help</h4>
+          <ul>
+            <li><a href="about.html">About ViceCityHub</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="report.html">Report Content / Takedown</a></li>
+            <li><a href="mailto:info@vicecityhub.eu">info@vicecityhub.eu</a></li>
+          </ul>
+        </div>
+        <div class="f-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="cookies.html">Cookie Policy</a></li>
+            <li><a href="dsa.html">EU DSA Compliance</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom-bar">
+      <p class="footer-disclaimer-text">
+        &copy; 2026 ViceCityHub.eu &bull; All rights reserved. Unofficial fan community.
+      </p>
+      <span>vicecityhub.eu</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js?v=2.7"></script>
+</body>
+</html>

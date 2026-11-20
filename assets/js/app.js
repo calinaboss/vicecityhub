@@ -468,15 +468,60 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Load any custom user posts from localStorage + API
+    try {
+      const savedPosts = JSON.parse(localStorage.getItem('vicecityhub_custom_posts') || '[]');
+      if (Array.isArray(savedPosts) && savedPosts.length > 0) {
+        posts = [...savedPosts, ...posts];
+      }
+    } catch (e) {}
+
     renderFeed();
+
+    fetch('/api/posts')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && Array.isArray(data.posts) && data.posts.length > 0) {
+          const existingIds = new Set(posts.map(p => p.id));
+          const fresh = data.posts.filter(p => !existingIds.has(p.id)).map(p => ({
+            ...p,
+            time: p.time || 'Recently',
+            avatar: p.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+            comments: Array.isArray(p.comments) ? p.comments : []
+          }));
+          if (fresh.length > 0) {
+            posts = [...fresh, ...posts];
+            renderFeed();
+          }
+        }
+      })
+      .catch(() => {});
   }
 
-  if (postForm) {
-    postForm.addEventListener('submit', (e) => {
+  // Dedicated Post Creation Page (post.html)
+  const dedicatedPostForm = document.getElementById('dedicated-post-form');
+  const postContentInput = document.getElementById('post-content-input');
+  const postCharCounter = document.getElementById('post-char-counter');
+
+  if (postContentInput && postCharCounter) {
+    postContentInput.addEventListener('input', () => {
+      postCharCounter.textContent = `${postContentInput.value.length} / 2000`;
+    });
+  }
+
+  if (dedicatedPostForm) {
+    dedicatedPostForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const hp = document.getElementById('website_url_hp')?.value || '';
+      if (hp.trim().length > 0) return;
+
+      const authorRaw = (document.getElementById('post-author-input')?.value || '').trim();
+      const author = authorRaw.replace(/[^\w\s-]/g, '').slice(0, 24) || 'Player_VI';
+      const username = author.toLowerCase().replace(/[^a-z0-9_]/g, '') || 'playervi';
       const title = document.getElementById('post-title-input').value.trim();
       const category = document.getElementById('post-category-select').value;
       const text = document.getElementById('post-content-input').value.trim();
+      const mediaUrl = (document.getElementById('post-media-input')?.value || '').trim();
 
       const catMap = {
         discussions: 'Discussions',
@@ -489,14 +534,15 @@ document.addEventListener('DOMContentLoaded', () => {
         category: category,
         categoryLabel: catMap[category] || 'Discussions',
         pinned: false,
-        author: 'Player_VI',
-        username: 'playervi',
+        author: author,
+        username: username,
         badge: 'Member',
         badgeClass: 'verified',
         time: 'Just now',
         avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
         title: title,
         text: text,
+        mediaUrl: mediaUrl,
         likes: 1,
         isLiked: true,
         bookmarks: 0,
@@ -504,11 +550,37 @@ document.addEventListener('DOMContentLoaded', () => {
         comments: []
       };
 
-      posts.unshift(newPost);
-      closeModal(postModal);
-      postForm.reset();
-      renderFeed();
-      showToast('Discussion published successfully!');
+      try {
+        const res = await fetch('/api/posts?action=create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            author,
+            title,
+            category,
+            text,
+            mediaUrl,
+            website_url_hp: hp
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.post) {
+            newPost.id = data.post.id || newPost.id;
+          }
+        }
+      } catch (err) {}
+
+      try {
+        const savedPosts = JSON.parse(localStorage.getItem('vicecityhub_custom_posts') || '[]');
+        savedPosts.unshift(newPost);
+        localStorage.setItem('vicecityhub_custom_posts', JSON.stringify(savedPosts.slice(0, 30)));
+      } catch (err) {}
+
+      showToast('Post published! Redirecting to Feed...');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 700);
     });
   }
 
@@ -657,18 +729,46 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (discordGrid) {
+    try {
+      const savedDiscords = JSON.parse(localStorage.getItem('vicecityhub_custom_discords') || '[]');
+      if (Array.isArray(savedDiscords) && savedDiscords.length > 0) {
+        discordServers = [...savedDiscords, ...discordServers];
+      }
+    } catch (e) {}
+
     renderDiscords();
+
+    fetch('/api/discords')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && Array.isArray(data.servers) && data.servers.length > 0) {
+          const existingIds = new Set(discordServers.map(s => s.id));
+          const fresh = data.servers.filter(s => !existingIds.has(s.id));
+          if (fresh.length > 0) {
+            discordServers = [...fresh, ...discordServers];
+            renderDiscords();
+          }
+        }
+      })
+      .catch(() => {});
+
     if (discordSearchInput) discordSearchInput.addEventListener('input', renderDiscords);
     if (discordCountryFilter) discordCountryFilter.addEventListener('change', renderDiscords);
     if (discordTypeFilter) discordTypeFilter.addEventListener('change', renderDiscords);
   }
 
-  if (discordForm) {
-    discordForm.addEventListener('submit', (e) => {
+  // Dedicated Discord Server Submission Page (submit-discord.html)
+  const dedicatedDiscordForm = document.getElementById('dedicated-discord-form');
+  if (dedicatedDiscordForm) {
+    dedicatedDiscordForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const hp = document.getElementById('discord_hp_url')?.value || '';
+      if (hp.trim().length > 0) return;
+
       const name = document.getElementById('discord-name-input').value.trim();
       const inviteUrl = document.getElementById('discord-url-input').value.trim();
       const category = document.getElementById('discord-category-select').value;
+      const country = document.getElementById('discord-country-select')?.value || 'intl';
       const desc = document.getElementById('discord-desc-input').value.trim();
 
       if (!DISCORD_REGEX.test(inviteUrl)) {
@@ -678,28 +778,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const catMap = {
         roleplay: 'Roleplay',
-        italian: 'Italian Community',
         heists: 'Heists & LFG',
         general: 'General Community',
         modding: 'Modding & Mapping'
       };
 
-      discordServers.unshift({
+      const countryMap = {
+        intl: 'International',
+        it: 'Italy',
+        es: 'Spain / Latam',
+        de: 'Germany',
+        fr: 'France'
+      };
+
+      const newServer = {
         id: `dc-${Date.now()}`,
         name: name,
         tag: catMap[category] || 'Community',
         category: category,
-        country: category === 'italian' ? 'it' : 'intl',
-        countryLabel: category === 'italian' ? 'Italy' : 'International',
+        country: country,
+        countryLabel: countryMap[country] || 'International',
         inviteUrl: inviteUrl,
         members: 'Just Added',
         desc: desc
-      });
+      };
 
-      closeModal(discordModal);
-      discordForm.reset();
-      renderDiscords();
-      showToast('Discord server listed successfully!');
+      try {
+        const res = await fetch('/api/discords', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            inviteUrl,
+            category,
+            country,
+            desc,
+            discord_hp_url: hp
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.server) {
+            newServer.id = data.server.id || newServer.id;
+          }
+        }
+      } catch (err) {}
+
+      try {
+        const savedDiscords = JSON.parse(localStorage.getItem('vicecityhub_custom_discords') || '[]');
+        savedDiscords.unshift(newServer);
+        localStorage.setItem('vicecityhub_custom_discords', JSON.stringify(savedDiscords.slice(0, 30)));
+      } catch (err) {}
+
+      showToast('Discord server listed! Redirecting to Directory...');
+      setTimeout(() => {
+        window.location.href = 'discords.html';
+      }, 700);
     });
   }
 
