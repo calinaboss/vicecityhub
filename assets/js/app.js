@@ -221,6 +221,91 @@ document.addEventListener('DOMContentLoaded', () => {
       comments: [
         { author: 'RayTracer', time: '3h ago', text: 'Weather engine is next level.' }
       ]
+    },
+    {
+      id: 'post-5',
+      category: 'official',
+      categoryLabel: 'Official News',
+      pinned: false,
+      author: 'ViceCityHub Staff',
+      username: 'admin',
+      badge: 'Official',
+      badgeClass: 'mod',
+      time: '5 hours ago',
+      avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&auto=format&fit=crop&q=80',
+      title: 'Title Update 1.02 Overview: Performance Optimizations & Bug Fixes',
+      text: 'Rockstar has released hotfix 1.02 addressing framerate drops near Ocean Drive neon districts and improving server matchmaking for heist squads. Full patch notes verified on our news thread.',
+      likes: 1102,
+      isLiked: false,
+      bookmarks: 310,
+      isBookmarked: false,
+      comments: [
+        { author: 'Techie_Dan', time: '4h ago', text: 'DLSS 3.5 frame gen is buttery smooth now.' }
+      ]
+    },
+    {
+      id: 'post-6',
+      category: 'leaks',
+      categoryLabel: 'Map',
+      pinned: false,
+      author: 'LeonidaScout',
+      username: 'scout_leonida',
+      badge: 'Verified',
+      badgeClass: 'verified',
+      time: '6 hours ago',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
+      title: 'Everglades Swamp Outpost Hidden Cache Coordinates',
+      text: 'Found a sunken patrol boat at coordinates [25.7617, -80.1918] containing body armor, an assault rifle, and 5000 cash. Open map.vicecityhub.eu to check the exact marker.',
+      likes: 745,
+      isLiked: false,
+      bookmarks: 412,
+      isBookmarked: false,
+      comments: [
+        { author: 'SwampRat', time: '5h ago', text: 'Confirmed, watch out for the gators around the hull.' }
+      ]
+    },
+    {
+      id: 'post-7',
+      category: 'discussions',
+      categoryLabel: 'Discussions',
+      pinned: false,
+      author: 'ViceResident',
+      username: 'vicelocal',
+      badge: '',
+      badgeClass: '',
+      time: '8 hours ago',
+      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+      title: 'What property or safehouse are you saving up for first?',
+      text: 'Starfish Island villas have private docks for speedboats, while Downtown penthouses have private helipads. Which one are you planning to buy first once your bank balance allows?',
+      likes: 588,
+      isLiked: false,
+      bookmarks: 140,
+      isBookmarked: false,
+      comments: [
+        { author: 'BoatKing', time: '6h ago', text: 'Villas on Starfish Island for sure.' },
+        { author: 'SkyscraperFan', time: '7h ago', text: 'Helipad penthouse is unbeatable for fast travel.' }
+      ]
+    },
+    {
+      id: 'post-8',
+      category: 'official',
+      categoryLabel: 'Official News',
+      pinned: false,
+      author: 'ViceCityHub Staff',
+      username: 'admin',
+      badge: 'Official',
+      badgeClass: 'mod',
+      time: '12 hours ago',
+      avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&auto=format&fit=crop&q=80',
+      title: 'Weekly Community Spotlight: Top Roleplay Servers and Heist Crews',
+      text: 'Check out the refreshed GTA VI Discords directory to join verified roleplay servers, modding hubs, and heist teams with active voice channels.',
+      likes: 820,
+      isLiked: false,
+      bookmarks: 230,
+      isBookmarked: false,
+      comments: [
+        { author: 'HeistLeader', time: '10h ago', text: 'Found our 4th player within 10 minutes on the directory.' }
+      ]
     }
   ];
 
