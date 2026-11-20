@@ -115,50 +115,64 @@ export function getTursoUrl(env) {
   return raw.replace(/^libsql:\/\//i, 'https://').replace(/\/+$/, '');
 }
 
-export function getTursoToken(env) {
-  let rawToken = (
-    env?.TURSO_AUTH_TOKEN ||
-    env?.TURSO_TOKEN ||
-    env?.TURSO_API_KEY ||
-    env?.TURSO_SECRET ||
-    env?.DATABASE_TOKEN ||
-    env?.DB_TOKEN ||
-    ''
-  ).trim();
-
-  if (!rawToken) {
-    const rawUrl = (env?.TURSO_DATABASE_URL || env?.TURSO_URL || env?.DATABASE_URL || '').trim();
-    const match = rawUrl.match(/[?&]authToken=([^&]+)/i);
-    if (match && match[1]) {
-      rawToken = match[1];
-    }
-  }
-
-  return rawToken
+function cleanToken(val) {
+  if (!val || typeof val !== 'string') return '';
+  return val
+    .trim()
     .replace(/^["']+|["']+$/g, '')
     .replace(/^Bearer\s+/i, '')
     .replace(/^authToken=/i, '')
     .replace(/\s+/g, '');
 }
 
+export function getAllTursoTokens(env) {
+  const candidates = [
+    env?.TURSO_AUTH_TOKEN,
+    env?.TURSO_TOKEN,
+    env?.TURSO_API_KEY,
+    env?.TURSO_SECRET,
+    env?.DATABASE_TOKEN,
+    env?.DB_TOKEN
+  ];
+
+  const rawUrl = (env?.TURSO_DATABASE_URL || env?.TURSO_URL || env?.DATABASE_URL || '').trim();
+  const match = rawUrl.match(/[?&]authToken=([^&]+)/i);
+  if (match && match[1]) {
+    candidates.push(match[1]);
+  }
+
+  const seen = new Set();
+  const list = [];
+  for (const c of candidates) {
+    const cleaned = cleanToken(c);
+    if (cleaned && !seen.has(cleaned)) {
+      seen.add(cleaned);
+      list.push(cleaned);
+    }
+  }
+  return list;
+}
+
+export function getTursoToken(env) {
+  const tokens = getAllTursoTokens(env);
+  return tokens[0] || '';
+}
+
 export function isTursoConfigured(env) {
-  return Boolean(getTursoUrl(env) && getTursoToken(env));
+  return Boolean(getTursoUrl(env) && getAllTursoTokens(env).length > 0);
 }
 
 /**
  * Executes a parameterized SQL query against Turso HTTP v2 Pipeline API
  */
 export async function runTursoSql(env, sql, params = []) {
-  if (!isTursoConfigured(env)) {
+  const tokens = getAllTursoTokens(env);
+  if (!getTursoUrl(env) || tokens.length === 0) {
     throw new Error('TURSO_NOT_CONFIGURED');
   }
 
   const rawUrl = getTursoUrl(env);
-  const authToken = getTursoToken(env);
   const endpoint = `${rawUrl}/v2/pipeline`;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 7000);
 
   const payload = {
     requests: [
@@ -173,38 +187,52 @@ export async function runTursoSql(env, sql, params = []) {
     ]
   };
 
-  try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${authToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-      signal: controller.signal
-    });
+  let lastError = null;
 
-    clearTimeout(timeoutId);
+  for (const authToken of tokens) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 7000);
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
 
-    if (!res.ok) {
-      const errText = await res.text().catch(() => '');
-      throw new Error(`Turso HTTP error (${res.status}): ${errText.slice(0, 180)}`);
+      clearTimeout(timeoutId);
+
+      if (res.status === 401 && tokens.length > 1) {
+        const errText = await res.text().catch(() => '');
+        lastError = new Error(`Turso HTTP error (401): ${errText.slice(0, 180)}`);
+        continue;
+      }
+
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '');
+        throw new Error(`Turso HTTP error (${res.status}): ${errText.slice(0, 180)}`);
+      }
+
+      const data = await res.json();
+      const first = data?.results?.[0];
+      if (first?.type === 'error') {
+        throw new Error(`Turso SQL error: ${first.error?.message || 'Unknown error'}`);
+      }
+
+      const execResult = first?.response?.result;
+      return {
+        rows: parseTursoResult(execResult),
+        affectedRowCount: execResult?.affected_row_count || 0
+      };
+    } finally {
+      clearTimeout(timeoutId);
     }
-
-    const data = await res.json();
-    const first = data?.results?.[0];
-    if (first?.type === 'error') {
-      throw new Error(`Turso SQL error: ${first.error?.message || 'Unknown error'}`);
-    }
-
-    const execResult = first?.response?.result;
-    return {
-      rows: parseTursoResult(execResult),
-      affectedRowCount: execResult?.affected_row_count || 0
-    };
-  } finally {
-    clearTimeout(timeoutId);
   }
+
+  throw lastError || new Error('Turso authentication failed (401)');
 }
 
 /**
