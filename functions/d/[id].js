@@ -574,6 +574,10 @@ export async function onRequest(context) {
 
           const count = parseInt(commentCountEl.textContent, 10) || 0;
           commentCountEl.textContent = String(count + 1);
+
+          setTimeout(function() {
+            window.location.reload();
+          }, 600);
         } catch (err) {
           if (feedback) {
             feedback.style.display = 'block';
@@ -594,7 +598,9 @@ export async function onRequest(context) {
     status: 200,
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
-      'Cache-Control': 'public, max-age=0, must-revalidate',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0',
       'X-Content-Type-Options': 'nosniff'
     }
   });
