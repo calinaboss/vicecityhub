@@ -42,6 +42,13 @@ function formatDisplayDate(val) {
   });
 }
 
+function safeJsonLd(obj) {
+  return JSON.stringify(obj)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026');
+}
+
 export async function onRequest(context) {
   const { request, env, params } = context;
   const rawId = (params && params.id) ? String(params.id).trim() : '';
@@ -225,7 +232,7 @@ export async function onRequest(context) {
   };
 
   let mediaHtml = '';
-  if (post.mediaUrl) {
+  if (post.mediaUrl && (/^https?:\/\//i.test(post.mediaUrl) || /^\/api\/media\?id=[0-9a-fA-F-]{20,40}$/.test(post.mediaUrl))) {
     if (post.mediaType === 'video' || /\.(mp4|webm|mov)(\?.*)?$/i.test(post.mediaUrl)) {
       mediaHtml = `<div class="post-media-container" style="margin-top:14px;border-radius:8px;overflow:hidden;background:#000;">
         <video controls playsinline preload="metadata" style="max-height:500px;width:100%;display:block;">
@@ -294,8 +301,8 @@ export async function onRequest(context) {
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="/assets/css/style.css?v=4.1">
 
-  <script type="application/ld+json">${JSON.stringify(discussionSchema)}</script>
-  <script type="application/ld+json">${JSON.stringify(breadcrumbsSchema)}</script>
+  <script type="application/ld+json">${safeJsonLd(discussionSchema)}</script>
+  <script type="application/ld+json">${safeJsonLd(breadcrumbsSchema)}</script>
 
   <script src="/assets/js/analytics.js?v=4.1"></script>
   <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-576B86L9"></script>
@@ -427,7 +434,7 @@ export async function onRequest(context) {
 
   <script>
   (function() {
-    const postId = ${JSON.stringify(post.id)};
+    const postId = ${safeJsonLd(post.id)};
     const likeBtn = document.getElementById('btn-discussion-like');
     const bookmarkBtn = document.getElementById('btn-discussion-bookmark');
     const shareBtn = document.getElementById('btn-discussion-share');
