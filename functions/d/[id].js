@@ -273,7 +273,7 @@ export async function onRequest(context) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(postTitle)} &bull; GTA 6 Discussion &bull; ViceCityHub</title>
   <meta name="description" content="${escapeHtml(cleanExcerpt)}">
-  <meta name="keywords" content="GTA VI, Grand Theft Auto VI, GTA VI release date, GTAVI, new Grand Theft Auto, GTA 6, Vice City, Leonida, ${escapeHtml(postTitle)}, Grand Theft Auto, GTA 6 leaks, GTA 6 forum">
+  <meta name="keywords" content="GTA Vice City, Rockstar Games, GTA VI, Grand Theft Auto VI, GTA Vice Online, GTA VI release date, GTAVI, new Grand Theft Auto, GTA 6, Vice City, Leonida, ${escapeHtml(postTitle)}, Grand Theft Auto, GTA 6 leaks, GTA 6 forum">
   <link rel="canonical" href="${postUrl}">
 
   <meta property="og:type" content="article">
