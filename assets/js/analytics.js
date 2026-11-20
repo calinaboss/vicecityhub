@@ -8,9 +8,9 @@
   try { stored = window.localStorage.getItem(STORAGE_KEY); } catch (e) {}
 
   gtag('consent', 'default', {
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
+    ad_storage: stored === 'granted' ? 'granted' : 'denied',
+    ad_user_data: stored === 'granted' ? 'granted' : 'denied',
+    ad_personalization: stored === 'granted' ? 'granted' : 'denied',
     analytics_storage: stored === 'granted' ? 'granted' : 'denied',
     wait_for_update: 500
   });
@@ -22,13 +22,31 @@
     try { window.localStorage.setItem(STORAGE_KEY, choice); } catch (e) {}
     gtag('consent', 'update', {
       analytics_storage: choice === 'granted' ? 'granted' : 'denied',
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied'
+      ad_storage: choice === 'granted' ? 'granted' : 'denied',
+      ad_user_data: choice === 'granted' ? 'granted' : 'denied',
+      ad_personalization: choice === 'granted' ? 'granted' : 'denied'
     });
   }
 
+  function initAdSenseUnits() {
+    try {
+      var units = document.querySelectorAll('ins.adsbygoogle');
+      if (!units.length) return;
+      window.adsbygoogle = window.adsbygoogle || [];
+      units.forEach(function (unit) {
+        if (!unit.getAttribute('data-adsbygoogle-status') && !unit.dataset.vchAdReady) {
+          unit.dataset.vchAdReady = '1';
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          } catch (pushErr) {}
+        }
+      });
+    } catch (e) {}
+  }
+  window.vchInitAds = initAdSenseUnits;
+
   function buildBanner() {
+    initAdSenseUnits();
     if (stored === 'granted' || stored === 'denied') return;
     if (document.getElementById('vch-consent-banner')) return;
 
@@ -49,7 +67,7 @@
     banner.setAttribute('aria-label', 'Cookie preferences');
 
     var text = document.createElement('p');
-    text.appendChild(document.createTextNode('We use privacy-friendly analytics cookies to improve ViceCityHub. You can accept or decline. '));
+    text.appendChild(document.createTextNode('We use privacy-friendly analytics and advertising cookies to support ViceCityHub. You can accept or decline. '));
     var link = document.createElement('a');
     link.href = '/cookies.html';
     link.textContent = 'Cookie policy';
@@ -85,4 +103,5 @@
   } else {
     buildBanner();
   }
+  window.addEventListener('load', initAdSenseUnits);
 })();
