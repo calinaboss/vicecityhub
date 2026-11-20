@@ -186,3 +186,14 @@ CREATE TABLE IF NOT EXISTS media_chunks (
 );
 
 CREATE INDEX IF NOT EXISTS idx_media_chunks_id ON media_chunks(media_id, chunk_index);
+
+CREATE TABLE IF NOT EXISTS ticket_messages (
+  id TEXT PRIMARY KEY,
+  ticket_id TEXT NOT NULL,
+  sender_role TEXT NOT NULL,
+  sender_name TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_ticket_messages_tid ON ticket_messages(ticket_id, created_at ASC);

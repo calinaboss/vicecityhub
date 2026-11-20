@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.6">
 </head>
 <body>
 
@@ -209,6 +209,21 @@
             </button>
           </div>
         </form>
+
+        <div id="my-tickets" style="margin-top: 26px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+            <h3 class="settings-section-title" style="font-size: 0.98rem; margin-bottom: 0;">
+              <i class="fa-regular fa-comments" style="color: var(--accent-cyan);"></i> Submitted Tickets &amp; Live Support Chat
+            </h3>
+            <button type="button" class="btn-secondary" id="btn-refresh-my-tickets" style="height: 32px; min-height: 32px; padding: 0 10px; font-size: 0.76rem;">
+              <i class="fa-solid fa-rotate"></i> Refresh Chat
+            </button>
+          </div>
+          <p class="settings-section-desc" style="margin-bottom: 12px;">
+            Click any active ticket below to open the temporary live chat with an administrator. Once resolved and closed, the temporary chat is permanently erased.
+          </p>
+          <div id="my-tickets-list" class="admin-flat-list"></div>
+        </div>
       </section>
 
       <section class="settings-flat-section" aria-label="Session Controls">
@@ -357,6 +372,153 @@ document.querySelectorAll('[data-toggle-pw]').forEach(btn => {
 
     const formSupport = document.getElementById('form-support-ticket');
     const supportFeedback = document.getElementById('support-feedback');
+    const myTicketsList = document.getElementById('my-tickets-list');
+    const btnRefreshMyTickets = document.getElementById('btn-refresh-my-tickets');
+    let activeOpenTicketId = new URLSearchParams(window.location.search).get('ticket') || '';
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    async function loadMyTickets() {
+      if (!myTicketsList) return;
+      try {
+        const res = await fetch('/api/profile?action=my_tickets', { credentials: 'same-origin' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const tickets = (data && data.tickets) || [];
+
+        if (tickets.length === 0) {
+          myTicketsList.innerHTML = `<div style="padding: 14px 0; font-size: 0.82rem; color: var(--text-dim);">No active support tickets.</div>`;
+          return;
+        }
+
+        if (!activeOpenTicketId && tickets.length === 1) {
+          activeOpenTicketId = tickets[0].id;
+        }
+
+        myTicketsList.innerHTML = tickets.map(t => {
+          const shortId = (t.id || '').slice(0, 8);
+          const isOpen = activeOpenTicketId === t.id;
+          const msgs = Array.isArray(t.messages) ? t.messages : [];
+          const hasAdminReply = msgs.some(m => m.sender_role === 'admin');
+
+          const messagesHtml = msgs.map(m => {
+            const isAdmin = m.sender_role === 'admin';
+            return `
+              <div class="ticket-chat-bubble ${isAdmin ? 'from-admin' : 'from-user'}">
+                <div class="ticket-chat-meta">
+                  <strong>${escapeHtml(m.sender_name)}</strong>
+                  ${isAdmin ? '<span class="badge-pill mod">ADMIN</span>' : '<span class="badge-pill verified">YOU</span>'}
+                  <span>${escapeHtml((m.created_at || '').slice(11, 16) || 'Now')}</span>
+                </div>
+                <div class="ticket-chat-text">${escapeHtml(m.message)}</div>
+              </div>
+            `;
+          }).join('');
+
+          return `
+            <div class="ticket-thread-card" data-ticket-box="${escapeHtml(t.id)}">
+              <div class="ticket-thread-header" data-toggle-ticket="${escapeHtml(t.id)}">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span class="badge-pill ${hasAdminReply ? 'mod' : 'verified'}">${hasAdminReply ? 'ADMIN REPLIED' : 'OPEN'}</span>
+                  <strong>Ticket #${escapeHtml(shortId)}: ${escapeHtml(t.subject)}</strong>
+                  <span style="font-size: 0.75rem; color: var(--text-dim);">${escapeHtml(t.category)}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 0.76rem; color: var(--accent-cyan); font-weight: 700;">
+                    <i class="fa-regular fa-comment-dots"></i> ${isOpen ? 'Hide Chat' : 'Open Chat'} (${msgs.length})
+                  </span>
+                </div>
+              </div>
+
+              <div class="ticket-chat-drawer" id="ticket-drawer-${escapeHtml(t.id)}" style="display: ${isOpen ? 'block' : 'none'};">
+                <div class="ticket-chat-messages" id="ticket-msgs-${escapeHtml(t.id)}">
+                  ${messagesHtml}
+                </div>
+                <div class="ticket-chat-input-row">
+                  <input type="text" class="form-input ticket-reply-input" id="reply-input-${escapeHtml(t.id)}" placeholder="Write a message to support..." maxlength="1500">
+                  <button type="button" class="btn-post-submit" style="height: 38px; padding: 0 14px; font-size: 0.8rem;" data-send-ticket="${escapeHtml(t.id)}">
+                    <i class="fa-solid fa-paper-plane"></i> Send
+                  </button>
+                  <button type="button" class="btn-secondary" style="height: 38px; min-height: 38px; padding: 0 12px; font-size: 0.78rem; color: #fca5a5;" data-close-my-ticket="${escapeHtml(t.id)}" title="Resolve and delete temporary chat">
+                    <i class="fa-solid fa-trash-can"></i> End Chat
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {}
+    }
+
+    if (myTicketsList) {
+      myTicketsList.addEventListener('click', async (e) => {
+        const toggleHeader = e.target.closest('[data-toggle-ticket]');
+        if (toggleHeader) {
+          const tid = toggleHeader.getAttribute('data-toggle-ticket');
+          activeOpenTicketId = activeOpenTicketId === tid ? '' : tid;
+          await loadMyTickets();
+          return;
+        }
+
+        const sendBtn = e.target.closest('[data-send-ticket]');
+        if (sendBtn) {
+          const tid = sendBtn.getAttribute('data-send-ticket');
+          const input = document.getElementById(`reply-input-${tid}`);
+          const msg = (input?.value || '').trim();
+          if (!msg) return;
+          input.value = '';
+          try {
+            const res = await fetch('/api/profile?action=ticket_reply', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({ ticket_id: tid, message: msg })
+            });
+            if (res.ok) {
+              activeOpenTicketId = tid;
+              await loadMyTickets();
+            }
+          } catch (err) {}
+          return;
+        }
+
+        const closeBtn = e.target.closest('[data-close-my-ticket]');
+        if (closeBtn) {
+          const tid = closeBtn.getAttribute('data-close-my-ticket');
+          if (!window.confirm('End and permanently delete this temporary support chat?')) return;
+          try {
+            const res = await fetch('/api/profile?action=close_ticket', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({ ticket_id: tid })
+            });
+            if (res.ok) {
+              if (activeOpenTicketId === tid) activeOpenTicketId = '';
+              await loadMyTickets();
+            }
+          } catch (err) {}
+        }
+      });
+    }
+
+    if (btnRefreshMyTickets) {
+      btnRefreshMyTickets.addEventListener('click', loadMyTickets);
+    }
+
+    loadMyTickets();
+    setInterval(() => {
+      if (activeOpenTicketId) loadMyTickets();
+    }, 6000);
+
     if (formSupport) {
       formSupport.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -380,7 +542,16 @@ document.querySelectorAll('[data-toggle-pw]').forEach(btn => {
           }
           document.getElementById('support-subject-input').value = '';
           document.getElementById('support-message-input').value = '';
-          showBoxFeedback(supportFeedback, 'success', `Assistance ticket #${(data.ticket_id || '').slice(0, 8)} received! We will respond within 24 hours.`);
+          const tid = data.ticket_id || '';
+          const shortId = tid.slice(0, 8);
+          activeOpenTicketId = tid;
+          supportFeedback.style.display = 'block';
+          supportFeedback.style.background = 'rgba(16, 185, 129, 0.16)';
+          supportFeedback.style.color = '#6ee7b7';
+          supportFeedback.innerHTML = `<i class="fa-solid fa-circle-check"></i> Ticket <strong>#${escapeHtml(shortId)}</strong> sent! You can view its status and live chat in <a href="settings.html?ticket=${encodeURIComponent(tid)}#my-tickets" style="color: #ffffff; text-decoration: underline; font-weight: 800;">Settings &rarr; Submitted Tickets (Chat Open)</a>.`;
+          await loadMyTickets();
+          const myTicketsEl = document.getElementById('my-tickets');
+          if (myTicketsEl) myTicketsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } catch (err) {
           showBoxFeedback(supportFeedback, 'error', 'Network error while sending assistance request.');
         }

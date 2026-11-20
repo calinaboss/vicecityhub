@@ -101,8 +101,46 @@ export async function onRequest(context) {
     await ensureTursoSchema(env);
 
     if (request.method === 'GET') {
-      const requestedUsername = (url.searchParams.get('u') || '').trim();
       const viewer = await getAuthenticatedUser(request, env);
+
+      if (action === 'my_tickets') {
+        if (!viewer) {
+          return jsonResponse({ error: 'Authentication required' }, 401);
+        }
+        const { rows: tickets } = await runTursoSql(
+          env,
+          `SELECT id, category, subject, message, status, created_at
+           FROM support_tickets
+           WHERE (user_id = ? OR LOWER(email) = LOWER(?)) AND status = 'open'
+           ORDER BY created_at DESC
+           LIMIT 30`,
+          [viewer.id, viewer.email]
+        );
+
+        const ticketIds = tickets.map(t => t.id);
+        const messagesByTicket = {};
+        for (const tid of ticketIds) {
+          const { rows: mRows } = await runTursoSql(
+            env,
+            `SELECT id, ticket_id, sender_role, sender_name, message, created_at
+             FROM ticket_messages
+             WHERE ticket_id = ?
+             ORDER BY created_at ASC`,
+            [tid]
+          );
+          messagesByTicket[tid] = mRows || [];
+        }
+
+        return jsonResponse({
+          ok: true,
+          tickets: tickets.map(t => ({
+            ...t,
+            messages: messagesByTicket[t.id] || []
+          }))
+        });
+      }
+
+      const requestedUsername = (url.searchParams.get('u') || '').trim();
 
       let targetUser = null;
 
@@ -405,17 +443,86 @@ export async function onRequest(context) {
         }
 
         const ticketId = generateUuid();
+        const senderName = viewer ? viewer.username : email.split('@')[0];
         await runTursoSql(
           env,
           `INSERT INTO support_tickets (id, user_id, username, email, category, subject, message, ip_hash)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [ticketId, viewer ? viewer.id : null, viewer ? viewer.username : 'Guest', email, category, subject, message, ipHash]
+          [ticketId, viewer ? viewer.id : null, senderName, email, category, subject, message, ipHash]
         );
+        await runTursoSql(
+          env,
+          `INSERT INTO ticket_messages (id, ticket_id, sender_role, sender_name, message)
+           VALUES (?, ?, 'user', ?, ?)`,
+          [generateUuid(), ticketId, senderName, message]
+        ).catch(() => {});
 
         return jsonResponse({
           ok: true,
           ticket_id: ticketId
         }, 201);
+      }
+
+      if (action === 'ticket_reply') {
+        if (!viewer) {
+          return jsonResponse({ error: 'Authentication required.' }, 401);
+        }
+        const ticketId = sanitizePlainText(body.ticket_id || '', 64);
+        const replyMsg = sanitizePlainText(body.message || '', 1500);
+        if (!ticketId || replyMsg.length < 1) {
+          return jsonResponse({ error: 'Message cannot be empty.' }, 400);
+        }
+
+        const { rows: tRows } = await runTursoSql(
+          env,
+          `SELECT id, user_id, email, status FROM support_tickets
+           WHERE id = ? AND (user_id = ? OR LOWER(email) = LOWER(?))
+           LIMIT 1`,
+          [ticketId, viewer.id, viewer.email]
+        );
+        if (tRows.length === 0) {
+          return jsonResponse({ error: 'Ticket not found or closed.' }, 404);
+        }
+
+        const msgId = generateUuid();
+        await runTursoSql(
+          env,
+          `INSERT INTO ticket_messages (id, ticket_id, sender_role, sender_name, message)
+           VALUES (?, ?, 'user', ?, ?)`,
+          [msgId, ticketId, viewer.username, replyMsg]
+        );
+
+        return jsonResponse({
+          ok: true,
+          message: {
+            id: msgId,
+            ticket_id: ticketId,
+            sender_role: 'user',
+            sender_name: viewer.username,
+            message: replyMsg,
+            created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
+          }
+        }, 201);
+      }
+
+      if (action === 'close_ticket') {
+        if (!viewer) {
+          return jsonResponse({ error: 'Authentication required.' }, 401);
+        }
+        const ticketId = sanitizePlainText(body.ticket_id || '', 64);
+        const { rows: tRows } = await runTursoSql(
+          env,
+          `SELECT id FROM support_tickets
+           WHERE id = ? AND (user_id = ? OR LOWER(email) = LOWER(?))
+           LIMIT 1`,
+          [ticketId, viewer.id, viewer.email]
+        );
+        if (tRows.length === 0) {
+          return jsonResponse({ error: 'Ticket not found.' }, 404);
+        }
+        await runTursoSql(env, 'DELETE FROM ticket_messages WHERE ticket_id = ?', [ticketId]).catch(() => {});
+        await runTursoSql(env, 'DELETE FROM support_tickets WHERE id = ?', [ticketId]);
+        return jsonResponse({ ok: true });
       }
     }
 

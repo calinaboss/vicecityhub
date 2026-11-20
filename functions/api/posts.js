@@ -345,6 +345,33 @@ export async function onRequest(context) {
 
       return jsonResponse({ ok: true });
     }
+
+    if (action === 'report') {
+      const allowed = await checkRateLimit(env, `posts_report_${ipHash}`, 10, 60000);
+      if (!allowed) {
+        return jsonResponse({ error: 'Too many reports submitted. Please wait 1 minute.' }, 429);
+      }
+
+      const postId = sanitizePlainText(body.postId, 64);
+      const reason = sanitizePlainText(body.reason || 'Reported by community member', 300);
+      if (!postId || reason.length < 3) {
+        return jsonResponse({ error: 'Post ID and report reason are required.' }, 400);
+      }
+
+      const reportId = generateUuid();
+      if (isTursoConfigured(env)) {
+        try {
+          await runTursoSql(
+            env,
+            `INSERT INTO security_reports (id, target_type, target_id, reason, reporter_ip_hash, status)
+             VALUES (?, 'post', ?, ?, ?, 'pending')`,
+            [reportId, postId, reason, ipHash]
+          );
+        } catch (e) {}
+      }
+
+      return jsonResponse({ ok: true, report_id: reportId }, 201);
+    }
   }
 
   return jsonResponse({ error: 'Method not allowed' }, 405);

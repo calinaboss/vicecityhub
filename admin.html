@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.6">
 </head>
 <body>
 
@@ -74,8 +74,11 @@
       <button class="filter-chip" data-admin-tab="users">
         <i class="fa-solid fa-users-gear"></i> User Profiles (<span id="count-all-users">0</span>)
       </button>
+      <button class="filter-chip" data-admin-tab="reports">
+        <i class="fa-solid fa-flag"></i> Post Reports (<span id="count-all-reports">0</span>)
+      </button>
       <button class="filter-chip" data-admin-tab="tickets">
-        <i class="fa-solid fa-headset"></i> Support Tickets (<span id="count-all-tickets">0</span>)
+        <i class="fa-solid fa-headset"></i> Live Support Tickets (<span id="count-all-tickets">0</span>)
       </button>
     </div>
 
@@ -118,9 +121,16 @@
       <div id="admin-users-list" class="admin-flat-list"></div>
     </section>
 
+    <section id="admin-tab-reports" class="admin-tab-panel" style="display: none;">
+      <h2 class="settings-section-title" style="margin-bottom: 12px;">
+        <i class="fa-solid fa-flag" style="color: #f87171;"></i> Reported Community Posts
+      </h2>
+      <div id="admin-reports-list" class="admin-flat-list"></div>
+    </section>
+
     <section id="admin-tab-tickets" class="admin-tab-panel" style="display: none;">
       <h2 class="settings-section-title" style="margin-bottom: 12px;">
-        <i class="fa-solid fa-headset" style="color: #34d399;"></i> Account Assistance &amp; Support Tickets
+        <i class="fa-solid fa-headset" style="color: #34d399;"></i> Live Support Ticket Chats (Closing erases temporary chat)
       </h2>
       <div id="admin-tickets-list" class="admin-flat-list"></div>
     </section>
@@ -351,34 +361,94 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
       }
 
-      function renderTickets(tickets) {
-        document.getElementById('count-all-tickets').textContent = tickets.filter(t => t.status === 'open').length;
-        if (tickets.length === 0) {
-          ticketsList.innerHTML = `<div class="empty-feed-state" style="padding: 20px 0;"><p style="color: var(--text-muted); font-size: 0.85rem;">No support tickets submitted.</p></div>`;
+      function renderReports(reports) {
+        const countEl = document.getElementById('count-all-reports');
+        const reportsList = document.getElementById('admin-reports-list');
+        if (countEl) countEl.textContent = reports.length;
+        if (!reportsList) return;
+        if (reports.length === 0) {
+          reportsList.innerHTML = `<div class="empty-feed-state" style="padding: 20px 0;"><p style="color: var(--text-muted); font-size: 0.85rem;">No reported posts pending review.</p></div>`;
           return;
         }
-        ticketsList.innerHTML = tickets.map(t => `
+        reportsList.innerHTML = reports.map(r => `
           <div class="admin-row-item">
             <div class="admin-row-info">
               <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <span class="badge-pill ${t.status === 'open' ? 'mod' : 'verified'}">${escapeHtml((t.status || 'open').toUpperCase())}</span>
-                <strong>${escapeHtml(t.subject)}</strong>
-                <span style="font-size: 0.76rem; color: var(--text-dim);">@${escapeHtml(t.username || 'Guest')} (${escapeHtml(t.email)}) &bull; ${escapeHtml(t.category)}</span>
+                <span class="badge-pill mod"><i class="fa-solid fa-flag"></i> REPORTED</span>
+                <strong>${escapeHtml(r.post_title || 'Post #' + (r.target_id || '').slice(0, 8))}</strong>
+                <span style="font-size: 0.76rem; color: var(--text-dim);">Author: @${escapeHtml(r.post_username || r.post_author || 'Unknown')} &bull; ${escapeHtml((r.created_at || '').slice(0, 16))}</span>
               </div>
-              <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">${escapeHtml(t.message)}</p>
+              <p style="font-size: 0.82rem; color: #fca5a5; margin-top: 4px;"><strong>Report Reason:</strong> ${escapeHtml(r.reason)}</p>
+              ${r.post_content ? `<p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;">"${escapeHtml(r.post_content.slice(0, 200))}"</p>` : ''}
             </div>
             <div class="admin-row-actions">
-              <a href="mailto:${escapeHtml(t.email)}?subject=Re:%20${encodeURIComponent(t.subject)}" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 11px; font-size: 0.76rem;">
-                <i class="fa-solid fa-reply"></i> Reply Email
-              </a>
-              ${t.status === 'open' ? `
-                <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 11px; font-size: 0.76rem;" data-act="close_ticket" data-id="${escapeHtml(t.id)}">
-                  <i class="fa-solid fa-check"></i> Close
+              ${r.target_id ? `
+                <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem; color: #fca5a5;" data-act="delete_post" data-id="${escapeHtml(r.target_id)}" data-confirm="Delete this reported post permanently?">
+                  <i class="fa-solid fa-trash-can"></i> Delete Post
                 </button>
               ` : ''}
+              <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem;" data-act="dismiss_report" data-id="${escapeHtml(r.id)}">
+                <i class="fa-solid fa-check"></i> Dismiss Report
+              </button>
             </div>
           </div>
         `).join('');
+      }
+
+      function renderTickets(tickets) {
+        document.getElementById('count-all-tickets').textContent = tickets.length;
+        if (tickets.length === 0) {
+          ticketsList.innerHTML = `<div class="empty-feed-state" style="padding: 20px 0;"><p style="color: var(--text-muted); font-size: 0.85rem;">No active support ticket chats.</p></div>`;
+          return;
+        }
+        ticketsList.innerHTML = tickets.map(t => {
+          const shortId = (t.id || '').slice(0, 8);
+          const msgs = Array.isArray(t.messages) && t.messages.length > 0
+            ? t.messages
+            : [{ sender_role: 'user', sender_name: t.username || 'User', message: t.message, created_at: t.created_at }];
+
+          const messagesHtml = msgs.map(m => {
+            const isAdmin = m.sender_role === 'admin';
+            return `
+              <div class="ticket-chat-bubble ${isAdmin ? 'from-admin' : 'from-user'}">
+                <div class="ticket-chat-meta">
+                  <strong>${escapeHtml(m.sender_name)}</strong>
+                  ${isAdmin ? '<span class="badge-pill mod">ADMIN</span>' : '<span class="badge-pill verified">USER</span>'}
+                  <span>${escapeHtml((m.created_at || '').slice(11, 16) || '')}</span>
+                </div>
+                <div class="ticket-chat-text">${escapeHtml(m.message)}</div>
+              </div>
+            `;
+          }).join('');
+
+          return `
+            <div class="ticket-thread-card">
+              <div class="ticket-thread-header">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span class="badge-pill mod">TICKET #${escapeHtml(shortId)}</span>
+                  <strong>${escapeHtml(t.subject)}</strong>
+                  <span style="font-size: 0.76rem; color: var(--text-dim);">by @${escapeHtml(t.username || 'Guest')} (${escapeHtml(t.email)}) &bull; ${escapeHtml(t.category)}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <button type="button" class="btn-secondary" style="height: 32px; min-height: 32px; padding: 0 11px; font-size: 0.76rem; color: #fca5a5;" data-act="close_ticket" data-id="${escapeHtml(t.id)}" data-confirm="Close and permanently erase this temporary ticket chat?">
+                    <i class="fa-solid fa-trash-can"></i> Close &amp; Erase Chat
+                  </button>
+                </div>
+              </div>
+              <div class="ticket-chat-drawer" style="display: block;">
+                <div class="ticket-chat-messages">
+                  ${messagesHtml}
+                </div>
+                <div class="ticket-chat-input-row">
+                  <input type="text" class="form-input ticket-reply-input" id="admin-reply-input-${escapeHtml(t.id)}" placeholder="Reply to @${escapeHtml(t.username || 'User')} in live chat..." maxlength="1500">
+                  <button type="button" class="btn-post-submit" style="height: 38px; padding: 0 14px; font-size: 0.8rem;" data-admin-reply-ticket="${escapeHtml(t.id)}">
+                    <i class="fa-solid fa-paper-plane"></i> Send Reply
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
       }
 
       async function loadAdminData() {
@@ -401,13 +471,36 @@ document.addEventListener('DOMContentLoaded', () => {
           renderAllPosts(data.allPosts || []);
           cachedUsers = data.users || [];
           renderUsersList();
+          renderReports(data.reports || []);
           renderTickets(data.tickets || []);
         } catch (err) {
           showToast('Error loading admin panel.');
         }
       }
 
-      document.body.addEventListener('click', (e) => {
+      document.body.addEventListener('click', async (e) => {
+        const replyBtn = e.target.closest('[data-admin-reply-ticket]');
+        if (replyBtn) {
+          const tid = replyBtn.getAttribute('data-admin-reply-ticket');
+          const input = document.getElementById(`admin-reply-input-${tid}`);
+          const msg = (input?.value || '').trim();
+          if (!msg) return;
+          input.value = '';
+          try {
+            const res = await fetch('/api/admin', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({ action: 'reply_ticket', targetId: tid, message: msg })
+            });
+            if (res.ok) {
+              showToast('Reply sent to user ticket chat!');
+              await loadAdminData();
+            }
+          } catch (err) {}
+          return;
+        }
+
         const actBtn = e.target.closest('[data-act]');
         if (!actBtn) return;
         const action = actBtn.getAttribute('data-act');

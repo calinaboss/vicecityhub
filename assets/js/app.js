@@ -184,6 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="action-btn btn-share" data-id="${post.id}" data-title="${escapeHtml(post.title)}">
               <i class="fa-solid fa-share-nodes"></i> Share
             </button>
+            <button class="action-btn btn-report-post" data-id="${post.id}" data-title="${escapeHtml(post.title)}" title="Report Post">
+              <i class="fa-regular fa-flag"></i> Report
+            </button>
             ${isCurrentUserAdmin() ? `
               <button class="action-btn btn-admin-pin" data-id="${post.id}" title="${post.pinned ? 'Unpin Post' : 'Pin Post'}">
                 <i class="fa-solid fa-thumbtack" style="color: ${post.pinned ? 'var(--accent-pink)' : 'inherit'};"></i>
@@ -363,6 +366,14 @@ document.addEventListener('DOMContentLoaded', () => {
           window.openShareBottomPopup(shareUrl, shareTitle);
         } else {
           showToast('Link copied to clipboard');
+        }
+        return;
+      }
+
+      const reportBtn = e.target.closest('.btn-report-post');
+      if (reportBtn) {
+        if (typeof window.openReportPostPopup === 'function') {
+          window.openReportPostPopup(reportBtn.dataset.id, reportBtn.dataset.title || 'Post');
         }
         return;
       }
@@ -1524,5 +1535,76 @@ document.addEventListener('DOMContentLoaded', () => {
     window.__sharePopupTimer = setTimeout(() => {
       sheet.classList.remove('show');
     }, 9000);
+  };
+
+  window.openReportPostPopup = function(postId, postTitle) {
+    if (!postId) return;
+    let sheet = document.getElementById('report-bottom-popup');
+    if (!sheet) {
+      sheet = document.createElement('div');
+      sheet.id = 'report-bottom-popup';
+      sheet.className = 'share-bottom-popup';
+      sheet.innerHTML = `
+        <div class="share-popup-inner">
+          <div class="share-popup-head">
+            <span class="share-popup-copied">
+              <i class="fa-solid fa-flag" style="color: #f87171;"></i> Report Post to Moderators:
+            </span>
+            <button type="button" class="share-popup-close" id="btn-close-report-popup" aria-label="Close">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div id="report-target-label" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;"></div>
+          <div class="share-popup-links" id="report-reasons-box"></div>
+        </div>
+      `;
+      document.body.appendChild(sheet);
+    }
+
+    const labelEl = document.getElementById('report-target-label');
+    const reasonsBox = document.getElementById('report-reasons-box');
+    const closeBtn = document.getElementById('btn-close-report-popup');
+    if (labelEl) labelEl.textContent = `Select a reason for reporting "${postTitle.slice(0, 60)}":`;
+
+    const reasons = [
+      'Spam or Scam Link',
+      'Fake Leak / Untagged Spoiler',
+      'Harassment or Toxicity',
+      'Inappropriate / NSFW Content'
+    ];
+
+    reasonsBox.innerHTML = reasons.map(r => `
+      <button type="button" class="share-platform-btn" data-report-reason="${escapeHtml(r)}">
+        <i class="fa-solid fa-triangle-exclamation" style="color: #f87171;"></i> <span>${escapeHtml(r)}</span>
+      </button>
+    `).join('');
+
+    reasonsBox.onclick = async (ev) => {
+      const btn = ev.target.closest('[data-report-reason]');
+      if (!btn) return;
+      const reason = btn.getAttribute('data-report-reason');
+      sheet.classList.remove('show');
+      try {
+        const res = await fetch('/api/posts?action=report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ postId, reason })
+        });
+        if (res.ok) {
+          showToast('Report submitted to moderators. Thank you!');
+        } else {
+          showToast('Could not submit report. Please try again later.');
+        }
+      } catch (e) {
+        showToast('Network error while reporting post.');
+      }
+    };
+
+    if (closeBtn) {
+      closeBtn.onclick = () => sheet.classList.remove('show');
+    }
+
+    sheet.classList.add('show');
   };
 });

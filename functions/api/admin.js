@@ -99,7 +99,32 @@ export async function onRequest(context) {
         env,
         `SELECT id, username, email, category, subject, message, status, created_at
          FROM support_tickets
+         WHERE status = 'open'
          ORDER BY created_at DESC
+         LIMIT 50`
+      ).catch(() => ({ rows: [] }));
+
+      const ticketMessagesMap = {};
+      for (const t of (tickets || [])) {
+        const { rows: mRows } = await runTursoSql(
+          env,
+          `SELECT id, ticket_id, sender_role, sender_name, message, created_at
+           FROM ticket_messages
+           WHERE ticket_id = ?
+           ORDER BY created_at ASC`,
+          [t.id]
+        ).catch(() => ({ rows: [] }));
+        ticketMessagesMap[t.id] = mRows || [];
+      }
+
+      const { rows: reports } = await runTursoSql(
+        env,
+        `SELECT r.id, r.target_id, r.reason, r.created_at,
+                p.title AS post_title, p.author AS post_author, p.username AS post_username, p.content AS post_content
+         FROM security_reports r
+         LEFT JOIN community_posts p ON r.target_id = p.id
+         WHERE r.status = 'pending'
+         ORDER BY r.created_at DESC
          LIMIT 50`
       ).catch(() => ({ rows: [] }));
 
@@ -111,7 +136,11 @@ export async function onRequest(context) {
         pendingDiscords: pendingDiscords || [],
         approvedDiscords: approvedDiscords || [],
         users: users || [],
-        tickets: tickets || []
+        tickets: (tickets || []).map(t => ({
+          ...t,
+          messages: ticketMessagesMap[t.id] || []
+        })),
+        reports: reports || []
       });
     }
 
@@ -135,7 +164,10 @@ export async function onRequest(context) {
         await runTursoSql(env, 'DELETE FROM community_comments WHERE post_id = ?', [targetId]).catch(() => {});
         await runTursoSql(env, 'DELETE FROM post_likes WHERE post_id = ?', [targetId]).catch(() => {});
         await runTursoSql(env, 'DELETE FROM post_bookmarks WHERE post_id = ?', [targetId]).catch(() => {});
+        await runTursoSql(env, 'DELETE FROM security_reports WHERE target_id = ?', [targetId]).catch(() => {});
         await runTursoSql(env, 'DELETE FROM community_posts WHERE id = ?', [targetId]);
+      } else if (action === 'dismiss_report') {
+        await runTursoSql(env, 'DELETE FROM security_reports WHERE id = ?', [targetId]);
       } else if (action === 'pin_post') {
         await runTursoSql(
           env,
@@ -168,8 +200,20 @@ export async function onRequest(context) {
         await runTursoSql(env, 'DELETE FROM sessions WHERE user_id = ?', [targetId]);
       } else if (action === 'unban_user') {
         await runTursoSql(env, 'UPDATE users SET is_banned = 0 WHERE id = ?', [targetId]);
+      } else if (action === 'reply_ticket') {
+        const replyText = sanitizePlainText(body.message || '', 1500);
+        if (!replyText) {
+          return jsonResponse({ error: 'Reply message cannot be empty' }, 400);
+        }
+        await runTursoSql(
+          env,
+          `INSERT INTO ticket_messages (id, ticket_id, sender_role, sender_name, message)
+           VALUES (?, ?, 'admin', ?, ?)`,
+          [generateUuid(), targetId, authUser.username, replyText]
+        );
       } else if (action === 'close_ticket') {
-        await runTursoSql(env, "UPDATE support_tickets SET status = 'closed' WHERE id = ?", [targetId]);
+        await runTursoSql(env, 'DELETE FROM ticket_messages WHERE ticket_id = ?', [targetId]).catch(() => {});
+        await runTursoSql(env, 'DELETE FROM support_tickets WHERE id = ?', [targetId]);
       } else {
         return jsonResponse({ error: 'Unsupported moderation action' }, 400);
       }
