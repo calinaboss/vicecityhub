@@ -147,11 +147,30 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `).join('');
 
+    let mediaHtml = '';
+    const mUrl = post.mediaUrl || post.media_url || '';
+    if (mUrl) {
+      const isVideo = post.mediaType === 'video' || post.media_type === 'video' || /\.(mp4|webm)(\?.*)?$/i.test(mUrl);
+      if (isVideo) {
+        mediaHtml = `
+          <div class="post-media-container post-video-wrap">
+            <video src="${escapeHtml(mUrl)}" class="post-video-player" controls playsinline preload="metadata"></video>
+          </div>
+        `;
+      } else {
+        mediaHtml = `
+          <div class="post-media-container" data-full-img="${escapeHtml(mUrl)}" title="Click to view full screen (drag to pan, scroll to zoom)">
+            <img src="${escapeHtml(mUrl)}" alt="${escapeHtml(post.title)}" loading="lazy">
+          </div>
+        `;
+      }
+    }
+
     return `
       <article class="post-card ${isPinnedClass}" data-id="${post.id}">
         <div class="post-header">
           <a href="profile.html?u=${encodeURIComponent(post.username || post.author)}" class="post-author-box" title="View @${escapeHtml(post.username)} profile">
-            <img class="post-avatar" src="${escapeHtml(post.avatar)}" alt="${escapeHtml(post.author)}">
+            <img class="post-avatar" src="${escapeHtml(post.avatar || 'assets/brand/favicon-192x192.png')}" alt="${escapeHtml(post.author)}">
             <div class="post-author-info">
               <div class="author-name-row">
                 ${pinBadge}
@@ -166,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <h2 class="post-title">${escapeHtml(post.title)}</h2>
         <p class="post-text">${escapeHtml(post.text)}</p>
+        ${mediaHtml}
 
         <div class="post-footer">
           <div class="post-actions-group">
@@ -344,10 +364,19 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(() => {});
   }
 
-  // Dedicated Post Creation Page (post.html)
+  // Dedicated Post Creation Page (post.html) - Max 15 MB Image/Video Upload
   const dedicatedPostForm = document.getElementById('dedicated-post-form');
   const postContentInput = document.getElementById('post-content-input');
   const postCharCounter = document.getElementById('post-char-counter');
+  const btnTriggerPostMedia = document.getElementById('btn-trigger-post-media');
+  const btnClearPostMedia = document.getElementById('btn-clear-post-media');
+  const postMediaFileInput = document.getElementById('post-media-file-input');
+  const postMediaStatus = document.getElementById('post-media-status');
+  const postMediaPreviewBox = document.getElementById('post-media-preview-box');
+
+  let uploadedPostMediaUrl = '';
+  let uploadedPostMediaType = 'image';
+  let isUploadingPostMedia = false;
 
   if (postContentInput && postCharCounter) {
     postContentInput.addEventListener('input', () => {
@@ -355,9 +384,212 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function uint8ToBase64(uint8) {
+    let binary = '';
+    const step = 0x8000;
+    for (let i = 0; i < uint8.length; i += step) {
+      binary += String.fromCharCode.apply(null, uint8.subarray(i, i + step));
+    }
+    return btoa(binary);
+  }
+
+  async function uploadBinaryInChunks(uint8, mimeType, statusEl) {
+    const CHUNK_BYTE_SIZE = 540 * 1024; // ~720 KB base64 per chunk
+    const totalBytes = uint8.byteLength;
+    const totalChunks = Math.max(1, Math.ceil(totalBytes / CHUNK_BYTE_SIZE));
+
+    const firstSlice = uint8.subarray(0, Math.min(CHUNK_BYTE_SIZE, totalBytes));
+    const firstB64 = uint8ToBase64(firstSlice);
+
+    if (statusEl) statusEl.textContent = `Uploading (1/${totalChunks})...`;
+
+    const initRes = await fetch('/api/media?action=init', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        mime_type: mimeType,
+        total_bytes: totalBytes,
+        total_chunks: totalChunks,
+        data_b64: firstB64
+      })
+    });
+    const initData = await initRes.json().catch(() => ({}));
+    if (!initRes.ok || !initData.media_id) {
+      throw new Error(initData.error || 'Media upload initialization failed.');
+    }
+
+    const mediaId = initData.media_id;
+
+    for (let idx = 1; idx < totalChunks; idx++) {
+      if (statusEl) {
+        const pct = Math.round(((idx + 1) / totalChunks) * 100);
+        statusEl.textContent = `Uploading media (${pct}%)...`;
+      }
+      const start = idx * CHUNK_BYTE_SIZE;
+      const end = Math.min(start + CHUNK_BYTE_SIZE, totalBytes);
+      const sliceB64 = uint8ToBase64(uint8.subarray(start, end));
+
+      const chunkRes = await fetch('/api/media?action=chunk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          media_id: mediaId,
+          chunk_index: idx,
+          data_b64: sliceB64
+        })
+      });
+      if (!chunkRes.ok) {
+        const errD = await chunkRes.json().catch(() => ({}));
+        throw new Error(errD.error || `Failed on chunk ${idx + 1}`);
+      }
+    }
+
+    return {
+      mediaUrl: initData.media_url,
+      mediaType: initData.media_type
+    };
+  }
+
+  async function compressAndStripExifImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX_DIM = 1440;
+          let w = img.width;
+          let h = img.height;
+          if (w > MAX_DIM || h > MAX_DIM) {
+            if (w >= h) {
+              h = Math.round((h * MAX_DIM) / w);
+              w = MAX_DIM;
+            } else {
+              w = Math.round((w * MAX_DIM) / h);
+              h = MAX_DIM;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, w, h);
+
+          canvas.toBlob((blob) => {
+            if (!blob) return reject(new Error('Image compression failed'));
+            blob.arrayBuffer().then(buf => {
+              resolve({ uint8: new Uint8Array(buf), mimeType: blob.type || 'image/webp' });
+            }).catch(reject);
+          }, 'image/webp', 0.82);
+        };
+        img.onerror = () => reject(new Error('Invalid image file'));
+        img.src = ev.target.result;
+      };
+      reader.onerror = () => reject(new Error('File read error'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (btnTriggerPostMedia && postMediaFileInput) {
+    btnTriggerPostMedia.addEventListener('click', () => postMediaFileInput.click());
+
+    if (btnClearPostMedia) {
+      btnClearPostMedia.addEventListener('click', () => {
+        uploadedPostMediaUrl = '';
+        uploadedPostMediaType = 'image';
+        postMediaFileInput.value = '';
+        btnClearPostMedia.style.display = 'none';
+        if (postMediaStatus) postMediaStatus.textContent = 'No file selected';
+        if (postMediaPreviewBox) {
+          postMediaPreviewBox.style.display = 'none';
+          postMediaPreviewBox.innerHTML = '';
+        }
+      });
+    }
+
+    postMediaFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const MAX_BYTES = 15 * 1024 * 1024; // 15 MB
+      if (file.size > MAX_BYTES) {
+        showToast('File exceeds the 15 MB limit. Please choose a file under 15 MB.');
+        postMediaFileInput.value = '';
+        return;
+      }
+
+      const isImage = /^image\/(jpeg|png|webp|gif)$/i.test(file.type);
+      const isVideo = /^video\/(mp4|webm)$/i.test(file.type);
+
+      if (!isImage && !isVideo) {
+        showToast('Only JPG, PNG, WebP, GIF, MP4, or WebM files are permitted.');
+        postMediaFileInput.value = '';
+        return;
+      }
+
+      isUploadingPostMedia = true;
+      if (postMediaStatus) postMediaStatus.textContent = isImage ? 'Optimizing & stripping EXIF...' : 'Preparing video...';
+
+      try {
+        let uint8;
+        let mimeType = file.type.toLowerCase();
+
+        if (isImage && mimeType !== 'image/gif') {
+          const compressed = await compressAndStripExifImage(file);
+          uint8 = compressed.uint8;
+          mimeType = compressed.mimeType;
+        } else {
+          const buf = await file.arrayBuffer();
+          uint8 = new Uint8Array(buf);
+        }
+
+        const result = await uploadBinaryInChunks(uint8, mimeType, postMediaStatus);
+        uploadedPostMediaUrl = result.mediaUrl;
+        uploadedPostMediaType = result.mediaType;
+
+        if (postMediaStatus) {
+          const kb = Math.max(1, Math.round(uint8.byteLength / 1024));
+          postMediaStatus.textContent = `Ready (${kb > 1024 ? (kb / 1024).toFixed(1) + ' MB' : kb + ' KB'})`;
+        }
+        if (btnClearPostMedia) btnClearPostMedia.style.display = 'inline-flex';
+
+        if (postMediaPreviewBox) {
+          postMediaPreviewBox.style.display = 'block';
+          if (uploadedPostMediaType === 'video') {
+            postMediaPreviewBox.innerHTML = `
+              <div class="post-media-container post-video-wrap">
+                <video src="${escapeHtml(uploadedPostMediaUrl)}" class="post-video-player" controls playsinline></video>
+              </div>
+            `;
+          } else {
+            postMediaPreviewBox.innerHTML = `
+              <div class="post-media-container" data-full-img="${escapeHtml(uploadedPostMediaUrl)}" title="Click for Fullscreen Discord-Style Preview">
+                <img src="${escapeHtml(uploadedPostMediaUrl)}" alt="Post preview">
+              </div>
+            `;
+          }
+        }
+        showToast('Media uploaded and verified!');
+      } catch (err) {
+        uploadedPostMediaUrl = '';
+        if (postMediaStatus) postMediaStatus.textContent = err.message || 'Upload failed';
+        showToast(err.message || 'Media upload failed.');
+      } finally {
+        isUploadingPostMedia = false;
+      }
+    });
+  }
+
   if (dedicatedPostForm) {
     dedicatedPostForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (isUploadingPostMedia) {
+        showToast('Please wait for the media upload to finish.');
+        return;
+      }
       const hp = document.getElementById('website_url_hp')?.value || '';
       if (hp.trim().length > 0) return;
 
@@ -367,7 +599,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const title = document.getElementById('post-title-input').value.trim();
       const category = document.getElementById('post-category-select').value;
       const text = document.getElementById('post-content-input').value.trim();
-      const mediaUrl = (document.getElementById('post-media-input')?.value || '').trim();
+      const externalMediaUrl = (document.getElementById('post-media-input')?.value || '').trim();
+      const mediaUrl = uploadedPostMediaUrl || externalMediaUrl;
+      const mediaType = uploadedPostMediaUrl ? uploadedPostMediaType : 'image';
 
       const catMap = {
         discussions: 'Discussions',
@@ -375,20 +609,23 @@ document.addEventListener('DOMContentLoaded', () => {
         official: 'Official News'
       };
 
+      const cachedUser = JSON.parse(localStorage.getItem('vicecityhub_user') || 'null');
+
       const newPost = {
         id: `post-${Date.now()}`,
         category: category,
         categoryLabel: catMap[category] || 'Discussions',
         pinned: false,
-        author: author,
-        username: username,
-        badge: 'Member',
-        badgeClass: 'verified',
+        author: (cachedUser && cachedUser.username) || author,
+        username: ((cachedUser && cachedUser.username) || username).toLowerCase(),
+        badge: (cachedUser && cachedUser.role === 'admin') ? 'Official' : 'Member',
+        badgeClass: (cachedUser && cachedUser.role === 'admin') ? 'mod' : 'verified',
         time: 'Just now',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+        avatar: (cachedUser && cachedUser.avatar_url) || 'assets/brand/favicon-192x192.png',
         title: title,
         text: text,
         mediaUrl: mediaUrl,
+        mediaType: mediaType,
         likes: 1,
         isLiked: true,
         bookmarks: 0,
@@ -403,16 +640,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch('/api/posts?action=create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
           body: JSON.stringify({
             author,
             title,
             category,
             text,
             mediaUrl,
+            mediaType,
             website_url_hp: hp,
             cfTurnstileResponse
           })
         });
+        if (res.status === 401) {
+          window.location.href = 'login.html?tab=signup';
+          return;
+        }
         if (res.status === 403 || res.status === 400 || res.status === 429) {
           const errData = await res.json().catch(() => ({}));
           showToast(errData.error || 'Security verification failed. Please retry.');
@@ -981,7 +1224,176 @@ document.addEventListener('DOMContentLoaded', () => {
         renderNavbarAuthUser(data.user);
       } else if (data && data.authenticated === false) {
         localStorage.removeItem('vicecityhub_user');
+        // If user is currently on post.html or submit-discord.html without an account, redirect to login.html
+        const path = window.location.pathname.toLowerCase();
+        if (path.endsWith('/post.html') || path.endsWith('/submit-discord.html') || path.endsWith('/post') || path.endsWith('/submit-discord')) {
+          window.location.href = 'login.html?tab=signup';
+        }
       }
     })
     .catch(() => {});
+
+  // Intercept clicks on "New Post" or "Share Discord Server" when not logged in
+  document.addEventListener('click', (e) => {
+    const postLink = e.target.closest('a[href*="post.html"], a[href*="submit-discord.html"]');
+    if (postLink) {
+      const cached = localStorage.getItem('vicecityhub_user');
+      if (!cached) {
+        e.preventDefault();
+        window.location.href = 'login.html?tab=signup';
+        return;
+      }
+    }
+
+    // Open Fullscreen Discord-Style Draggable & Zoomable Image Preview when clicking any post image
+    const mediaBox = e.target.closest('.post-media-container[data-full-img]');
+    if (mediaBox) {
+      const src = mediaBox.getAttribute('data-full-img');
+      if (src && typeof window.openDiscordMediaViewer === 'function') {
+        e.preventDefault();
+        window.openDiscordMediaViewer(src);
+      }
+    }
+  });
+
+  // ==========================================================================
+  // 6. FULL-SCREEN DISCORD-STYLE DRAGGABLE & ZOOMABLE IMAGE VIEWER
+  // Hold mouse down or drag with finger on phone to move image around freely
+  // ==========================================================================
+  window.openDiscordMediaViewer = function(imgSrc) {
+    if (!imgSrc) return;
+    let viewer = document.getElementById('discord-media-viewer');
+    if (!viewer) {
+      viewer = document.createElement('div');
+      viewer.id = 'discord-media-viewer';
+      viewer.className = 'discord-media-viewer';
+      viewer.innerHTML = `
+        <div class="discord-viewer-topbar">
+          <span class="discord-viewer-hint">
+            <i class="fa-solid fa-up-down-left-right" style="color: var(--accent-pink);"></i> Hold &amp; drag to pan &bull; Scroll or pinch to zoom
+          </span>
+          <div class="discord-viewer-controls">
+            <button type="button" class="discord-viewer-btn" id="dv-zoom-out" title="Zoom Out" aria-label="Zoom Out"><i class="fa-solid fa-minus"></i></button>
+            <button type="button" class="discord-viewer-btn" id="dv-zoom-reset" title="Reset Position" aria-label="Reset">100%</button>
+            <button type="button" class="discord-viewer-btn" id="dv-zoom-in" title="Zoom In" aria-label="Zoom In"><i class="fa-solid fa-plus"></i></button>
+            <button type="button" class="discord-viewer-btn dv-close" id="dv-close-btn" title="Close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+        <div class="discord-viewer-stage" id="dv-stage">
+          <img id="dv-image" class="discord-viewer-img" src="" alt="Full Screen Preview" draggable="false">
+        </div>
+      `;
+      document.body.appendChild(viewer);
+    }
+
+    const stage = document.getElementById('dv-stage');
+    const img = document.getElementById('dv-image');
+    const btnIn = document.getElementById('dv-zoom-in');
+    const btnOut = document.getElementById('dv-zoom-out');
+    const btnReset = document.getElementById('dv-zoom-reset');
+    const btnClose = document.getElementById('dv-close-btn');
+
+    let scale = 1;
+    let posX = 0;
+    let posY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    function updateTransform() {
+      img.style.transform = `translate3d(${posX}px, ${posY}px, 0) scale(${scale})`;
+      if (btnReset) btnReset.textContent = `${Math.round(scale * 100)}%`;
+    }
+
+    img.src = imgSrc;
+    scale = 1;
+    posX = 0;
+    posY = 0;
+    updateTransform();
+    viewer.classList.add('open');
+
+    function closeViewer() {
+      viewer.classList.remove('open');
+      img.src = '';
+    }
+
+    btnClose.onclick = closeViewer;
+    btnIn.onclick = () => { scale = Math.min(5, scale + 0.3); updateTransform(); };
+    btnOut.onclick = () => { scale = Math.max(0.5, scale - 0.3); updateTransform(); };
+    btnReset.onclick = () => { scale = 1; posX = 0; posY = 0; updateTransform(); };
+
+    stage.onmousedown = (e) => {
+      if (e.target === stage && scale === 1 && posX === 0 && posY === 0) {
+        closeViewer();
+        return;
+      }
+      e.preventDefault();
+      isDragging = true;
+      startX = e.clientX - posX;
+      startY = e.clientY - posY;
+      img.style.cursor = 'grabbing';
+    };
+
+    window.onmousemove = (e) => {
+      if (!isDragging || !viewer.classList.contains('open')) return;
+      posX = e.clientX - startX;
+      posY = e.clientY - startY;
+      updateTransform();
+    };
+
+    window.onmouseup = () => {
+      if (isDragging) {
+        isDragging = false;
+        img.style.cursor = 'grab';
+      }
+    };
+
+    stage.onwheel = (e) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.18 : -0.18;
+      scale = Math.max(0.4, Math.min(5, scale + delta));
+      updateTransform();
+    };
+
+    // Mobile Touch Drag & Pinch-to-Zoom
+    let pinchDist = 0;
+    let pinchScale = 1;
+
+    stage.ontouchstart = (e) => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        startX = e.touches[0].clientX - posX;
+        startY = e.touches[0].clientY - posY;
+      } else if (e.touches.length === 2) {
+        isDragging = false;
+        pinchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        pinchScale = scale;
+      }
+    };
+
+    stage.ontouchmove = (e) => {
+      if (isDragging && e.touches.length === 1) {
+        e.preventDefault();
+        posX = e.touches[0].clientX - startX;
+        posY = e.touches[0].clientY - startY;
+        updateTransform();
+      } else if (e.touches.length === 2 && pinchDist > 0) {
+        e.preventDefault();
+        const d = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        scale = Math.max(0.4, Math.min(5, pinchScale * (d / pinchDist)));
+        updateTransform();
+      }
+    };
+
+    stage.ontouchend = () => {
+      isDragging = false;
+      pinchDist = 0;
+    };
+  };
 });

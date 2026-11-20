@@ -92,6 +92,9 @@ export async function onRequest(context) {
     }
 
     const authUser = await getAuthenticatedUser(request, env);
+    if (!authUser) {
+      return jsonResponse({ error: 'Authentication required. Please log in or create an account to share a Discord server.' }, 401);
+    }
     const name = sanitizePlainText(body.name, 60);
     const inviteUrl = (body.inviteUrl || '').trim();
     const rawCat = (body.category || 'general').toLowerCase().trim();

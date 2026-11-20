@@ -149,7 +149,7 @@ export async function onRequest(context) {
       try {
         const { rows: pRows } = await runTursoSql(
           env,
-          `SELECT id, category, category_label, title, content, media_url, likes_count, comments_count, created_at
+          `SELECT id, category, category_label, title, content, media_url, media_type, likes_count, comments_count, created_at
            FROM community_posts
            WHERE (user_id = ? OR LOWER(username) = LOWER(?)) AND status = 'approved'
            ORDER BY created_at DESC

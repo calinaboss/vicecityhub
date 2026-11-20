@@ -147,7 +147,26 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    postsListEl.innerHTML = posts.map(p => `
+    postsListEl.innerHTML = posts.map(p => {
+      let mediaHtml = '';
+      const mUrl = p.media_url || '';
+      if (mUrl) {
+        const isVideo = p.media_type === 'video' || /\.(mp4|webm)(\?.*)?$/i.test(mUrl);
+        if (isVideo) {
+          mediaHtml = `
+            <div class="post-media-container post-video-wrap">
+              <video src="${escapeHtml(mUrl)}" class="post-video-player" controls playsinline preload="metadata"></video>
+            </div>
+          `;
+        } else {
+          mediaHtml = `
+            <div class="post-media-container" data-full-img="${escapeHtml(mUrl)}" title="Click for Fullscreen Preview">
+              <img src="${escapeHtml(mUrl)}" alt="${escapeHtml(p.title)}" loading="lazy">
+            </div>
+          `;
+        }
+      }
+      return `
       <article class="post-card">
         <div class="post-header">
           <span class="post-category-tag">${escapeHtml(p.category_label || p.category || 'Discussions')}</span>
@@ -155,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <h3 class="post-title">${escapeHtml(p.title)}</h3>
         <p class="post-text">${escapeHtml(p.content)}</p>
+        ${mediaHtml}
         <div class="post-footer">
           <div class="post-actions-group">
             <span class="action-btn" style="cursor: default;"><i class="fa-solid fa-heart" style="color: var(--accent-pink);"></i> ${Number(p.likes_count || 0)}</span>
@@ -163,7 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
           <a href="index.html" style="font-size: 0.78rem; color: var(--accent-pink); font-weight: 600;">View in Feed <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       </article>
-    `).join('');
+    `;
+    }).join('');
   }
 
   function populateProfileUI(data) {
@@ -397,16 +418,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function exportOptimizedAvatarDataUrl() {
-    if (!cropCanvas) return '';
-    // Re-encoding on 256x256 canvas strips 100% of EXIF/GPS/Camera metadata
-    // and compresses up to 5MB photos down to ~15-25 KB WebP/JPEG
-    let dataUrl = cropCanvas.toDataURL('image/webp', 0.78);
+    if (!cropCanvas || !cropImageObj) return '';
+    // Re-encode onto an exact 256x256 output canvas to strip 100% EXIF/GPS metadata
+    // and compress 5MB photos down to ~15-22 KB WebP/JPEG
+    const outCanvas = document.createElement('canvas');
+    outCanvas.width = 256;
+    outCanvas.height = 256;
+    const outCtx = outCanvas.getContext('2d');
+    outCtx.imageSmoothingEnabled = true;
+    outCtx.imageSmoothingQuality = 'high';
+    outCtx.drawImage(cropCanvas, 0, 0, cropCanvas.width, cropCanvas.height, 0, 0, 256, 256);
+
+    let dataUrl = outCanvas.toDataURL('image/webp', 0.78);
     if (!dataUrl.startsWith('data:image/webp')) {
-      dataUrl = cropCanvas.toDataURL('image/jpeg', 0.78);
+      dataUrl = outCanvas.toDataURL('image/jpeg', 0.78);
     }
     if (cropSizeBadge) {
       const approxKb = Math.max(1, Math.round((dataUrl.length * 0.75) / 1024));
-      cropSizeBadge.textContent = `Optimized size: ~${approxKb} KB (100% EXIF metadata removed)`;
+      cropSizeBadge.textContent = `Auto-optimized: ~${approxKb} KB (100% EXIF metadata removed)`;
     }
     return dataUrl;
   }
@@ -488,19 +517,51 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    cropCanvas.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+    cropCanvas.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      startDrag(e.clientX, e.clientY);
+    });
     window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
     window.addEventListener('mouseup', endDrag);
+
+    // Mouse wheel zoom inside fullscreen Discord-style cropper
+    cropCanvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.12 : -0.12;
+      cropScale = Math.max(1, Math.min(3.5, cropScale + delta));
+      if (cropZoomSlider) cropZoomSlider.value = String(cropScale.toFixed(2));
+      drawCropCanvas();
+      exportOptimizedAvatarDataUrl();
+    }, { passive: false });
+
+    let pinchStartDist = 0;
+    let pinchStartScale = 1;
 
     cropCanvas.addEventListener('touchstart', (e) => {
       if (e.touches.length === 1) {
         startDrag(e.touches[0].clientX, e.touches[0].clientY);
+      } else if (e.touches.length === 2) {
+        isDraggingCrop = false;
+        pinchStartDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        pinchStartScale = cropScale;
       }
     }, { passive: true });
     cropCanvas.addEventListener('touchmove', (e) => {
       if (isDraggingCrop && e.touches.length === 1) {
         e.preventDefault();
         moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+      } else if (e.touches.length === 2 && pinchStartDist > 0) {
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        cropScale = Math.max(1, Math.min(3.5, pinchStartScale * (dist / pinchStartDist)));
+        if (cropZoomSlider) cropZoomSlider.value = String(cropScale.toFixed(2));
+        drawCropCanvas();
       }
     }, { passive: false });
     cropCanvas.addEventListener('touchend', endDrag);

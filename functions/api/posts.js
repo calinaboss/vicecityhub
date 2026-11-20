@@ -69,6 +69,7 @@ export async function onRequest(context) {
         env,
         `SELECT id, category, category_label as categoryLabel, pinned, author, username,
                 badge, badge_class as badgeClass, title, content as text, media_url as mediaUrl,
+                media_type as mediaType, author_avatar as avatar,
                 likes_count as likes, bookmarks_count as bookmarks, created_at
          FROM community_posts
          WHERE status = 'approved'
@@ -130,8 +131,12 @@ export async function onRequest(context) {
     const authUser = await getAuthenticatedUser(request, env);
     const actorFingerprint = authUser ? `user_${authUser.id}` : `ip_${ipHash}`;
 
-    // 1. CREATE NEW POST
+    // 1. CREATE NEW POST (Authenticated Users Only)
     if (action === 'create' || action === 'list') {
+      if (!authUser) {
+        return jsonResponse({ error: 'Authentication required. Please log in or create an account to publish a post.' }, 401);
+      }
+
       const allowed = await checkRateLimit(env, `posts_create_${ipHash}`, 8, 60000);
       if (!allowed) {
         return jsonResponse({ error: 'Too many posts submitted. Please wait 1 minute.' }, 429);
@@ -148,9 +153,18 @@ export async function onRequest(context) {
       const rawCat = (body.category || 'discussions').toLowerCase().trim();
       const category = ALLOWED_CATEGORIES.includes(rawCat) ? rawCat : 'discussions';
       const categoryLabel = CATEGORY_LABELS[category] || 'Discussions';
-      const author = sanitizeAuthorName(body.author, authUser);
-      const username = author.toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20) || 'viceplayer';
-      const mediaUrl = body.mediaUrl ? sanitizeExternalUrl(body.mediaUrl) : '';
+      const author = authUser.username;
+      const username = authUser.username.toLowerCase();
+
+      let mediaUrl = '';
+      const rawMedia = typeof body.mediaUrl === 'string' ? body.mediaUrl.trim() : '';
+      if (/^\/api\/media\?id=[0-9a-fA-F-]{20,40}$/.test(rawMedia)) {
+        mediaUrl = rawMedia;
+      } else if (rawMedia) {
+        mediaUrl = sanitizeExternalUrl(rawMedia);
+      }
+      const mediaType = body.mediaType === 'video' ? 'video' : 'image';
+      const authorAvatar = authUser.avatar_url || 'assets/brand/favicon-192x192.png';
 
       if (title.length < 6) {
         return jsonResponse({ error: 'Post title must be at least 6 characters long.' }, 400);
@@ -170,10 +184,11 @@ export async function onRequest(context) {
         badge: authUser?.role === 'admin' ? 'Official' : 'Member',
         badgeClass: authUser?.role === 'admin' ? 'mod' : 'verified',
         time: 'Just now',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80',
+        avatar: authorAvatar,
         title,
         text,
         mediaUrl,
+        mediaType,
         likes: 1,
         isLiked: true,
         bookmarks: 0,
@@ -185,11 +200,11 @@ export async function onRequest(context) {
         try {
           await runTursoSql(
             env,
-            `INSERT INTO community_posts (id, user_id, category, category_label, author, username, badge, badge_class, title, content, media_url)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            `INSERT INTO community_posts (id, user_id, category, category_label, author, username, badge, badge_class, title, content, media_url, media_type, author_avatar)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
               postId,
-              authUser ? authUser.id : null,
+              authUser.id,
               category,
               categoryLabel,
               author,
@@ -198,7 +213,9 @@ export async function onRequest(context) {
               postObj.badgeClass,
               title,
               text,
-              mediaUrl || null
+              mediaUrl || null,
+              mediaType,
+              authorAvatar
             ]
           );
         } catch (e) {}

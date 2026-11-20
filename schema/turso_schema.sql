@@ -186,3 +186,22 @@ CREATE TABLE IF NOT EXISTS support_tickets (
   status TEXT NOT NULL DEFAULT 'open',
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+-- 13. MEDIA UPLOADS & CHUNKS (Images & Videos up to 15 MB, OWASP Magic-Byte Verified)
+CREATE TABLE IF NOT EXISTS media_uploads (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  mime_type TEXT NOT NULL,
+  total_bytes INTEGER NOT NULL DEFAULT 0,
+  total_chunks INTEGER NOT NULL DEFAULT 1,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS media_chunks (
+  media_id TEXT NOT NULL,
+  chunk_index INTEGER NOT NULL,
+  data_b64 TEXT NOT NULL,
+  PRIMARY KEY (media_id, chunk_index)
+);
+
+CREATE INDEX IF NOT EXISTS idx_media_chunks_id ON media_chunks(media_id, chunk_index);

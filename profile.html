@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.3">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
 </head>
 <body>
 
@@ -111,40 +111,34 @@
       </div>
     </section>
 
-    <!-- WHATSCR-STYLE CIRCULAR PFP CROP & PREVIEW MODAL (MAX 5MB -> AUTO COMPRESSED + EXIF STRIPPED) -->
-    <div class="modal-overlay" id="avatar-crop-modal" aria-hidden="true">
-      <div class="modal-container" style="max-width: 420px; text-align: center;">
-        <div class="modal-header">
-          <h2 class="modal-title">
-            <i class="fa-solid fa-circle-user" style="color: var(--accent-pink);"></i> Adjust Profile Picture
-          </h2>
-          <button type="button" class="modal-close-btn" id="btn-close-crop-modal" aria-label="Close">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
+    <!-- FULL-SCREEN DISCORD-STYLE CIRCULAR PFP CROP & PREVIEW OVERLAY (NO BOXES, DRAG & ZOOM) -->
+    <div class="fullscreen-crop-overlay" id="avatar-crop-modal" aria-hidden="true">
+      <div class="fullscreen-crop-topbar">
+        <span class="fullscreen-crop-title">
+          <i class="fa-solid fa-up-down-left-right" style="color: var(--accent-pink);"></i> Drag with mouse or finger to move &bull; Scroll or slide to zoom
+        </span>
+        <button type="button" class="fullscreen-close-btn" id="btn-close-crop-modal" aria-label="Close Preview">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
 
-        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
-          Drag the image to center it inside the circle. Metadata (EXIF/GPS) is automatically stripped and quality is optimized for fast loading.
-        </p>
-
-        <!-- Circular Preview Viewport (WhatsCR style) -->
+      <div class="fullscreen-crop-center">
         <div class="crop-stage-wrapper">
-          <canvas id="avatar-crop-canvas" width="256" height="256" class="avatar-crop-canvas"></canvas>
+          <canvas id="avatar-crop-canvas" width="360" height="360" class="avatar-crop-canvas"></canvas>
           <div class="crop-circle-guide"></div>
         </div>
+      </div>
 
-        <!-- Zoom Slider -->
+      <div class="fullscreen-crop-bottombar">
         <div class="crop-zoom-row">
-          <i class="fa-solid fa-magnifying-glass-minus" style="color: var(--text-dim); font-size: 0.85rem;"></i>
-          <input type="range" id="crop-zoom-slider" min="1" max="3" step="0.02" value="1" class="crop-zoom-slider" aria-label="Zoom Profile Picture">
-          <i class="fa-solid fa-magnifying-glass-plus" style="color: var(--text-dim); font-size: 0.85rem;"></i>
+          <i class="fa-solid fa-magnifying-glass-minus" style="color: var(--text-muted); font-size: 0.9rem;"></i>
+          <input type="range" id="crop-zoom-slider" min="1" max="3.5" step="0.02" value="1" class="crop-zoom-slider" aria-label="Zoom Profile Picture">
+          <i class="fa-solid fa-magnifying-glass-plus" style="color: var(--text-muted); font-size: 0.9rem;"></i>
         </div>
-
-        <div id="crop-size-badge" style="font-size: 0.74rem; color: var(--text-dim); margin-bottom: 14px;">
-          Optimized output: ~18 KB (EXIF removed)
+        <div id="crop-size-badge" style="font-size: 0.76rem; color: var(--text-muted);">
+          Auto-optimized (~18 KB &bull; 100% EXIF removed)
         </div>
-
-        <div class="posting-form-actions" style="justify-content: center;">
+        <div style="display: flex; gap: 12px; align-items: center;">
           <button type="button" class="btn-secondary" id="btn-cancel-crop">Cancel</button>
           <button type="button" class="btn-post-submit" id="btn-apply-crop">
             <i class="fa-solid fa-check"></i> Apply Picture
@@ -296,7 +290,7 @@
     <span id="toast-text">Action completed!</span>
   </div>
 
-  <script src="assets/js/app.js?v=3.3"></script>
-  <script src="assets/js/profile.js?v=3.3"></script>
+  <script src="assets/js/app.js?v=3.4"></script>
+  <script src="assets/js/profile.js?v=3.4"></script>
 </body>
 </html>

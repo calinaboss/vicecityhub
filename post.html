@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3.3">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.4">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
@@ -132,9 +132,25 @@
           </div>
 
           <div class="form-group">
-            <label for="post-media-input" class="form-label">Image Screenshot URL (Optional &bull; HTTPS Only)</label>
+            <label class="form-label">Attach Image or Video (Max 15 MB &bull; Auto EXIF Stripped &amp; Optimized)</label>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <button type="button" class="btn-secondary" id="btn-trigger-post-media" style="padding: 0 14px; height: 38px; min-height: 38px;">
+                <i class="fa-solid fa-photo-film" style="color: var(--accent-pink);"></i> Choose Image / Video (Max 15 MB)
+              </button>
+              <button type="button" class="btn-secondary" id="btn-clear-post-media" style="display: none; padding: 0 12px; height: 38px; min-height: 38px; color: #fca5a5;">
+                <i class="fa-solid fa-trash-can"></i> Remove Media
+              </button>
+              <span id="post-media-status" style="font-size: 0.78rem; color: var(--text-muted);">No file selected</span>
+            </div>
+            <input type="file" id="post-media-file-input" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" style="display: none;">
+
+            <!-- Inline Preview of Attached Image or Video (Click Image for Fullscreen Discord-Style Pan/Zoom) -->
+            <div id="post-media-preview-box" style="display: none; margin-top: 10px;"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="post-media-input" class="form-label">Or External Image URL (Optional &bull; HTTPS Only)</label>
             <input type="url" id="post-media-input" class="form-input" placeholder="https://images.unsplash.com/...">
-            <span style="font-size: 0.72rem; color: var(--text-dim);">OWASP Security: Only valid HTTPS image URLs are accepted. Executable links and scripts are automatically blocked.</span>
           </div>
 
           <div class="form-group">
@@ -311,6 +327,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/app.js?v=3.3"></script>
+  <script src="assets/js/app.js?v=3.4"></script>
 </body>
 </html>
