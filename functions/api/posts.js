@@ -72,7 +72,7 @@ export async function onRequest(context) {
     try {
       const { rows: postRows } = await runTursoSql(
         env,
-        `SELECT id, category, category_label as categoryLabel, pinned, author, username,
+        `SELECT id, user_id, category, category_label as categoryLabel, pinned, author, username,
                 badge, badge_class as badgeClass, title, content as text, media_url as mediaUrl,
                 media_type as mediaType, author_avatar as avatar,
                 likes_count as likes, bookmarks_count as bookmarks, created_at
@@ -87,8 +87,8 @@ export async function onRequest(context) {
         `SELECT id, post_id, author, content as text, created_at
          FROM community_comments
          WHERE status = 'approved'
-         ORDER BY created_at ASC
-         LIMIT 250`
+         ORDER BY created_at DESC
+         LIMIT 500`
       );
 
       const commentsByPost = {};
@@ -364,6 +364,28 @@ export async function onRequest(context) {
       const reason = sanitizePlainText(body.reason || 'Reported by community member', 300);
       if (!postId || reason.length < 3) {
         return jsonResponse({ error: 'Post ID and report reason are required.' }, 400);
+      }
+
+      if (isTursoConfigured(env)) {
+        try {
+          const { rows: targetPostRows } = await runTursoSql(
+            env,
+            `SELECT id, user_id, author, username FROM community_posts WHERE id = ? LIMIT 1`,
+            [postId]
+          );
+          if (targetPostRows && targetPostRows.length > 0) {
+            const p = targetPostRows[0];
+            if (authUser && (
+              authUser.id === p.user_id ||
+              (authUser.username && (
+                authUser.username.toLowerCase() === (p.username || '').toLowerCase() ||
+                authUser.username.toLowerCase() === (p.author || '').toLowerCase()
+              ))
+            )) {
+              return jsonResponse({ error: 'Non puoi segnalare il tuo stesso post.' }, 400);
+            }
+          }
+        } catch (e) {}
       }
 
       const reportId = generateUuid();

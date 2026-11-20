@@ -117,19 +117,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentCategory = 'all';
 
+  function getCurrentUser() {
+    try {
+      return JSON.parse(localStorage.getItem('vicecityhub_user') || 'null');
+    } catch (e) {
+      return null;
+    }
+  }
+
   function renderPostCard(post) {
     const isPinnedClass = post.pinned ? 'pinned' : '';
     const pinBadge = post.pinned ? `<span class="badge-pill mod" style="margin-right: 6px;"><i class="fa-solid fa-thumbtack"></i> Pinned</span>` : '';
     const badgeHtml = post.badge ? `<span class="badge-pill ${post.badgeClass}">${post.badge}</span>` : '';
 
-    const commentsHtml = post.comments.map(c => `
+    const currentUser = getCurrentUser();
+    const isOwnPost = Boolean(
+      currentUser && (
+        (currentUser.id && post.user_id && currentUser.id === post.user_id) ||
+        (currentUser.username && post.username && currentUser.username.toLowerCase() === post.username.toLowerCase()) ||
+        (currentUser.username && post.author && currentUser.username.toLowerCase() === post.author.toLowerCase())
+      )
+    );
+
+    const postComments = Array.isArray(post.comments) ? post.comments : [];
+    const maxInitial = 2;
+    const initialComments = postComments.slice(0, maxInitial);
+    const extraComments = postComments.slice(maxInitial);
+
+    const renderComment = (c) => `
       <div class="single-comment">
         <div class="single-comment-meta">
-          <span class="author">${escapeHtml(c.author)}</span> &bull; <span>${escapeHtml(c.time)}</span>
+          <span class="author">${escapeHtml(c.author)}</span> &bull; <span>${escapeHtml(formatTimeAgo(c.time))}</span>
         </div>
         <p class="single-comment-text">${escapeHtml(c.text)}</p>
       </div>
-    `).join('');
+    `;
+
+    const initialCommentsHtml = initialComments.map(renderComment).join('');
+    const extraCommentsHtml = extraComments.length > 0 ? `
+      <div class="extra-comments-collapsed" id="extra-comments-${post.id}" style="display: none;">
+        ${extraComments.map(renderComment).join('')}
+      </div>
+      <button type="button" class="btn-show-more-comments" data-id="${post.id}">
+        <i class="fa-solid fa-chevron-down"></i> Visualizza altri ${extraComments.length} commenti
+      </button>
+    ` : '';
 
     let mediaHtml = '';
     const mUrl = post.mediaUrl || post.media_url || '';
@@ -184,9 +216,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="action-btn btn-share" data-id="${post.id}" data-title="${escapeHtml(post.title)}">
               <i class="fa-solid fa-share-nodes"></i> Share
             </button>
-            <button class="action-btn btn-report-post" data-id="${post.id}" data-title="${escapeHtml(post.title)}" title="Report Post">
-              <i class="fa-regular fa-flag"></i> Report
-            </button>
+            ${!isOwnPost ? `
+              <button class="action-btn btn-report-post" data-id="${post.id}" data-title="${escapeHtml(post.title)}" title="Report Post">
+                <i class="fa-regular fa-flag"></i> Report
+              </button>
+            ` : ''}
             ${isCurrentUserAdmin() ? `
               <button class="action-btn btn-admin-pin" data-id="${post.id}" title="${post.pinned ? 'Unpin Post' : 'Pin Post'}">
                 <i class="fa-solid fa-thumbtack" style="color: ${post.pinned ? 'var(--accent-pink)' : 'inherit'};"></i>
@@ -207,7 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <button class="comment-submit-btn" data-id="${post.id}">Post</button>
           </div>
           <div class="comments-list" id="comments-list-${post.id}">
-            ${commentsHtml}
+            ${initialCommentsHtml}
+            ${extraCommentsHtml}
           </div>
         </div>
       </article>
@@ -412,7 +447,36 @@ document.addEventListener('DOMContentLoaded', () => {
       const commentsToggle = e.target.closest('.btn-comments-toggle');
       if (commentsToggle) {
         const drawer = document.getElementById(`comments-${commentsToggle.dataset.id}`);
-        if (drawer) drawer.classList.toggle('open');
+        if (drawer) {
+          const isOpen = drawer.classList.toggle('open');
+          if (isOpen) {
+            const input = drawer.querySelector('.comment-input-field');
+            if (input) {
+              setTimeout(() => {
+                input.focus();
+                input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }, 50);
+            }
+          }
+        }
+        return;
+      }
+
+      const moreCommentsBtn = e.target.closest('.btn-show-more-comments');
+      if (moreCommentsBtn) {
+        const postId = moreCommentsBtn.dataset.id;
+        const extraBox = document.getElementById(`extra-comments-${postId}`);
+        if (extraBox) {
+          const isHidden = extraBox.style.display === 'none';
+          if (isHidden) {
+            extraBox.style.display = 'flex';
+            moreCommentsBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Mostra meno commenti';
+          } else {
+            extraBox.style.display = 'none';
+            const count = extraBox.querySelectorAll('.single-comment').length;
+            moreCommentsBtn.innerHTML = `<i class="fa-solid fa-chevron-down"></i> Visualizza altri ${count} commenti`;
+          }
+        }
         return;
       }
 
@@ -424,7 +488,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!val) return;
         const p = posts.find(item => item.id === commentSubmit.dataset.id);
         if (p) {
-          p.comments.unshift({ author: 'You', time: 'Just now', text: val });
+          const curUser = getCurrentUser();
+          const authorName = curUser ? (curUser.username || 'You') : 'You';
+          p.comments.unshift({ author: authorName, time: 'Just now', text: val });
           input.value = '';
           renderFeed();
           const updatedDrawer = document.getElementById(`comments-${p.id}`);
@@ -1654,6 +1720,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.openReportPostPopup = function(postId, postTitle) {
     if (!postId) return;
+    const targetPost = posts.find(p => p.id === postId);
+    const currentUser = getCurrentUser();
+    if (targetPost && currentUser) {
+      const isOwner = (
+        (currentUser.id && targetPost.user_id && currentUser.id === targetPost.user_id) ||
+        (currentUser.username && targetPost.username && currentUser.username.toLowerCase() === targetPost.username.toLowerCase()) ||
+        (currentUser.username && targetPost.author && currentUser.username.toLowerCase() === targetPost.author.toLowerCase())
+      );
+      if (isOwner) {
+        showToast('Non puoi segnalare il tuo stesso post.');
+        return;
+      }
+    }
+
     let sheet = document.getElementById('report-bottom-popup');
     if (!sheet) {
       sheet = document.createElement('div');
@@ -1706,10 +1786,11 @@ document.addEventListener('DOMContentLoaded', () => {
           credentials: 'same-origin',
           body: JSON.stringify({ postId, reason })
         });
+        const data = await res.json().catch(() => null);
         if (res.ok) {
           showToast('Report submitted to moderators. Thank you!');
         } else {
-          showToast('Could not submit report. Please try again later.');
+          showToast(data && data.error ? data.error : 'Could not submit report. Please try again later.');
         }
       } catch (e) {
         showToast('Network error while reporting post.');

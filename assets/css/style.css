@@ -749,6 +749,38 @@ img {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  max-height: 400px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.btn-show-more-comments {
+  background: transparent;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--accent-cyan);
+  padding: 6px 12px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 4px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-show-more-comments:hover {
+  background: rgba(0, 240, 255, 0.08);
+  border-color: var(--accent-cyan);
+}
+
+.extra-comments-collapsed {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .single-comment {
