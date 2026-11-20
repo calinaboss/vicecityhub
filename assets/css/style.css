@@ -53,6 +53,9 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
 }
 
 body {
@@ -65,6 +68,9 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* Fixed Palm Background (Remains static while feed & news scroll smoothly) */
@@ -309,7 +315,6 @@ img {
   gap: 7px;
   min-height: 44px;
 }
-}
 
 .btn-secondary:hover {
   background: var(--bg-surface-elevated);
@@ -410,6 +415,8 @@ img {
 
 .search-input {
   flex: 1;
+  min-width: 0;
+  width: 100%;
   height: 38px;
   color: var(--text-main);
   font-size: 0.95rem;
@@ -497,6 +504,12 @@ img {
   grid-template-columns: minmax(0, 1fr) 300px;
   gap: 28px;
   align-items: start;
+}
+
+.content-grid > *,
+.posting-page-grid > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* ==========================================================================
@@ -628,6 +641,8 @@ img {
   margin-bottom: 6px;
   color: var(--text-main);
   line-height: 1.35;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .post-text {
@@ -635,6 +650,8 @@ img {
   font-size: 0.88rem;
   line-height: 1.55;
   margin-bottom: 12px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .post-media-container {
@@ -1543,7 +1560,7 @@ body.page-map-view {
 
 .cheat-row-info {
   flex: 1;
-  min-width: 240px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -2217,13 +2234,20 @@ body.page-map-view {
   }
 }
 
+.cf-turnstile {
+  max-width: 100%;
+  overflow: hidden;
+}
+
 @media (max-width: 768px) {
   .site-header {
-    height: 58px;
+    height: 54px;
   }
 
   .header-container {
     justify-content: space-between;
+    padding: 0 12px;
+    gap: 8px;
   }
 
   .nav-divider {
@@ -2232,25 +2256,208 @@ body.page-map-view {
 
   .mobile-brand-title {
     display: block;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .header-nav-left, .header-nav-right .nav-auth-link {
     display: none;
   }
 
+  .header-nav-right {
+    gap: 8px;
+  }
+
+  .site-header .btn-post,
+  .site-header .btn-secondary {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
   .mobile-menu-btn {
     display: flex;
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .hero-center-section {
+    padding: 8px 12px 10px;
+  }
+
+  .hero-center-logo {
+    height: 54px;
+    max-width: 220px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .search-box {
+    padding: 3px 4px 3px 12px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .search-icon {
+    font-size: 0.85rem;
+    margin-right: 8px;
+  }
+
+  .search-input {
+    height: 34px;
+    font-size: 0.86rem;
+  }
+
+  .search-submit-btn {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
   }
 
   .site-main {
-    padding: 16px 14px 80px;
+    padding: 10px 12px 76px;
+  }
+
+  .filter-bar {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .filter-chip {
+    height: 32px;
+    min-height: 32px;
+    padding: 0 12px;
+    font-size: 0.78rem;
+  }
+
+  .feed-container,
+  .discords-list,
+  .cheats-ordered-list {
+    max-height: calc(100vh - 250px);
+    min-height: 300px;
+    padding-right: 4px;
+  }
+
+  .post-card {
+    padding: 12px 4px;
+  }
+
+  .post-title {
+    font-size: 0.96rem;
+  }
+
+  .post-text {
+    font-size: 0.84rem;
+  }
+
+  .action-btn {
+    height: 32px;
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 0.76rem;
+  }
+
+  .page-header-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    margin-bottom: 12px;
+  }
+
+  .page-title {
+    font-size: 1.18rem;
+    line-height: 1.25;
+  }
+
+  .page-desc {
+    font-size: 0.8rem;
+  }
+
+  .discord-filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .discord-search-box {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .filter-select {
+    width: 100%;
+    max-width: 100%;
+    height: 38px;
+    min-height: 38px;
+    font-size: 0.82rem;
+  }
+
+  .discord-list-name {
+    font-size: 0.9rem;
+    white-space: normal;
+  }
+
+  .cheats-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .cheats-toolbar .search-box {
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  .poi-pill {
+    height: 32px;
+    min-height: 34px;
+    padding: 0 11px;
+    font-size: 0.76rem;
+  }
+
+  .cheat-row-title {
+    font-size: 0.92rem;
+  }
+
+  .cheat-row-desc {
+    font-size: 0.78rem;
+  }
+
+  .dpad-badge {
+    padding: 4px 7px;
+    font-size: 0.72rem;
+  }
+
+  .posting-form-actions {
+    flex-wrap: wrap;
+    justify-content: stretch;
+  }
+
+  .posting-form-actions .btn-secondary,
+  .posting-form-actions .btn-post-submit {
+    flex: 1;
+    justify-content: center;
+    min-width: 130px;
   }
 
   .mobile-bottom-bar {
     display: flex;
+  }
+
+  .footer {
+    padding: 32px 0 76px;
   }
 
   .footer-cols {
@@ -2262,7 +2469,7 @@ body.page-map-view {
   }
 
   .legal-card {
-    padding: 20px;
+    padding: 18px 14px;
   }
 }
 
@@ -2276,7 +2483,12 @@ body.page-map-view {
   }
 
   .hero-center-logo {
-    height: 48px;
+    height: 46px;
+    max-width: 190px;
+  }
+
+  .mobile-brand-title {
+    font-size: 0.84rem;
   }
 }
 
