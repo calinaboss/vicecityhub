@@ -385,19 +385,25 @@ export async function onRequest(context) {
       </div>
 
       <section class="post-card" style="padding:18px 20px;">
-        <h2 style="font-size:1.15rem;font-weight:800;color:var(--text-main);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
-          <i class="fa-regular fa-comments" style="color:var(--accent-pink);"></i>
-          <span>Replies (<span id="d-comment-count">${comments.length}</span>)</span>
-        </h2>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+          <h2 style="font-size:1.15rem;font-weight:800;color:var(--text-main);margin:0;display:flex;align-items:center;gap:8px;">
+            <i class="fa-regular fa-comments" style="color:var(--accent-pink);"></i>
+            <span>Replies (<span id="d-comment-count">${comments.length}</span>)</span>
+          </h2>
+          <a href="/index.html#post-${escapeHtml(post.id)}" class="btn-post-submit" style="text-decoration:none;padding:6px 14px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;">
+            <i class="fa-solid fa-reply"></i> Reply in Feed
+          </a>
+        </div>
 
-        <form id="discussion-comment-form" style="display:flex;gap:8px;margin-bottom:16px;">
-          <input type="text" id="discussion-comment-input" class="form-input" placeholder="Join the discussion in Vice City..." maxlength="300" required style="flex:1;">
-          <button type="submit" id="discussion-comment-submit" class="btn-post-submit" style="white-space:nowrap;padding:0 16px;">Post</button>
-        </form>
-        <div id="comment-feedback" style="display:none;padding:8px 12px;border-radius:6px;font-size:0.8rem;margin-bottom:12px;"></div>
+        <div style="background:#11161d;border:1px dashed #30363d;border-radius:8px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <span style="font-size:0.84rem;color:var(--text-muted);">Want to join this discussion or share your thoughts?</span>
+          <a href="/index.html#post-${escapeHtml(post.id)}" style="color:var(--accent-pink);font-size:0.84rem;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+            Open in Community Feed &rarr;
+          </a>
+        </div>
 
         <div id="discussion-comments-list">
-          ${commentsListHtml || '<p id="no-comments-msg" style="font-size:0.86rem;color:var(--text-dim);font-style:italic;">No replies yet. Be the first to share your thoughts!</p>'}
+          ${commentsListHtml || '<p id="no-comments-msg" style="font-size:0.86rem;color:var(--text-dim);font-style:italic;">No replies yet. Be the first to share your thoughts in the community feed!</p>'}
         </div>
       </section>
     </div>
@@ -438,14 +444,7 @@ export async function onRequest(context) {
     const likeBtn = document.getElementById('btn-discussion-like');
     const bookmarkBtn = document.getElementById('btn-discussion-bookmark');
     const shareBtn = document.getElementById('btn-discussion-share');
-    const commentForm = document.getElementById('discussion-comment-form');
-    const commentInput = document.getElementById('discussion-comment-input');
-    const commentSubmit = document.getElementById('discussion-comment-submit');
-    const commentsList = document.getElementById('discussion-comments-list');
-    const commentCountEl = document.getElementById('d-comment-count');
     const likeCountEl = document.getElementById('d-like-count');
-    const noCommentsMsg = document.getElementById('no-comments-msg');
-    const feedback = document.getElementById('comment-feedback');
 
     if (likeBtn) {
       likeBtn.addEventListener('click', async function() {
@@ -514,78 +513,6 @@ export async function onRequest(context) {
           });
         } else {
           prompt('Copy discussion link:', shareUrl);
-        }
-      });
-    }
-
-    if (commentForm) {
-      commentForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const text = (commentInput.value || '').trim();
-        if (!text) return;
-
-        commentSubmit.disabled = true;
-        if (feedback) {
-          feedback.style.display = 'block';
-          feedback.style.background = 'rgba(59, 130, 246, 0.14)';
-          feedback.style.color = '#93c5fd';
-          feedback.textContent = 'Posting reply...';
-        }
-
-        let authorName = 'VicePlayer';
-        const userJson = localStorage.getItem('vicecityhub_user');
-        if (userJson) {
-          try {
-            const u = JSON.parse(userJson);
-            if (u && (u.username || u.name)) authorName = u.username || u.name;
-          } catch (err) {}
-        }
-
-        try {
-          const res = await fetch('/api/posts?action=comment', {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ postId: postId, text: text, author: authorName })
-          });
-          const data = await res.json();
-          if (!res.ok || !data.ok) {
-            if (feedback) {
-              feedback.style.display = 'block';
-              feedback.style.background = 'rgba(239, 68, 68, 0.16)';
-              feedback.style.color = '#fca5a5';
-              feedback.textContent = data.error || 'Failed to submit comment.';
-            }
-            commentSubmit.disabled = false;
-            return;
-          }
-
-          if (feedback) feedback.style.display = 'none';
-          commentInput.value = '';
-          commentSubmit.disabled = false;
-          if (noCommentsMsg) noCommentsMsg.style.display = 'none';
-
-          const newEl = document.createElement('article');
-          newEl.className = 'discussion-comment-item';
-          newEl.style.cssText = 'padding:12px 14px;background:#161b22;border:1px solid #30363d;border-radius:8px;margin-bottom:10px;';
-          newEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-weight:700;color:#f0f6fc;font-size:0.86rem;">' + (data.comment?.author || authorName) + '</span><span style="font-size:0.74rem;color:#8b949e;">Just now</span></div><p style="font-size:0.88rem;color:#c9d1d9;line-height:1.45;margin:0;word-break:break-word;"></p>';
-          newEl.querySelector('p').textContent = text;
-          commentsList.appendChild(newEl);
-
-          const count = parseInt(commentCountEl.textContent, 10) || 0;
-          commentCountEl.textContent = String(count + 1);
-
-          setTimeout(function() {
-            window.location.reload();
-          }, 600);
-        } catch (err) {
-          if (feedback) {
-            feedback.style.display = 'block';
-            feedback.style.background = 'rgba(239, 68, 68, 0.16)';
-            feedback.style.color = '#fca5a5';
-            feedback.textContent = 'Connection error. Please try again.';
-          }
-          commentSubmit.disabled = false;
         }
       });
     }

@@ -647,6 +647,24 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('vch_bookmarked_posts', JSON.stringify([...localBookmarked]));
           } catch (e) {}
           renderFeed();
+
+          if (window.location.hash) {
+            const targetId = window.location.hash.replace('#post-', '');
+            if (targetId) {
+              setTimeout(() => {
+                const targetCard = document.querySelector(`.post-card[data-id="${targetId}"]`);
+                if (targetCard) {
+                  targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  const drawer = document.getElementById(`comments-${targetId}`);
+                  if (drawer) {
+                    drawer.classList.add('open');
+                    const input = drawer.querySelector('.comment-input-field');
+                    if (input) input.focus();
+                  }
+                }
+              }, 150);
+            }
+          }
         }
       })
       .catch(() => {});
