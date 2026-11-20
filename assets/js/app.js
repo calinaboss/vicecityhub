@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       id: 'post-2',
       category: 'leaks',
-      categoryLabel: 'Map & Guides',
+      categoryLabel: 'Map',
       pinned: false,
       author: 'Cartographer_VC',
       username: 'vice_carto',
@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const catMap = {
         discussions: 'Discussions',
-        leaks: 'Map & Guides',
+        leaks: 'Map',
         clips: 'Clips & Media',
         official: 'Official News'
       };
@@ -502,6 +502,28 @@ document.addEventListener('DOMContentLoaded', () => {
       inviteUrl: 'https://discord.gg/gta6de',
       members: '3,800 Members',
       desc: 'Die deutsche GTA 6 Community fuer Crews, Heists und Rollenspiel.'
+    },
+    {
+      id: 'dc-7',
+      name: 'Vice City RP Italia - Leonida Life',
+      tag: 'Italian RP',
+      category: 'roleplay',
+      country: 'it',
+      countryLabel: 'Italy',
+      inviteUrl: 'https://discord.gg/leonidalife',
+      members: '11,200 Members',
+      desc: 'Server Roleplay italiano con script personalizzati, whitelist attiva e oltre 40 fazioni tra polizia, mafie e cittadini.'
+    },
+    {
+      id: 'dc-8',
+      name: 'GTA VI France & Francophonie',
+      tag: 'French Community',
+      category: 'general',
+      country: 'fr',
+      countryLabel: 'France',
+      inviteUrl: 'https://discord.gg/gta6fr',
+      members: '4,100 Members',
+      desc: 'Communaute francophone active pour suivre les actualites, trouver des joueurs et rejoindre des crews.'
     }
   ];
 
@@ -520,32 +542,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (filtered.length === 0) {
       discordGrid.innerHTML = `
-        <div class="widget-card" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px;">
-          <p style="color: var(--text-muted); margin-bottom: 12px;">No Discord servers matching your filters.</p>
-          <button class="btn-discord trigger-add-discord">Submit Your Discord</button>
+        <div class="widget-card" style="text-align: center; padding: 40px 20px;">
+          <p style="color: var(--text-muted); margin-bottom: 12px;">No Discord servers matching your search.</p>
+          <button class="btn-discord trigger-add-discord"><i class="fa-solid fa-plus"></i> Submit Your Discord</button>
         </div>
       `;
       return;
     }
 
     discordGrid.innerHTML = filtered.map(s => `
-      <div class="discord-item-card">
-        <div>
-          <div class="discord-item-header">
-            <div class="discord-avatar-box">
-              <i class="fa-brands fa-discord"></i>
-            </div>
-            <div>
-              <h3 class="discord-name">${escapeHtml(s.name)}</h3>
-              <span class="discord-tag">${escapeHtml(s.tag)} &bull; ${escapeHtml(s.countryLabel)}</span>
-            </div>
+      <div class="discord-list-item">
+        <div class="discord-list-left">
+          <div class="discord-avatar-box">
+            <i class="fa-brands fa-discord"></i>
           </div>
-          <p class="discord-desc">${escapeHtml(s.desc)}</p>
+          <div class="discord-list-info">
+            <div class="discord-list-title-row">
+              <span class="discord-list-name">${escapeHtml(s.name)}</span>
+              <span class="discord-pill-tag">${escapeHtml(s.tag)}</span>
+              <span class="discord-country-tag">${escapeHtml(s.countryLabel)}</span>
+            </div>
+            <p class="discord-list-desc">${escapeHtml(s.desc)}</p>
+          </div>
         </div>
-        <div class="discord-footer">
-          <span class="discord-count"><i class="fa-solid fa-users"></i> ${escapeHtml(s.members)}</span>
-          <a href="${escapeHtml(s.inviteUrl)}" target="_blank" rel="noopener noreferrer nofollow" class="btn-discord" style="height: 34px; padding: 0 12px; font-size: 0.8rem;">
-            Join Server
+        <div class="discord-list-right">
+          <span class="discord-members-count"><i class="fa-solid fa-users"></i> ${escapeHtml(s.members)}</span>
+          <a href="${escapeHtml(s.inviteUrl)}" target="_blank" rel="noopener noreferrer nofollow" class="btn-discord-join">
+            <i class="fa-brands fa-discord"></i> Join Server
           </a>
         </div>
       </div>
@@ -896,12 +919,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 5. CLIPS SHOWCASE (clips.html)
+  // 5. CLIPS SHOWCASE (CATEGORIES: ALL, BUGS, GLITCHES, FUNNY, CLIPS & LIST VIEW)
   // ==========================================
+  let activeClipCategory = 'all';
+  let clipSearchQuery = '';
+
   let clips = [
     {
       id: 'clip-1',
-      title: 'Night Drift down Ocean Beach in 4K',
+      title: 'Night Drift down Ocean Beach in 4K with raytracing',
+      category: 'clips',
+      categoryLabel: 'Clips',
       author: 'Speedy_VC',
       views: '3.4k views',
       thumb: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1000&auto=format&fit=crop&q=80',
@@ -909,43 +937,150 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       id: 'clip-2',
-      title: 'Helicopter Escape from Grassrivers Swamp Outpost',
-      author: 'TacticalPilot',
-      views: '1.8k views',
+      title: 'Swamp alligators attacking police cruiser during pursuit',
+      category: 'funny',
+      categoryLabel: 'Funny',
+      author: 'GatorBaiter',
+      views: '8.9k views',
       thumb: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1000&auto=format&fit=crop&q=80',
-      time: '5 hours ago'
+      time: '4 hours ago'
     },
     {
       id: 'clip-3',
-      title: 'Insane Stunt Jump off the Downtown Highway Ramp',
-      author: 'ViceJumper',
-      views: '5.1k views',
+      title: 'Invisible barrier collision bug on Gellhorn Overpass',
+      category: 'bugs',
+      categoryLabel: 'Bugs',
+      author: 'LeonidaTester',
+      views: '2.1k views',
       thumb: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?w=1000&auto=format&fit=crop&q=80',
+      time: '7 hours ago'
+    },
+    {
+      id: 'clip-4',
+      title: 'Physics engine glitch: NPC launched into stratosphere with scooter',
+      category: 'glitches',
+      categoryLabel: 'Glitches',
+      author: 'VicePhysix',
+      views: '12.4k views',
+      thumb: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1000&auto=format&fit=crop&q=80',
       time: '1 day ago'
+    },
+    {
+      id: 'clip-5',
+      title: 'Precision helicopter landing on top of Starfish Island penthouse',
+      category: 'clips',
+      categoryLabel: 'Clips',
+      author: 'TacticalPilot',
+      views: '4.6k views',
+      thumb: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1000&auto=format&fit=crop&q=80',
+      time: '1 day ago'
+    },
+    {
+      id: 'clip-6',
+      title: 'NPC pedestrian walking backwards talking to telephone pole',
+      category: 'funny',
+      categoryLabel: 'Funny',
+      author: 'CluckinBellFan',
+      views: '6.7k views',
+      thumb: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1000&auto=format&fit=crop&q=80',
+      time: '2 days ago'
+    },
+    {
+      id: 'clip-7',
+      title: 'Water mesh render glitch in Grassrivers Everglades stream',
+      category: 'glitches',
+      categoryLabel: 'Glitches',
+      author: 'Dataminer_VI',
+      views: '3.1k views',
+      thumb: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1000&auto=format&fit=crop&q=80',
+      time: '3 days ago'
+    },
+    {
+      id: 'clip-8',
+      title: 'Traffic lights cycling backwards causing 40-car highway pileup',
+      category: 'bugs',
+      categoryLabel: 'Bugs',
+      author: 'FloridaMan_6',
+      views: '15.3k views',
+      thumb: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1000&auto=format&fit=crop&q=80',
+      time: '3 days ago'
     }
   ];
 
   function renderClips() {
     if (!clipsGrid) return;
-    clipsGrid.innerHTML = clips.map(c => `
-      <div class="clip-card">
-        <div class="clip-thumb-wrap" onclick="alert('Viewing clip: ${escapeHtml(c.title)}')">
-          <img src="${escapeHtml(c.thumb)}" alt="${escapeHtml(c.title)}" loading="lazy">
-          <div class="clip-play-badge"><i class="fa-solid fa-play"></i></div>
+
+    const filtered = clips.filter(c => {
+      const matchCat = activeClipCategory === 'all' || c.category === activeClipCategory;
+      const matchQuery = !clipSearchQuery ||
+        c.title.toLowerCase().includes(clipSearchQuery) ||
+        c.author.toLowerCase().includes(clipSearchQuery);
+      return matchCat && matchQuery;
+    });
+
+    if (filtered.length === 0) {
+      clipsGrid.innerHTML = `
+        <div class="widget-card" style="text-align: center; padding: 40px 20px;">
+          <p style="color: var(--text-muted); margin-bottom: 12px;">No clips matching your filter.</p>
+          <button class="btn-post trigger-post-clip"><i class="fa-solid fa-upload"></i> Post Your Clip</button>
         </div>
-        <div class="clip-body">
-          <h3 class="clip-title">${escapeHtml(c.title)}</h3>
-          <div class="clip-meta">
-            <span>By @${escapeHtml(c.author)}</span>
-            <span>${escapeHtml(c.views)} &bull; ${escapeHtml(c.time)}</span>
+      `;
+      return;
+    }
+
+    clipsGrid.innerHTML = filtered.map(c => `
+      <div class="clip-list-item" onclick="alert('Viewing clip: ${escapeHtml(c.title)}')">
+        <div class="clip-list-thumb">
+          <img src="${escapeHtml(c.thumb)}" alt="${escapeHtml(c.title)}" loading="lazy">
+          <div class="clip-list-play-overlay">
+            <i class="fa-solid fa-play"></i>
           </div>
+        </div>
+        <div class="clip-list-info">
+          <div class="clip-list-badge-row">
+            <span class="clip-badge clip-badge-${escapeHtml(c.category)}">${escapeHtml(c.categoryLabel || c.category)}</span>
+          </div>
+          <h3 class="clip-list-title">${escapeHtml(c.title)}</h3>
+          <div class="clip-list-meta">
+            <span><i class="fa-solid fa-user"></i> @${escapeHtml(c.author)}</span>
+            <span>&bull;</span>
+            <span><i class="fa-solid fa-eye"></i> ${escapeHtml(c.views)}</span>
+            <span>&bull;</span>
+            <span><i class="fa-solid fa-clock"></i> ${escapeHtml(c.time)}</span>
+          </div>
+        </div>
+        <div class="clip-list-right">
+          <button class="btn-watch-clip" aria-label="Watch Clip">
+            <i class="fa-solid fa-play"></i> Watch
+          </button>
         </div>
       </div>
     `).join('');
   }
 
+  const clipCatPills = document.querySelectorAll('.clip-cat-pill');
+  const clipSearchInput = document.getElementById('clip-search-input');
+
   if (clipsGrid) {
     renderClips();
+
+    if (clipCatPills.length > 0) {
+      clipCatPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          clipCatPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeClipCategory = pill.dataset.category || 'all';
+          renderClips();
+        });
+      });
+    }
+
+    if (clipSearchInput) {
+      clipSearchInput.addEventListener('input', () => {
+        clipSearchQuery = clipSearchInput.value.toLowerCase().trim();
+        renderClips();
+      });
+    }
   }
 
   if (clipForm) {
@@ -953,10 +1088,21 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const title = document.getElementById('clip-title-input').value.trim();
       const thumb = document.getElementById('clip-thumb-input').value.trim();
+      const categorySelect = document.getElementById('clip-category-select');
+      const selectedCat = categorySelect ? categorySelect.value : 'clips';
+
+      const catLabelMap = {
+        clips: 'Clips',
+        bugs: 'Bugs',
+        glitches: 'Glitches',
+        funny: 'Funny'
+      };
 
       clips.unshift({
         id: `clip-${Date.now()}`,
         title: title,
+        category: selectedCat,
+        categoryLabel: catLabelMap[selectedCat] || 'Clips',
         author: 'You',
         views: '1 view',
         thumb: thumb || 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1000&auto=format&fit=crop&q=80',
