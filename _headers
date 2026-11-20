@@ -46,5 +46,8 @@
 /sitemap.xml
   Cache-Control: public, max-age=3600, must-revalidate
 
+/BingSiteAuth.xml
+  Cache-Control: public, max-age=86400, must-revalidate
+
 /d/*
   Cache-Control: public, max-age=0, must-revalidate
