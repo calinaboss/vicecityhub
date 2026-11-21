@@ -160,7 +160,7 @@ export async function onRequest(context) {
   const authorProfileUrl = `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(post.username || post.author)}`;
   const postIsoDate = formatIsoTime(post.created_at);
   const displayDate = formatDisplayDate(post.created_at);
-  const ogImage = post.mediaUrl || 'https://vicecityhub.eu/assets/brand/logo.png';
+  const ogImage = post.mediaUrl || 'https://vicecityhub.eu/assets/brand/og-banner.png';
   const likesCount = Number(post.likes) || 0;
 
   const discussionSchema = {
