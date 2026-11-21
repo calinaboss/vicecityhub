@@ -155,12 +155,28 @@ export async function onRequest(context) {
   } catch (e) {}
 
   const postTitle = post.title || 'GTA VI Discussion';
-  const cleanExcerpt = stripTags(post.text).slice(0, 160);
+  const rawBodyText = stripTags(post.text);
+  const categoryName = post.categoryLabel || 'GTA 6 Discussions';
+  const authorHandle = post.username || post.author || 'VicePlayer';
+  const tagsSuffix = ' #GTA6 #GTAVI #ViceCity #ViceCityHub';
+  const cleanExcerpt = `[${categoryName}] @${authorHandle}: ${rawBodyText.slice(0, 140)}${rawBodyText.length > 140 ? '...' : ''}${tagsSuffix}`;
   const postUrl = `https://vicecityhub.eu/d/${encodeURIComponent(post.id)}`;
   const authorProfileUrl = `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(post.username || post.author)}`;
   const postIsoDate = formatIsoTime(post.created_at);
   const displayDate = formatDisplayDate(post.created_at);
-  const ogImage = post.mediaUrl || 'https://vicecityhub.eu/assets/brand/og-banner.png';
+
+  let fullMediaUrl = '';
+  if (post.mediaUrl) {
+    if (/^https?:\/\//i.test(post.mediaUrl)) {
+      fullMediaUrl = post.mediaUrl;
+    } else if (post.mediaUrl.startsWith('/')) {
+      fullMediaUrl = `https://vicecityhub.eu${post.mediaUrl}`;
+    } else {
+      fullMediaUrl = `https://vicecityhub.eu/${post.mediaUrl}`;
+    }
+  }
+  const isVideoMedia = Boolean(fullMediaUrl && (post.mediaType === 'video' || /\.(mp4|webm|mov)(\?.*)?$/i.test(fullMediaUrl)));
+  const ogImage = (!isVideoMedia && fullMediaUrl) ? fullMediaUrl : 'https://vicecityhub.eu/assets/brand/og-banner.png';
   const likesCount = Number(post.likes) || 0;
 
   const discussionSchema = {
@@ -202,9 +218,14 @@ export async function onRequest(context) {
     }))
   };
 
-  if (post.mediaUrl) {
-    discussionSchema.image = post.mediaUrl;
+  if (fullMediaUrl) {
+    discussionSchema.image = fullMediaUrl;
   }
+
+  const videoOgMeta = isVideoMedia ? `
+  <meta property="og:video" content="${escapeHtml(fullMediaUrl)}">
+  <meta property="og:video:secure_url" content="${escapeHtml(fullMediaUrl)}">
+  <meta property="og:video:type" content="video/mp4">` : '';
 
   const breadcrumbsSchema = {
     '@context': 'https://schema.org',
@@ -282,13 +303,27 @@ export async function onRequest(context) {
   <meta property="og:url" content="${postUrl}">
   <meta property="og:site_name" content="ViceCityHub">
   <meta property="og:image" content="${escapeHtml(ogImage)}">
+  <meta property="og:image:secure_url" content="${escapeHtml(ogImage)}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="${escapeHtml(postTitle)}">${videoOgMeta}
   <meta property="article:published_time" content="${postIsoDate}">
   <meta property="article:section" content="${escapeHtml(post.categoryLabel || 'GTA 6 Discussions')}">
+  <meta property="article:tag" content="GTA 6">
+  <meta property="article:tag" content="GTA VI">
+  <meta property="article:tag" content="Vice City">
+  <meta property="article:tag" content="${escapeHtml(post.categoryLabel || 'Discussions')}">
 
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@ViceCityHub">
   <meta name="twitter:title" content="${escapeHtml(postTitle)} &bull; ViceCityHub">
   <meta name="twitter:description" content="${escapeHtml(cleanExcerpt)}">
   <meta name="twitter:image" content="${escapeHtml(ogImage)}">
+  <meta name="twitter:image:alt" content="${escapeHtml(postTitle)}">
+  <meta name="twitter:label1" content="Category">
+  <meta name="twitter:data1" content="${escapeHtml(post.categoryLabel || 'GTA VI Discussion')}">
+  <meta name="twitter:label2" content="Posted by">
+  <meta name="twitter:data2" content="@${escapeHtml(authorHandle)}">
 
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192x192.png">

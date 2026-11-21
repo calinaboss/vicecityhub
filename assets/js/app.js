@@ -1752,6 +1752,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <a href="https://api.whatsapp.com/send?text=${encText}" target="_blank" rel="noopener noreferrer" class="share-platform-btn">
         <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> <span>WhatsApp</span>
       </a>
+      <button type="button" class="share-platform-btn" id="share-btn-tiktok">
+        <i class="fa-brands fa-tiktok" style="color: #ff0050;"></i> <span>TikTok</span>
+      </button>
       <button type="button" class="share-platform-btn" id="share-btn-instagram">
         <i class="fa-brands fa-instagram" style="color: #e1306c;"></i> <span>Instagram</span>
       </button>
@@ -1768,6 +1771,21 @@ document.addEventListener('DOMContentLoaded', () => {
         <i class="fa-solid fa-envelope" style="color: var(--accent-pink);"></i> <span>Email</span>
       </a>
     `;
+
+    const ttBtn = document.getElementById('share-btn-tiktok');
+    if (ttBtn) {
+      ttBtn.onclick = () => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(`${shareTitle} ${shareUrl} #GTA6 #GTAVI #ViceCityHub`).catch(() => {});
+        }
+        if (navigator.share) {
+          navigator.share({ title: shareTitle, text: `${shareTitle} #GTA6 #GTAVI #ViceCityHub`, url: shareUrl }).catch(() => {});
+        } else {
+          showToast('Link & tags copied for TikTok!');
+          window.open('https://www.tiktok.com/', '_blank', 'noopener,noreferrer');
+        }
+      };
+    }
 
     const igBtn = document.getElementById('share-btn-instagram');
     if (igBtn) {
