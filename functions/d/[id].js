@@ -93,7 +93,7 @@ export async function onRequest(context) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Discussion Not Found &bull; ViceCityHub</title>
-  <link rel="stylesheet" href="/assets/css/style.css?v=4.1">
+  <link rel="stylesheet" href="/assets/css/style.css?v=4.3">
 </head>
 <body style="display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;background:#0d1117;color:#c9d1d9;">
   <div style="max-width:480px;padding:24px;">
@@ -336,12 +336,12 @@ export async function onRequest(context) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="/assets/css/style.css?v=4.1">
+  <link rel="stylesheet" href="/assets/css/style.css?v=4.3">
 
   <script type="application/ld+json">${safeJsonLd(discussionSchema)}</script>
   <script type="application/ld+json">${safeJsonLd(breadcrumbsSchema)}</script>
 
-  <script src="/assets/js/analytics.js?v=4.1"></script>
+  <script src="/assets/js/analytics.js?v=4.3"></script>
   <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-576B86L9"></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729233023466811" crossorigin="anonymous"></script>
 </head>

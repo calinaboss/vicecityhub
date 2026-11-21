@@ -1828,23 +1828,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (cheatSearchInput) cheatSearchInput.addEventListener('input', renderCheats);
 
-    const cheatCatPills = document.querySelectorAll('[data-cheat-cat]');
-    cheatCatPills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        cheatCatPills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        currentCheatCategory = pill.dataset.cheatCat || 'all';
+    document.addEventListener('click', (e) => {
+      const catPill = e.target.closest('[data-cheat-cat]');
+      if (catPill) {
+        document.querySelectorAll('[data-cheat-cat]').forEach(p => p.classList.remove('active'));
+        catPill.classList.add('active');
+        currentCheatCategory = catPill.dataset.cheatCat || 'all';
         renderCheats();
-      });
-    });
+        return;
+      }
 
-    platformPills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        platformPills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        currentPlatform = pill.dataset.platform || 'all';
+      const platPill = e.target.closest('[data-platform]');
+      if (platPill) {
+        document.querySelectorAll('[data-platform]').forEach(p => p.classList.remove('active'));
+        platPill.classList.add('active');
+        currentPlatform = platPill.dataset.platform || 'all';
         renderCheats();
-      });
+        return;
+      }
     });
 
     cheatsGrid.addEventListener('click', (e) => {
