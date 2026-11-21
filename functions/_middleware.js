@@ -1,3 +1,5 @@
+import { onRequest as serveDynamicSitemap } from './api/sitemap.js';
+
 const ALLOWED_ORIGINS = [
   'https://vicecityhub.eu',
   'https://www.vicecityhub.eu',
@@ -18,11 +20,17 @@ function checkAllowedOrigin(origin) {
 
 export async function onRequest(context) {
   const { request } = context;
+  const reqUrl = new URL(request.url);
+
+  if (reqUrl.pathname === '/sitemap.xml') {
+    return serveDynamicSitemap(context);
+  }
+
   const origin = request.headers.get('Origin') || '';
   const isAllowedOrigin = checkAllowedOrigin(origin);
 
   const contentLength = parseInt(request.headers.get('Content-Length') || '0', 10);
-  if (contentLength > 2097152 && new URL(request.url).pathname.startsWith('/api/')) {
+  if (contentLength > 2097152 && reqUrl.pathname.startsWith('/api/')) {
     return new Response(JSON.stringify({ error: 'Payload too large (max 2MB per chunk)' }), {
       status: 413,
       headers: { 'Content-Type': 'application/json; charset=utf-8' }

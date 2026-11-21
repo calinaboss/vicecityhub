@@ -22,9 +22,16 @@ export async function onRequest(context) {
     { loc: 'https://vicecityhub.eu/faq.html', lastmod: today, changefreq: 'weekly', priority: '0.85' },
     { loc: 'https://vicecityhub.eu/post.html', lastmod: today, changefreq: 'weekly', priority: '0.80' },
     { loc: 'https://vicecityhub.eu/submit-discord.html', lastmod: today, changefreq: 'weekly', priority: '0.80' },
+    { loc: 'https://vicecityhub.eu/about.html', lastmod: today, changefreq: 'monthly', priority: '0.70' },
+    { loc: 'https://vicecityhub.eu/privacy.html', lastmod: today, changefreq: 'monthly', priority: '0.50' },
+    { loc: 'https://vicecityhub.eu/terms.html', lastmod: today, changefreq: 'monthly', priority: '0.50' },
+    { loc: 'https://vicecityhub.eu/cookies.html', lastmod: today, changefreq: 'monthly', priority: '0.45' },
+    { loc: 'https://vicecityhub.eu/dsa.html', lastmod: today, changefreq: 'monthly', priority: '0.45' },
     { loc: 'https://vicecityhub.eu/llms.txt', lastmod: today, changefreq: 'daily', priority: '0.80' },
     { loc: 'https://vicecityhub.eu/llms-full.txt', lastmod: today, changefreq: 'daily', priority: '0.80' }
   ];
+
+  const seenUrls = new Set(urls.map(u => u.loc));
 
   if (isTursoConfigured(env)) {
     try {
@@ -34,19 +41,27 @@ export async function onRequest(context) {
       );
       for (const p of (posts || [])) {
         const mod = (p.created_at || today).slice(0, 10);
-        urls.push({
-          loc: `https://vicecityhub.eu/d/${encodeURIComponent(p.id)}`,
-          lastmod: mod,
-          changefreq: 'daily',
-          priority: '0.85'
-        });
-        if (p.username) {
+        const threadUrl = `https://vicecityhub.eu/d/${encodeURIComponent(p.id)}`;
+        if (!seenUrls.has(threadUrl)) {
+          seenUrls.add(threadUrl);
           urls.push({
-            loc: `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(p.username)}`,
+            loc: threadUrl,
             lastmod: mod,
-            changefreq: 'weekly',
-            priority: '0.70'
+            changefreq: 'daily',
+            priority: '0.85'
           });
+        }
+        if (p.username) {
+          const profUrl = `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(p.username)}`;
+          if (!seenUrls.has(profUrl)) {
+            seenUrls.add(profUrl);
+            urls.push({
+              loc: profUrl,
+              lastmod: mod,
+              changefreq: 'weekly',
+              priority: '0.70'
+            });
+          }
         }
       }
     } catch (e) {}

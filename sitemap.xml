@@ -1,99 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://vicecityhub.eu/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://vicecityhub.eu/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://vicecityhub.eu/"/>
-    <xhtml:link rel="alternate" hreflang="it" href="https://vicecityhub.eu/"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://vicecityhub.eu/"/>
-    <xhtml:link rel="alternate" hreflang="de" href="https://vicecityhub.eu/"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://vicecityhub.eu/"/>
-    <image:image>
-      <image:loc>https://vicecityhub.eu/assets/brand/logo.png</image:loc>
-      <image:title>ViceCityHub - GTA VI Community Hub &amp; Interactive Leonida Map</image:title>
-    </image:image>
   </url>
   <url>
     <loc>https://map.vicecityhub.eu/</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://vicecityhub.eu/discords.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
     <loc>https://vicecityhub.eu/cheats.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://vicecityhub.eu/post.html</loc>
-    <lastmod>2026-11-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
-    <loc>https://vicecityhub.eu/submit-discord.html</loc>
-    <lastmod>2026-11-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://vicecityhub.eu/faq.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://vicecityhub.eu/llms.txt</loc>
-    <lastmod>2026-11-20</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://vicecityhub.eu/post.html</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://vicecityhub.eu/llms-full.txt</loc>
-    <lastmod>2026-11-20</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://vicecityhub.eu/submit-discord.html</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
     <loc>https://vicecityhub.eu/about.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
+    <priority>0.70</priority>
   </url>
   <url>
     <loc>https://vicecityhub.eu/privacy.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.50</priority>
   </url>
   <url>
     <loc>https://vicecityhub.eu/terms.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.50</priority>
   </url>
   <url>
     <loc>https://vicecityhub.eu/cookies.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.45</priority>
   </url>
   <url>
     <loc>https://vicecityhub.eu/dsa.html</loc>
-    <lastmod>2026-11-20</lastmod>
+    <lastmod>2026-11-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.45</priority>
+  </url>
+  <url>
+    <loc>https://vicecityhub.eu/llms.txt</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://vicecityhub.eu/llms-full.txt</loc>
+    <lastmod>2026-11-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://vicecityhub.eu/d/331e69f1-1e98-438b-a97c-aca7014478b3</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://vicecityhub.eu/d/e70d0048-04c0-472e-9527-3d16b8171511</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://vicecityhub.eu/d/9ed0de0f-133a-47cf-bf60-22c9b8e86aa5</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://vicecityhub.eu/d/cc4619cf-4fdb-4586-8eb0-5bdcc850686c</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
 </urlset>
