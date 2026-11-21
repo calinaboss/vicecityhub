@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cookie Policy &bull; Privacy Preferences &bull; ViceCityHub</title>
-  <meta name="description" content="Cookie usage, local storage, and privacy details for ViceCityHub.eu.">
+  <title>Cookie Policy &bull; Google Consent Mode v2 &amp; AdSense &bull; ViceCityHub</title>
+  <meta name="description" content="Cookie Policy, Google AdSense DART cookie disclosures, Google Consent Mode v2, and local storage details for ViceCityHub.eu.">
   <meta name="theme-color" content="#0d1117">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/brand/favicon-32x32.png">
   <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
@@ -35,36 +35,63 @@
   <main class="legal-main">
     <article class="legal-card">
       <div class="legal-header">
-        <h1 class="legal-title">Cookie &amp; Storage Policy</h1>
-        <p class="legal-meta">Last Updated: November 2026 &bull; Zero Invasive Tracking</p>
+        <h1 class="legal-title">Cookie &amp; Advertising Storage Policy</h1>
+        <p class="legal-meta">Last Updated: November 2026 &bull; EU ePrivacy Directive &bull; Google Consent Mode v2</p>
       </div>
 
       <div class="legal-content">
         <h2>1. What Are Cookies and Local Storage?</h2>
         <p>
-          Cookies and HTML5 Local Storage are small text files or key-value entries placed in your browser when you visit a website. They allow the website to remember your actions and preferences over a period of time.
+          Cookies and HTML5 Local Storage are small text files or key-value entries placed on your computer or mobile device when you visit a website. They are widely used to make websites work efficiently, remember user preferences, measure audience engagement, and display relevant advertisements.
         </p>
 
-        <h2>2. How ViceCityHub Uses Storage</h2>
-        <p>
-          ViceCityHub.eu operates with a strict <strong>Zero Third-Party Tracking</strong> policy:
-        </p>
+        <h2>2. Categories of Cookies &amp; Storage Used on ViceCityHub.eu</h2>
         <ul>
-          <li><strong>Strictly Necessary Technical Storage:</strong> Used by our infrastructure host (Cloudflare) for DDoS protection, session routing, and security rate-limiting.</li>
-          <li><strong>Client Preference Storage:</strong> We use browser <code>localStorage</code> to remember your active category filters and client-side bookmarks. No user-profiling or marketing trackers are used.</li>
+          <li>
+            <strong>Strictly Necessary &amp; Security Cookies (Always Active):</strong>
+            Used by our infrastructure provider (Cloudflare) and authentication backend for DDoS protection, bot verification (Cloudflare Turnstile), session authentication (<code>vicecityhub_session</code>), and security rate-limiting.
+          </li>
+          <li>
+            <strong>Functional &amp; Preference Storage (<code>localStorage</code>):</strong>
+            We use browser <code>localStorage</code> to save your cookie consent state (<code>vch_cookie_consent</code>), bookmarked posts, and interface preferences.
+          </li>
+          <li>
+            <strong>Analytics &amp; Performance Cookies (Consent-Based):</strong>
+            With your consent, we use Google Tag Manager and Google Analytics (<code>_ga</code>, <code>_gid</code>) to collect aggregated, anonymized insights on page views, traffic sources, and site performance.
+          </li>
+          <li>
+            <strong>Advertising &amp; Google AdSense Cookies (Consent-Based):</strong>
+            We partner with <strong>Google AdSense</strong> (Publisher ID: <code>ca-pub-3729233023466811</code>) to fund and maintain our community platform. Google and its certified advertising partners may set advertising cookies (such as the DoubleClick DART cookie, <code>IDE</code>, <code>__gads</code>, <code>__gpi</code>) to measure ad impressions, prevent click fraud, limit how many times you see an ad, and serve personalized or non-personalized advertisements.
+          </li>
         </ul>
 
-        <h2>3. Third-Party Services</h2>
+        <h2>3. Google Consent Mode v2 &amp; How Your Consent Works</h2>
         <p>
-          When you click external links (such as Discord server invite links), you leave ViceCityHub.eu and are subject to Discord's respective privacy and cookie practices.
+          ViceCityHub.eu implements <strong>Google Consent Mode v2</strong> across all pages. By default, for visitors who have not yet made a choice, consent signals (<code>ad_storage</code>, <code>ad_user_data</code>, <code>ad_personalization</code>, and <code>analytics_storage</code>) are set to <code>denied</code>.
         </p>
-        <p>
-          With your consent, ViceCityHub.eu uses Google Tag Manager and Google Analytics to measure anonymous traffic and improve the site. Analytics cookies are disabled by default and only activate if you click Accept in the cookie banner. Advertising storage, ad user data, and ad personalization remain denied. Your choice is saved in your browser and can be reset by clearing site data.
+        <ul>
+          <li>When you click <strong>Accept</strong> on our consent banner, these signals update to <code>granted</code>, allowing analytics and personalized ad delivery.</li>
+          <li>When you click <strong>Decline</strong>, all advertising personalization and analytics storage remain <code>denied</code>, and only non-personalized or contextual content is shown.</li>
+        </ul>
+        <p style="margin-top: 12px;">
+          <button type="button" class="btn-post-submit" onclick="if(window.vchOpenConsentSettings){window.vchOpenConsentSettings();}" style="cursor: pointer;">
+            <i class="fa-solid fa-sliders"></i> Manage Cookie &amp; Ad Preferences Now
+          </button>
         </p>
 
-        <h2>4. How to Control or Delete Cookies</h2>
+        <h2>4. Third-Party Opt-Out &amp; Browser Controls</h2>
         <p>
-          You can delete or block all cookies through your web browser settings at any time. Doing so will not hinder your ability to browse ViceCityHub.eu.
+          In addition to our on-site consent controls, you can manage or opt out of personalized advertising cookies across the web through:
+        </p>
+        <ul>
+          <li><strong>Google Ads Settings:</strong> <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" style="color: var(--accent-pink);">https://adssettings.google.com</a></li>
+          <li><strong>Google Partner Sites Policy:</strong> <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" style="color: var(--accent-pink);">https://policies.google.com/technologies/partner-sites</a></li>
+          <li><strong>European Interactive Digital Advertising Alliance (EDAA):</strong> <a href="https://www.youronlinechoices.eu/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-pink);">https://www.youronlinechoices.eu</a></li>
+          <li><strong>Digital Advertising Alliance (US DAA):</strong> <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-pink);">https://www.aboutads.info/choices</a></li>
+          <li><strong>Network Advertising Initiative (NAI):</strong> <a href="https://optout.networkadvertising.org/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-pink);">https://optout.networkadvertising.org</a></li>
+        </ul>
+        <p>
+          You can also delete or block cookies at any time via your browser settings (Chrome, Firefox, Safari, Edge, Opera). For more details on how we handle personal data globally, please read our <a href="privacy.html" style="color: var(--accent-pink);">Global Privacy Policy</a>.
         </p>
       </div>
     </article>
@@ -72,8 +99,11 @@
 
   <footer class="footer">
     <div class="footer-bottom-bar" style="margin-top: 0; border-top: none;">
-      <p class="footer-disclaimer-text">&copy; 2026 ViceCityHub.eu &bull; Cookie &amp; Storage Guidelines.</p>
-      <a href="/" style="color: var(--accent-pink); font-size: 0.82rem;">Return to Homepage</a>
+      <p class="footer-disclaimer-text">&copy; 2026 ViceCityHub.eu &bull; Cookie &amp; Advertising Transparency.</p>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+        <a href="#cookie-settings" onclick="if(window.vchOpenConsentSettings){window.vchOpenConsentSettings();return false;}" style="color: var(--text-muted); font-size: 0.82rem;">Privacy &amp; Cookie Settings</a>
+        <a href="/" style="color: var(--accent-pink); font-size: 0.82rem;">Return to Homepage</a>
+      </div>
     </div>
   </footer>
 </body>

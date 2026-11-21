@@ -467,9 +467,16 @@ export async function onRequest(context) {
   </main>
 
   <footer class="footer">
-    <div class="footer-bottom-bar" style="margin-top:0;border-top:none;">
+    <div class="footer-bottom-bar" style="margin-top:0;border-top:none;flex-wrap:wrap;gap:12px;">
       <p class="footer-disclaimer-text">&copy; 2026 ViceCityHub.eu &bull; Unofficial GTA VI Community Portal.</p>
-      <a href="/index.html" style="color:var(--accent-pink);font-size:0.82rem;">Return to Homepage</a>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;">
+        <a href="/about.html" style="color:var(--text-muted);font-size:0.8rem;">About &amp; Contact</a>
+        <a href="/privacy.html" style="color:var(--text-muted);font-size:0.8rem;">Privacy (GDPR/CCPA)</a>
+        <a href="/cookies.html" style="color:var(--text-muted);font-size:0.8rem;">Cookie Policy</a>
+        <a href="/terms.html" style="color:var(--text-muted);font-size:0.8rem;">Terms</a>
+        <a href="/dsa.html" style="color:var(--text-muted);font-size:0.8rem;">DSA</a>
+        <a href="/index.html" style="color:var(--accent-pink);font-size:0.82rem;font-weight:700;">Return to Homepage</a>
+      </div>
     </div>
   </footer>
 
