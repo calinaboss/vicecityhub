@@ -1190,64 +1190,558 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const cheatsData = [
     {
-      id: 'cheat-1',
+      id: 'cheat-p1',
+      category: 'player',
+      categoryLabel: 'Player',
       title: '$250,000',
-      tag: 'Quick Cheat (Story Unlock)',
-      desc: 'Instantly receive $250,000. Unlocked and ready to use right after completing the final story mission.',
+      tag: 'Player \u2022 Unlock: Make $250,000 from fenced goods',
+      desc: 'Instantly gives you $250,000.',
       sequence: ['Up', 'Right', 'Down', 'Left', 'Up', 'Left', 'Down', 'Right']
     },
     {
-      id: 'cheat-2',
+      id: 'cheat-p2',
+      category: 'player',
+      categoryLabel: 'Player',
+      title: 'Drunk',
+      tag: 'Player \u2022 Unlock: Spend $2,500 on alcohol',
+      desc: 'Instantly makes you and your partner drunk.',
+      sequence: ['Up', 'Left', 'Right', 'Up', 'Up', 'Left', 'Right', 'Up', 'Left', 'Right']
+    },
+    {
+      id: 'cheat-p3',
+      category: 'player',
+      categoryLabel: 'Player',
+      title: 'Raise Heat Level',
+      tag: 'Player \u2022 Unlock: Story / Progression',
+      desc: 'Raises your level of heat across the map.',
+      sequence: ['Left', 'Down', 'Right', 'Down', 'Up', 'Down', 'Up']
+    },
+    {
+      id: 'cheat-p4',
+      category: 'player',
+      categoryLabel: 'Player',
       title: 'Unlimited Focus',
-      tag: 'Quick Cheat (Story Unlock)',
-      desc: 'Never run out of Focus. Unlocked and ready to use right after completing the final story mission.',
+      tag: 'Player \u2022 Unlock: Story / Progression',
+      desc: 'Focus never runs out.',
       sequence: ['Down', 'Up', 'Up', 'Down', 'Up', 'Down', 'Up', 'Down', 'Up', 'Right']
     },
     {
-      id: 'cheat-3',
+      id: 'cheat-p5',
+      category: 'player',
+      categoryLabel: 'Player',
+      title: 'Raise Wanted Level',
+      tag: 'Player \u2022 Unlock: Lose a 3-star wanted level 50 times',
+      desc: 'Raises your wanted level.',
+      sequence: []
+    },
+    {
+      id: 'cheat-p6',
+      category: 'player',
+      categoryLabel: 'Player',
+      title: 'No Fall Damage',
+      tag: 'Player \u2022 Unlock: Survive a freefall from 40 feet 20 times',
+      desc: 'You are immune to fall damage.',
+      sequence: []
+    },
+    {
+      id: 'cheat-p7',
+      category: 'player',
+      categoryLabel: 'Player',
+      title: 'Parachute',
+      tag: 'Player \u2022 Unlock: Complete 50 skydives or base jumps from 300 feet or higher',
+      desc: 'Adds a parachute to your loadout.',
+      sequence: []
+    },
+    {
+      id: 'cheat-p8',
+      category: 'player',
+      categoryLabel: 'Player',
+      title: 'Body Armor',
+      tag: 'Player \u2022 Unlock: Complete 100 workouts',
+      desc: 'Adds body armor to your loadout.',
+      sequence: []
+    },
+    {
+      id: 'cheat-p9',
+      category: 'player',
+      categoryLabel: 'Player',
+      title: 'Repair Vehicle',
+      tag: 'Player \u2022 Unlock: Get 1st place in 10 races at Gellhorn Raceway, Thrillbilly Mud Club, and Boone Speedway',
+      desc: 'Fully repairs your current vehicle.',
+      sequence: []
+    },
+    {
+      id: 'cheat-p10',
+      category: 'player',
+      categoryLabel: 'Player',
+      title: 'Unlimited Nitrous',
+      tag: 'Player \u2022 Unlock: Complete 50 stunt jumps',
+      desc: 'Nitrous and fuel never runs out on vehicles.',
+      sequence: []
+    },
+    {
+      id: 'cheat-c1',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'Max Ammo',
+      tag: 'Combat \u2022 Unlock: Earn 25 bronze medals or better at shooting ranges',
+      desc: 'Refills ammunition to maximum capacity for all equipped weapons.',
+      sequence: ['Down', 'Up', 'Right', 'Down', 'Left', 'Left', 'Up', 'Up', 'Down', 'Left']
+    },
+    {
+      id: 'cheat-c2',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'Infinite Ammo',
+      tag: 'Combat \u2022 Unlock: Earn 25 silver medals or better at shooting ranges',
+      desc: 'Grants unlimited weapon ammunition.',
+      sequence: ['Down', 'Up', 'Right', 'Down', 'Left', 'Left', 'Up', 'Down', 'Down', 'Down']
+    },
+    {
+      id: 'cheat-c3',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'No Reload',
+      tag: 'Combat \u2022 Unlock: Earn 25 gold medals at shooting ranges',
+      desc: 'Fire continuously without ever needing to reload.',
+      sequence: ['Down', 'Up', 'Right', 'Down', 'Left', 'Left', 'Up', 'Down', 'Down', 'Up']
+    },
+    {
+      id: 'cheat-c4',
+      category: 'combat',
+      categoryLabel: 'Combat',
       title: 'Attack Force',
-      tag: 'Quick Cheat (Story Unlock)',
-      desc: 'Bullets and melee attacks blast targets away upon impact. Unlocked after the final story mission.',
+      tag: 'Combat \u2022 Unlock: Finish the main story',
+      desc: 'Bullets and melee attacks blast targets away with extreme force.',
       sequence: ['Down', 'Up', 'Left', 'Left', 'Right', 'Down', 'Down', 'Up', 'Down']
     },
     {
-      id: 'cheat-4',
-      title: 'Weather Cycle',
-      tag: 'Quick Cheat (Story Unlock)',
-      desc: 'Changes current weather conditions and sky colors across Vice City and Leonida.',
+      id: 'cheat-c5',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'Exploding Balls',
+      tag: 'Combat \u2022 Unlock: Deal explosive damage to 20 enemies',
+      desc: 'Projectiles trigger explosive impact blasts.',
+      sequence: ['Down', 'Up', 'Left', 'Left', 'Right', 'Down', 'Down', 'Up', 'Right']
+    },
+    {
+      id: 'cheat-c6',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'Vehicle Force',
+      tag: 'Combat \u2022 Unlock: Kill 25 enemies using a vehicle',
+      desc: 'Grants heavy ramming force to your vehicle on collision.',
+      sequence: ['Down', 'Up', 'Left', 'Left', 'Right', 'Down', 'Left', 'Up', 'Down']
+    },
+    {
+      id: 'cheat-c7',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'All Explosive Weapons',
+      tag: 'Combat \u2022 Unlock: Throw 100 grenades',
+      desc: 'Equips all explosive weapons to your arsenal.',
+      sequence: []
+    },
+    {
+      id: 'cheat-c8',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'Incendiary Ammo',
+      tag: 'Combat \u2022 Unlock: Burn 100 enemies with fire damage',
+      desc: 'Rounds ignite targets on impact.',
+      sequence: []
+    },
+    {
+      id: 'cheat-c9',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'Exploding Bottles',
+      tag: 'Combat \u2022 Unlock: Throw 100 molotovs',
+      desc: 'Thrown bottles detonate on impact.',
+      sequence: []
+    },
+    {
+      id: 'cheat-c10',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'Explosive Shotgun',
+      tag: 'Combat \u2022 Unlock: Hit 100 enemies with explosive damage',
+      desc: 'Shotgun shells detonate with explosive force.',
+      sequence: []
+    },
+    {
+      id: 'cheat-c11',
+      category: 'combat',
+      categoryLabel: 'Combat',
+      title: 'Hauners H-AT',
+      tag: 'Combat \u2022 Unlock: Blow up 100 vehicles',
+      desc: 'Equips the heavy anti-tank Hauners H-AT weapon.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v1',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Maibatsu Boomazoom',
+      tag: 'Vehicles \u2022 Unlock: Complete 5 shopping challenges',
+      desc: 'Spawns the Maibatsu Boomazoom.',
+      sequence: ['Left', 'Up', 'Right', 'Down', 'Left', 'Left', 'Up', 'Left']
+    },
+    {
+      id: 'cheat-v2',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'MTL Pumper',
+      tag: 'Vehicles \u2022 Unlock: Discover the MTL Pumper in the Progress menu',
+      desc: 'Spawns the MTL Pumper fire truck.',
+      sequence: ['Left', 'Up', 'Right', 'Down', 'Left', 'Right', 'Right', 'Up']
+    },
+    {
+      id: 'cheat-v3',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'HVY Bulldozer',
+      tag: 'Vehicles \u2022 Unlock: Discover the HVY Bulldozer in the Progress menu',
+      desc: 'Spawns the heavy HVY Bulldozer.',
+      sequence: ['Left', 'Up', 'Right', 'Down', 'Left', 'Right', 'Right', 'Down']
+    },
+    {
+      id: 'cheat-v4',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Interstate Ambulance',
+      tag: 'Vehicles \u2022 Unlock: Discover the Interstate Ambulance in the Progress menu',
+      desc: 'Spawns the Interstate Ambulance.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v5',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Airboat 09',
+      tag: 'Vehicles \u2022 Unlock: Complete 5 survival challenges',
+      desc: 'Spawns the Grassrivers Airboat 09.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v6',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Bravado Banshee',
+      tag: 'Vehicles \u2022 Unlock: Complete all combat challenges',
+      desc: 'Spawns the Bravado Banshee sports car.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v7',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Tuff BMX',
+      tag: 'Vehicles \u2022 Unlock: Complete 5 fitness challenges',
+      desc: 'Spawns the Tuff BMX bicycle.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v8',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Nagasaki Carbon RS',
+      tag: 'Vehicles \u2022 Unlock: Complete all exploration challenges',
+      desc: 'Spawns the Nagasaki Carbon RS sport bike.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v9',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: '\u201965 Vapid Dominator',
+      tag: 'Vehicles \u2022 Unlock: Complete all fitness challenges',
+      desc: 'Spawns the classic \u201965 Vapid Dominator muscle car.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v10',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Progen Emerus',
+      tag: 'Vehicles \u2022 Unlock: Complete all vehicle challenges',
+      desc: 'Spawns the Progen Emerus hypercar.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v11',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Inflatable Flamingo',
+      tag: 'Vehicles \u2022 Unlock: Destroy 50 cocaine flamingos',
+      desc: 'Spawns the Inflatable Flamingo.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v12',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Vapid Stanier G2 Taxi',
+      tag: 'Vehicles \u2022 Unlock: Complete 5 sports challenges',
+      desc: 'Spawns the Vapid Stanier G2 Taxi.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v13',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Hauners P-996 Lazer',
+      tag: 'Vehicles \u2022 Unlock: Complete all challenges',
+      desc: 'Spawns the Hauners P-996 Lazer fighter jet.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v14',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Lapwing Mallard',
+      tag: 'Vehicles \u2022 Unlock: Complete 5 vehicle challenges',
+      desc: 'Spawns the Lapwing Mallard stunt plane.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v15',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Brimstone Golfer',
+      tag: 'Vehicles \u2022 Unlock: Complete all sports challenges',
+      desc: 'Spawns the Brimstone Golfer cart.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v16',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Hauners Rhino Tank',
+      tag: 'Vehicles \u2022 Unlock: Complete all survival challenges',
+      desc: 'Spawns the armored Hauners Rhino Tank.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v17',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Maibatsu Sanchez',
+      tag: 'Vehicles \u2022 Unlock: Complete 5 criminal challenges',
+      desc: 'Spawns the Maibatsu Sanchez dirt bike.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v18',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Nagasaki Sea Sparrow',
+      tag: 'Vehicles \u2022 Unlock: Complete 5 exploration challenges',
+      desc: 'Spawns the Nagasaki Sea Sparrow amphibious helicopter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v19',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Speeder 700 GT',
+      tag: 'Vehicles \u2022 Unlock: Complete 5 combat challenges',
+      desc: 'Spawns the Speeder 700 GT speedboat.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v20',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Truffade Thrax',
+      tag: 'Vehicles \u2022 Unlock: Complete all shopping challenges',
+      desc: 'Spawns the Truffade Thrax supercar.',
+      sequence: []
+    },
+    {
+      id: 'cheat-v21',
+      category: 'vehicles',
+      categoryLabel: 'Spawn Vehicles',
+      title: 'Western Zombie Bobber',
+      tag: 'Vehicles \u2022 Unlock: Complete all criminal challenges',
+      desc: 'Spawns the Western Zombie Bobber chopper motorcycle.',
+      sequence: []
+    },
+    {
+      id: 'cheat-e1',
+      category: 'environment',
+      categoryLabel: 'Environment',
+      title: 'Cycle Weather',
+      tag: 'Environment \u2022 Unlock: Finish the main story',
+      desc: 'Cycles through weather conditions across Vice City and Leonida.',
       sequence: ['Down', 'Right', 'Up', 'Down', 'Right', 'Up', 'Right']
     },
     {
-      id: 'cheat-5',
-      title: 'Exploding Balls',
-      tag: 'Combat Pattern',
-      desc: 'Projectiles trigger explosive impact blasts. Note: Differs from Attack Force by only the final input.',
-      sequence: ['Down', 'Up', 'Left', 'Left', 'Right', 'Down', 'Down', 'Up', 'Up']
+      id: 'cheat-e2',
+      category: 'environment',
+      categoryLabel: 'Environment',
+      title: 'Move Time Forward',
+      tag: 'Environment \u2022 Unlock: Find 10 collectible watches',
+      desc: 'Advances the in-game time of day.',
+      sequence: []
     },
     {
-      id: 'cheat-6',
-      title: 'Vehicle Force',
-      tag: 'Vehicle Combat',
-      desc: 'Grants heavy ramming force to your vehicle on collision. Differs from Attack Force by one command.',
-      sequence: ['Down', 'Up', 'Left', 'Left', 'Right', 'Down', 'Down', 'Right', 'Down']
+      id: 'cheat-e3',
+      category: 'environment',
+      categoryLabel: 'Environment',
+      title: 'Pause Time of Day',
+      tag: 'Environment \u2022 Unlock: Find 20 collectible watches',
+      desc: 'Freezes the current time of day.',
+      sequence: []
     },
     {
-      id: 'cheat-7',
-      title: 'Standard Ammo Refill',
-      tag: 'Ammo Pattern',
-      desc: 'Follows the universal Ammo prefix (Down, Up, Right, Down, Left, Left, Up) to restore weapon ammunition.',
-      sequence: ['Down', 'Up', 'Right', 'Down', 'Left', 'Left', 'Up', 'Right', 'Down']
+      id: 'cheat-f1',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Cataclysm',
+      tag: 'Screen Filter \u2022 Unlock: Discover Martha\u2019s Vamos in the Progress menu',
+      desc: 'Applies the Cataclysm visual screen filter.',
+      sequence: ['Down', 'Down', 'Up', 'Right', 'Right', 'Up', 'Left', 'Left', 'Right', 'Right']
     },
     {
-      id: 'cheat-8',
-      title: 'Vehicle Spawn Pattern',
-      tag: 'Vehicle Pattern',
-      desc: 'All vehicle spawn cheats begin with the universal prefix: Left, Up, Right, Down.',
-      sequence: ['Left', 'Up', 'Right', 'Down', 'Left', 'Up', 'Right', 'Up']
+      id: 'cheat-f2',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Dollhouse',
+      tag: 'Screen Filter \u2022 Unlock: Spend 8 hours with your partner',
+      desc: 'Applies the Dollhouse visual screen filter.',
+      sequence: ['Down', 'Down', 'Up', 'Right', 'Right', 'Up', 'Left', 'Left', 'Down', 'Right']
+    },
+    {
+      id: 'cheat-f3',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Faded Glory',
+      tag: 'Screen Filter \u2022 Unlock: Rob 50 stores with your partner',
+      desc: 'Applies the Faded Glory visual screen filter.',
+      sequence: ['Down', 'Down', 'Up', 'Right', 'Right', 'Up', 'Left', 'Left', 'Left', 'Right']
+    },
+    {
+      id: 'cheat-f4',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Golden Hour',
+      tag: 'Screen Filter \u2022 Unlock: Spend 4 hours holding hands',
+      desc: 'Applies the Golden Hour sunset visual filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f5',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Powdered Sugar',
+      tag: 'Screen Filter \u2022 Unlock: Scan all space debris with WAiNK',
+      desc: 'Applies the Powdered Sugar visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f6',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Pinhole',
+      tag: 'Screen Filter \u2022 Unlock: Clear 25 gang operations with your partner',
+      desc: 'Applies the Pinhole camera visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f7',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Neon Jungle',
+      tag: 'Screen Filter \u2022 Unlock: Discover all 16 Girlypop Vehicles',
+      desc: 'Applies the Neon Jungle visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f8',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Yesteryear',
+      tag: 'Screen Filter \u2022 Unlock: Discover the Ridgeway',
+      desc: 'Applies the retro Yesteryear visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f9',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Videotape',
+      tag: 'Screen Filter \u2022 Unlock: Complete 50 activities with your partner',
+      desc: 'Applies the VHS Videotape visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f10',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Dark Mirror',
+      tag: 'Screen Filter \u2022 Unlock: Make $500,000 selling vehicles',
+      desc: 'Applies the Dark Mirror visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f11',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Migraine',
+      tag: 'Screen Filter \u2022 Unlock: Survive 6 minutes with a 6-star wanted level',
+      desc: 'Applies the Migraine distortion visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f12',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Bubblegum',
+      tag: 'Screen Filter \u2022 Unlock: Find all 24 collectible cards for the Vice City Flamingos',
+      desc: 'Applies the Bubblegum pink visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f13',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Fast Forward',
+      tag: 'Screen Filter \u2022 Unlock: Complete 50 meditations',
+      desc: 'Applies the Fast Forward visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f14',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Fisheye',
+      tag: 'Screen Filter \u2022 Unlock: Catch 100 fish',
+      desc: 'Applies the Fisheye lens visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f15',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Pixel Art',
+      tag: 'Screen Filter \u2022 Unlock: Make $250,000 selling collectibles',
+      desc: 'Applies the retro 8-bit Pixel Art visual screen filter.',
+      sequence: []
+    },
+    {
+      id: 'cheat-f16',
+      category: 'filters',
+      categoryLabel: 'Screen Filters',
+      title: 'Hellscape',
+      tag: 'Screen Filter \u2022 Unlock: Steal 100 cop vehicles',
+      desc: 'Applies the Hellscape visual screen filter.',
+      sequence: []
     }
   ];
 
   let currentPlatform = 'all';
+  let currentCheatCategory = 'all';
 
   const dpadIconMap = {
     Up: 'fa-arrow-up',
@@ -1268,12 +1762,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cheatsGrid) return;
     const query = (cheatSearchInput?.value || '').toLowerCase().trim();
     const filtered = cheatsData.filter(c => {
+      const matchCat = currentCheatCategory === 'all' || c.category === currentCheatCategory;
       const codeStr = c.sequence.join(', ').toLowerCase();
-      return !query ||
+      const matchQuery = !query ||
         c.title.toLowerCase().includes(query) ||
         c.desc.toLowerCase().includes(query) ||
         c.tag.toLowerCase().includes(query) ||
         codeStr.includes(query);
+      return matchCat && matchQuery;
     });
 
     if (filtered.length === 0) {
@@ -1287,12 +1783,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     cheatsGrid.innerHTML = filtered.map(c => {
-      const plainCode = c.sequence.join(', ');
-      const dpadBadgesHtml = c.sequence.map(dir => `
-        <span class="dpad-badge dpad-${dir.toLowerCase()}">
-          <i class="fa-solid ${dpadIconMap[dir] || 'fa-circle'}"></i> ${escapeHtml(dir)}
-        </span>
-      `).join('');
+      const hasSequence = Array.isArray(c.sequence) && c.sequence.length > 0;
+      const plainCode = hasSequence ? c.sequence.join(', ') : '';
+      const dpadBadgesHtml = hasSequence
+        ? c.sequence.map(dir => `
+          <span class="dpad-badge dpad-${dir.toLowerCase()}">
+            <i class="fa-solid ${dpadIconMap[dir] || 'fa-circle'}"></i> ${escapeHtml(dir)}
+          </span>
+        `).join('')
+        : `<span class="cheat-unlock-tag" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);"><i class="fa-solid fa-lock"></i> Unlock via In-Game Challenge (D-Pad Sequence TBD)</span>`;
+
+      const copyBtnHtml = hasSequence
+        ? `<button class="cheat-copy-btn btn-copy-cheat" data-code="${escapeHtml(plainCode)}" title="Copy D-Pad Sequence">
+            <i class="fa-solid fa-copy"></i> <span>Copy</span>
+          </button>`
+        : '';
 
       return `
         <div class="cheat-row-card">
@@ -1311,9 +1816,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="dpad-sequence-wrap">
               ${dpadBadgesHtml}
             </div>
-            <button class="cheat-copy-btn btn-copy-cheat" data-code="${escapeHtml(plainCode)}" title="Copy D-Pad Sequence">
-              <i class="fa-solid fa-copy"></i> <span>Copy</span>
-            </button>
+            ${copyBtnHtml}
           </div>
         </div>
       `;
@@ -1324,6 +1827,16 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCheats();
 
     if (cheatSearchInput) cheatSearchInput.addEventListener('input', renderCheats);
+
+    const cheatCatPills = document.querySelectorAll('[data-cheat-cat]');
+    cheatCatPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        cheatCatPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentCheatCategory = pill.dataset.cheatCat || 'all';
+        renderCheats();
+      });
+    });
 
     platformPills.forEach(pill => {
       pill.addEventListener('click', () => {
