@@ -66,6 +66,9 @@ export async function onRequest(context) {
   newHeaders.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   newHeaders.set('X-Frame-Options', 'SAMEORIGIN');
   newHeaders.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  newHeaders.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  newHeaders.set('X-Permitted-Cross-Domain-Policies', 'none');
+  newHeaders.set('X-DNS-Prefetch-Control', 'on');
   newHeaders.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   newHeaders.set('Permissions-Policy', STRICT_PERMISSIONS);
   if (!new URL(request.url).pathname.startsWith('/api/media')) {
