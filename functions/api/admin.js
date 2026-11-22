@@ -71,7 +71,7 @@ export async function onRequest(context) {
 
       const { rows: pendingDiscords } = await runTursoSql(
         env,
-        `SELECT id, name, tag, category, country, country_label, invite_url, description, status, created_at
+        `SELECT id, name, tag, category, country, country_label, invite_url, description, icon_url, status, created_at
          FROM discord_servers
          WHERE status = 'pending'
          ORDER BY created_at DESC
@@ -80,7 +80,7 @@ export async function onRequest(context) {
 
       const { rows: approvedDiscords } = await runTursoSql(
         env,
-        `SELECT id, name, tag, category, country, country_label, invite_url, description, status, created_at
+        `SELECT id, name, tag, category, country, country_label, invite_url, description, icon_url, status, created_at
          FROM discord_servers
          WHERE status = 'approved'
          ORDER BY created_at DESC

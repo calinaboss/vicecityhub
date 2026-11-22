@@ -1023,6 +1023,147 @@ document.addEventListener('DOMContentLoaded', () => {
     tag.textContent = JSON.stringify(schema);
   }
 
+  function initSearchableCountryPicker(selectEl) {
+    if (!selectEl || selectEl.dataset.enhanced === '1') return;
+    selectEl.dataset.enhanced = '1';
+    selectEl.style.display = 'none';
+
+    const wrap = document.createElement('div');
+    wrap.className = 'country-picker-wrap';
+
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'country-picker-trigger';
+
+    const triggerLeft = document.createElement('span');
+    triggerLeft.className = 'country-picker-trigger-left';
+
+    const globeIcon = document.createElement('i');
+    globeIcon.className = 'fa-solid fa-earth-americas';
+    globeIcon.style.color = 'var(--accent-pink)';
+
+    const triggerLabel = document.createElement('span');
+    triggerLabel.className = 'country-picker-trigger-label';
+
+    const chevron = document.createElement('i');
+    chevron.className = 'fa-solid fa-chevron-down';
+    chevron.style.fontSize = '0.72rem';
+    chevron.style.color = 'var(--text-dim)';
+
+    triggerLeft.appendChild(globeIcon);
+    triggerLeft.appendChild(triggerLabel);
+    trigger.appendChild(triggerLeft);
+    trigger.appendChild(chevron);
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'country-picker-dropdown';
+
+    const searchWrap = document.createElement('div');
+    searchWrap.className = 'country-picker-search-wrap';
+
+    const searchIcon = document.createElement('i');
+    searchIcon.className = 'fa-solid fa-magnifying-glass';
+
+    const searchInputEl = document.createElement('input');
+    searchInputEl.type = 'text';
+    searchInputEl.className = 'country-picker-search-input';
+    searchInputEl.placeholder = 'Search country or language...';
+    searchInputEl.autocomplete = 'off';
+
+    searchWrap.appendChild(searchIcon);
+    searchWrap.appendChild(searchInputEl);
+
+    const listBox = document.createElement('div');
+    listBox.className = 'country-picker-list';
+
+    dropdown.appendChild(searchWrap);
+    dropdown.appendChild(listBox);
+
+    wrap.appendChild(trigger);
+    wrap.appendChild(dropdown);
+    selectEl.parentNode.insertBefore(wrap, selectEl.nextSibling);
+
+    const optionsData = Array.from(selectEl.options).map(opt => ({
+      value: opt.value,
+      label: opt.textContent.trim()
+    }));
+
+    function updateTriggerText() {
+      const currentOpt = optionsData.find(o => o.value === selectEl.value) || optionsData[0];
+      triggerLabel.textContent = currentOpt ? currentOpt.label : 'Select Country';
+    }
+
+    function renderOptionsList(filterText = '') {
+      const q = filterText.toLowerCase().trim();
+      listBox.innerHTML = '';
+      const matched = optionsData.filter(o =>
+        !q || o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q)
+      );
+
+      if (matched.length === 0) {
+        const emptyEl = document.createElement('div');
+        emptyEl.className = 'country-picker-empty';
+        emptyEl.textContent = 'No matching country found';
+        listBox.appendChild(emptyEl);
+        return;
+      }
+
+      matched.forEach(o => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'country-picker-option' + (o.value === selectEl.value ? ' active' : '');
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = o.label;
+
+        const codeSpan = document.createElement('span');
+        codeSpan.className = 'country-picker-code';
+        codeSpan.textContent = o.value === 'all' ? 'ALL' : o.value.toUpperCase();
+
+        btn.appendChild(nameSpan);
+        btn.appendChild(codeSpan);
+
+        btn.addEventListener('click', () => {
+          selectEl.value = o.value;
+          updateTriggerText();
+          wrap.classList.remove('open');
+          searchInputEl.value = '';
+          selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+
+        listBox.appendChild(btn);
+      });
+    }
+
+    updateTriggerText();
+    renderOptionsList('');
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = !wrap.classList.contains('open');
+      document.querySelectorAll('.country-picker-wrap.open').forEach(w => w.classList.remove('open'));
+      if (willOpen) {
+        wrap.classList.add('open');
+        searchInputEl.value = '';
+        renderOptionsList('');
+        setTimeout(() => searchInputEl.focus(), 30);
+      }
+    });
+
+    dropdown.addEventListener('click', (e) => e.stopPropagation());
+
+    searchInputEl.addEventListener('input', () => {
+      renderOptionsList(searchInputEl.value);
+    });
+
+    document.addEventListener('click', () => {
+      wrap.classList.remove('open');
+    });
+  }
+
+  initSearchableCountryPicker(discordCountryFilter);
+  initSearchableCountryPicker(document.getElementById('discord-country-select'));
+
   function renderDiscords() {
     if (!discordGrid) return;
     injectDynamicDiscordsSchema(discordServers);
@@ -1038,23 +1179,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (filtered.length === 0) {
-      discordGrid.innerHTML = `
-        <div class="empty-feed-state">
-          <h3 style="font-size: 1.02rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">No Discord servers listed yet</h3>
-          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Have a GTA VI Roleplay, Heist, or Community server? Share it in the directory.</p>
-          <a href="submit-discord.html" class="btn-discord" style="height: 40px; padding: 0 18px; text-decoration: none;">
-            <i class="fa-solid fa-plus"></i> Share Your Discord Server
-          </a>
-        </div>
-      `;
+      if (selCountry !== 'all') {
+        discordGrid.innerHTML = `
+          <div class="empty-feed-state">
+            <h3 style="font-size: 1.08rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">:( no servers available in this country</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Be the first to share a GTA VI Discord server for this country or language.</p>
+            <a href="submit-discord.html" class="btn-discord" style="height: 40px; padding: 0 18px; text-decoration: none;">
+              <i class="fa-solid fa-plus"></i> Share Your Discord Server
+            </a>
+          </div>
+        `;
+      } else {
+        discordGrid.innerHTML = `
+          <div class="empty-feed-state">
+            <h3 style="font-size: 1.02rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">No Discord servers listed yet</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">Have a GTA VI Roleplay, Heist, or Community server? Share it in the directory.</p>
+            <a href="submit-discord.html" class="btn-discord" style="height: 40px; padding: 0 18px; text-decoration: none;">
+              <i class="fa-solid fa-plus"></i> Share Your Discord Server
+            </a>
+          </div>
+        `;
+      }
       return;
     }
 
-    discordGrid.innerHTML = filtered.map(s => `
+    discordGrid.innerHTML = filtered.map(s => {
+      const rawIcon = s.iconUrl || s.icon_url || '';
+      const hasValidIcon = /^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(rawIcon);
+      const avatarContent = hasValidIcon
+        ? `<img src="${escapeHtml(rawIcon)}" alt="${escapeHtml(s.name)}" class="discord-server-logo-img" loading="lazy">`
+        : `<i class="fa-brands fa-discord"></i>`;
+
+      return `
       <div class="discord-list-item">
         <div class="discord-list-left">
           <div class="discord-avatar-box">
-            <i class="fa-brands fa-discord"></i>
+            ${avatarContent}
           </div>
           <div class="discord-list-info">
             <div class="discord-list-title-row">
@@ -1072,7 +1232,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
 
   if (discordGrid) {
@@ -1094,6 +1255,97 @@ document.addEventListener('DOMContentLoaded', () => {
     if (discordTypeFilter) discordTypeFilter.addEventListener('change', renderDiscords);
   }
 
+  let uploadedDiscordLogoDataUrl = '';
+  const btnTriggerDiscordLogo = document.getElementById('btn-trigger-discord-logo');
+  const btnClearDiscordLogo = document.getElementById('btn-clear-discord-logo');
+  const discordLogoFileInput = document.getElementById('discord-logo-file-input');
+  const discordLogoPreviewBox = document.getElementById('discord-logo-preview-box');
+  const discordLogoStatus = document.getElementById('discord-logo-status');
+
+  if (btnTriggerDiscordLogo && discordLogoFileInput) {
+    btnTriggerDiscordLogo.addEventListener('click', () => discordLogoFileInput.click());
+
+    if (btnClearDiscordLogo) {
+      btnClearDiscordLogo.addEventListener('click', () => {
+        uploadedDiscordLogoDataUrl = '';
+        discordLogoFileInput.value = '';
+        btnClearDiscordLogo.style.display = 'none';
+        if (discordLogoPreviewBox) {
+          discordLogoPreviewBox.innerHTML = '<i class="fa-brands fa-discord"></i>';
+        }
+        if (discordLogoStatus) {
+          discordLogoStatus.textContent = 'Default Discord icon (160x160 square auto-crop)';
+        }
+      });
+    }
+
+    discordLogoFileInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const MAX_LOGO_BYTES = 5 * 1024 * 1024;
+      if (file.size > MAX_LOGO_BYTES) {
+        showToast('Server logo exceeds the 5 MB limit. Please choose an image under 5 MB.');
+        discordLogoFileInput.value = '';
+        return;
+      }
+
+      if (!/^image\/(jpeg|png|webp)$/i.test(file.type)) {
+        showToast('Only JPG, PNG, or WebP images are permitted.');
+        discordLogoFileInput.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const SIZE = 160;
+          canvas.width = SIZE;
+          canvas.height = SIZE;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#0d1117';
+          ctx.fillRect(0, 0, SIZE, SIZE);
+
+          const scale = Math.max(SIZE / img.width, SIZE / img.height);
+          const drawW = img.width * scale;
+          const drawH = img.height * scale;
+          const dx = (SIZE - drawW) / 2;
+          const dy = (SIZE - drawH) / 2;
+
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, dx, dy, drawW, drawH);
+
+          let dataUrl = canvas.toDataURL('image/webp', 0.80);
+          if (!dataUrl.startsWith('data:image/webp')) {
+            dataUrl = canvas.toDataURL('image/jpeg', 0.80);
+          }
+
+          uploadedDiscordLogoDataUrl = dataUrl;
+          if (discordLogoPreviewBox) {
+            discordLogoPreviewBox.innerHTML = `<img src="${escapeHtml(dataUrl)}" alt="Server Logo Preview" class="discord-server-logo-img">`;
+          }
+          if (btnClearDiscordLogo) {
+            btnClearDiscordLogo.style.display = 'inline-flex';
+          }
+          if (discordLogoStatus) {
+            const approxKb = Math.max(1, Math.round((dataUrl.length * 0.75) / 1024));
+            discordLogoStatus.textContent = `Logo optimized (~${approxKb} KB • 100% EXIF removed)`;
+          }
+          showToast('Server logo optimized and ready!');
+        };
+        img.onerror = () => {
+          showToast('Invalid or corrupted image file.');
+          discordLogoFileInput.value = '';
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   const dedicatedDiscordForm = document.getElementById('dedicated-discord-form');
   if (dedicatedDiscordForm) {
     dedicatedDiscordForm.addEventListener('submit', async (e) => {
@@ -1104,40 +1356,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const name = document.getElementById('discord-name-input').value.trim();
       const inviteUrl = document.getElementById('discord-url-input').value.trim();
       const category = document.getElementById('discord-category-select').value;
-      const country = document.getElementById('discord-country-select')?.value || 'intl';
+      const countrySelectEl = document.getElementById('discord-country-select');
+      const country = countrySelectEl?.value || 'intl';
       const desc = document.getElementById('discord-desc-input').value.trim();
 
       if (!DISCORD_REGEX.test(inviteUrl)) {
         showToast('Invalid Discord invite! Must be https://discord.gg/... or https://discord.com/invite/...');
         return;
       }
-
-      const catMap = {
-        roleplay: 'Roleplay',
-        heists: 'Heists & LFG',
-        general: 'General Community',
-        modding: 'Modding & Mapping'
-      };
-
-      const countryMap = {
-        intl: 'International',
-        it: 'Italy',
-        es: 'Spain / Latam',
-        de: 'Germany',
-        fr: 'France'
-      };
-
-      const newServer = {
-        id: `dc-${Date.now()}`,
-        name: name,
-        tag: catMap[category] || 'Community',
-        category: category,
-        country: country,
-        countryLabel: countryMap[country] || 'International',
-        inviteUrl: inviteUrl,
-        members: 'Just Added',
-        desc: desc
-      };
 
       const turnstileInput = dedicatedDiscordForm.querySelector('[name="cf-turnstile-response"]');
       const cfTurnstileResponse = turnstileInput ? turnstileInput.value : '';
@@ -1152,6 +1378,7 @@ document.addEventListener('DOMContentLoaded', () => {
             category,
             country,
             desc,
+            iconUrl: uploadedDiscordLogoDataUrl,
             discord_hp_url: hp,
             cfTurnstileResponse
           })
@@ -1175,6 +1402,7 @@ document.addEventListener('DOMContentLoaded', () => {
               modBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
             dedicatedDiscordForm.reset();
+            if (btnClearDiscordLogo) btnClearDiscordLogo.click();
             showToast('Waiting for the moderators approval');
             return;
           }

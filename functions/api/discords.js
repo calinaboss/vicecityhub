@@ -9,13 +9,13 @@ import {
   checkRateLimit,
   getAuthenticatedUser,
   sanitizePlainText,
+  validateAndSanitizeAvatarDataUrl,
   verifyTurnstileToken
 } from './_turso.js';
 
 const DISCORD_REGEX = /^https:\/\/(discord\.gg\/[a-zA-Z0-9_-]{2,32}|discord\.com\/invite\/[a-zA-Z0-9_-]{2,32})$/;
 
 const ALLOWED_CATEGORIES = ['roleplay', 'heists', 'modding', 'general'];
-const ALLOWED_COUNTRIES = ['intl', 'it', 'es', 'de', 'fr'];
 
 const CATEGORY_MAP = {
   roleplay: 'Roleplay',
@@ -26,11 +26,68 @@ const CATEGORY_MAP = {
 
 const COUNTRY_MAP = {
   intl: 'International',
+  en: 'English (Global)',
+  us: 'United States',
+  gb: 'United Kingdom',
+  ca: 'Canada',
+  au: 'Australia',
   it: 'Italy',
-  es: 'Spain / Latam',
+  es: 'Spain',
+  mx: 'Mexico / Latam',
+  ar: 'Argentina',
+  co: 'Colombia',
+  cl: 'Chile',
+  pe: 'Peru',
   de: 'Germany',
-  fr: 'France'
+  at: 'Austria',
+  ch: 'Switzerland',
+  fr: 'France',
+  be: 'Belgium',
+  pt: 'Portugal',
+  br: 'Brazil',
+  nl: 'Netherlands',
+  pl: 'Poland',
+  ro: 'Romania',
+  tr: 'Turkey',
+  gr: 'Greece',
+  cz: 'Czechia',
+  sk: 'Slovakia',
+  hu: 'Hungary',
+  se: 'Sweden',
+  no: 'Norway',
+  dk: 'Denmark',
+  fi: 'Finland',
+  ie: 'Ireland',
+  ua: 'Ukraine',
+  ru: 'Russian',
+  rs: 'Serbia / Balkan',
+  hr: 'Croatia',
+  bg: 'Bulgaria',
+  al: 'Albania',
+  lt: 'Lithuania',
+  lv: 'Latvia',
+  ee: 'Estonia',
+  jp: 'Japan',
+  kr: 'South Korea',
+  cn: 'China',
+  tw: 'Taiwan',
+  in: 'India',
+  id: 'Indonesia',
+  ph: 'Philippines',
+  vn: 'Vietnam',
+  th: 'Thailand',
+  my: 'Malaysia',
+  sg: 'Singapore',
+  nz: 'New Zealand',
+  sa: 'Arabic / MENA',
+  ae: 'UAE',
+  eg: 'Egypt',
+  ma: 'Morocco',
+  il: 'Israel',
+  za: 'South Africa'
 };
+
+const ALLOWED_COUNTRIES = Object.keys(COUNTRY_MAP);
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -55,7 +112,7 @@ export async function onRequest(context) {
       const { rows } = await runTursoSql(
         env,
         `SELECT id, name, tag, category, country, country_label as countryLabel,
-                invite_url as inviteUrl, members, description as desc
+                invite_url as inviteUrl, members, description as desc, icon_url as iconUrl
          FROM discord_servers
          WHERE status = 'approved'
          ORDER BY created_at DESC
@@ -113,6 +170,16 @@ export async function onRequest(context) {
       return jsonResponse({ error: 'Server description must be at least 15 characters.' }, 400);
     }
 
+    let iconUrl = '';
+    const rawIcon = typeof body.iconUrl === 'string' ? body.iconUrl.trim() : '';
+    if (rawIcon) {
+      try {
+        iconUrl = validateAndSanitizeAvatarDataUrl(rawIcon);
+      } catch (iconErr) {
+        return jsonResponse({ error: iconErr.message || 'Invalid server logo image format.' }, 400);
+      }
+    }
+
     const requiresApproval = authUser.role !== 'admin';
     const serverStatus = requiresApproval ? 'pending' : 'approved';
 
@@ -125,6 +192,7 @@ export async function onRequest(context) {
       country,
       countryLabel: COUNTRY_MAP[country] || 'International',
       inviteUrl,
+      iconUrl: iconUrl || null,
       members: 'Verified Community',
       desc,
       status: serverStatus
@@ -134,8 +202,8 @@ export async function onRequest(context) {
       try {
         await runTursoSql(
           env,
-          `INSERT INTO discord_servers (id, user_id, name, tag, category, country, country_label, invite_url, description, status)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          `INSERT INTO discord_servers (id, user_id, name, tag, category, country, country_label, invite_url, description, icon_url, status)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             serverId,
             authUser.id,
@@ -146,6 +214,7 @@ export async function onRequest(context) {
             serverObj.countryLabel,
             inviteUrl,
             desc,
+            iconUrl || null,
             serverStatus
           ]
         );

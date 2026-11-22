@@ -46,7 +46,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=4.3">
+  <link rel="stylesheet" href="assets/css/style.css?v=4.4">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <link rel="canonical" href="https://vicecityhub.eu/submit-discord.html">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -57,7 +57,7 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="search" type="application/opensearchdescription+xml" title="ViceCityHub" href="/opensearch.xml">
   <link rel="alternate" type="application/rss+xml" title="ViceCityHub GTA VI Feed" href="https://vicecityhub.eu/api/feed">
-  <script src="/assets/js/analytics.js?v=4.3"></script>
+  <script src="/assets/js/analytics.js?v=4.4"></script>
   <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-576B86L9"></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3729233023466811" crossorigin="anonymous"></script>
 </head>
@@ -130,6 +130,27 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label">Server Logo / Icon <span style="font-size: 0.72rem; color: var(--text-dim); font-weight: 500;">(Optional &bull; Max 5 MB &bull; JPG, PNG, WebP &bull; Auto-Optimized &amp; EXIF Stripped)</span></label>
+            <div class="discord-logo-upload-row">
+              <div class="discord-avatar-box" id="discord-logo-preview-box">
+                <i class="fa-brands fa-discord"></i>
+              </div>
+              <div class="discord-logo-upload-actions">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="btn-secondary" id="btn-trigger-discord-logo" style="height: 36px; padding: 0 14px; font-size: 0.8rem;">
+                    <i class="fa-solid fa-image"></i> Upload Logo
+                  </button>
+                  <button type="button" class="btn-secondary" id="btn-clear-discord-logo" style="height: 36px; padding: 0 12px; font-size: 0.8rem; display: none; color: #fca5a5;">
+                    <i class="fa-solid fa-trash-can"></i> Remove
+                  </button>
+                </div>
+                <span id="discord-logo-status" style="font-size: 0.74rem; color: var(--text-dim);">Default Discord icon (160x160 square auto-crop)</span>
+              </div>
+              <input type="file" id="discord-logo-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
+            </div>
+          </div>
+
+          <div class="form-group">
             <label for="discord-url-input" class="form-label">Official Discord Invite URL <span style="color: var(--accent-pink);">*</span></label>
             <input type="url" id="discord-url-input" class="form-input" placeholder="https://discord.gg/yourcode" required pattern="https://(discord\.gg|discord\.com/invite)/[a-zA-Z0-9_-]{2,32}" title="Must be a valid Discord invite (https://discord.gg/... or https://discord.com/invite/...)">
             <span style="font-size: 0.72rem; color: var(--text-dim);">Disclaimer: Only official <code>https://discord.gg/</code> or <code>https://discord.com/invite/</code> links are permitted. Every submitted server enters the moderation queue (Waiting for the moderators' approval) before appearing in the public directory.</span>
@@ -147,13 +168,68 @@
             </div>
 
             <div class="form-group">
-              <label for="discord-country-select" class="form-label">Language / Region <span style="color: var(--accent-pink);">*</span></label>
+              <label for="discord-country-select" class="form-label">Country / Language <span style="color: var(--accent-pink);">*</span></label>
               <select id="discord-country-select" class="form-select" required>
-                <option value="intl">International / English</option>
-                <option value="it">Italy (IT)</option>
-                <option value="es">Spain / Latam (ES)</option>
-                <option value="de">Germany (DE)</option>
-                <option value="fr">France (FR)</option>
+                <option value="intl">International (Multilingual)</option>
+                <option value="en">English (Global)</option>
+                <option value="us">United States (US)</option>
+                <option value="gb">United Kingdom (UK)</option>
+                <option value="ca">Canada (CA)</option>
+                <option value="au">Australia (AU)</option>
+                <option value="it">Italy / Italiano (IT)</option>
+                <option value="es">Spain / Espa&ntilde;ol (ES)</option>
+                <option value="mx">Mexico / Latam (MX)</option>
+                <option value="ar">Argentina (AR)</option>
+                <option value="co">Colombia (CO)</option>
+                <option value="cl">Chile (CL)</option>
+                <option value="pe">Peru (PE)</option>
+                <option value="de">Germany / Deutsch (DE)</option>
+                <option value="at">Austria (AT)</option>
+                <option value="ch">Switzerland (CH)</option>
+                <option value="fr">France / Fran&ccedil;ais (FR)</option>
+                <option value="be">Belgium (BE)</option>
+                <option value="pt">Portugal / Portugu&ecirc;s (PT)</option>
+                <option value="br">Brazil / Brasil (BR)</option>
+                <option value="nl">Netherlands / Nederlands (NL)</option>
+                <option value="pl">Poland / Polska (PL)</option>
+                <option value="ro">Romania / Rom&acirc;nia (RO)</option>
+                <option value="tr">Turkey / T&uuml;rkiye (TR)</option>
+                <option value="gr">Greece (GR)</option>
+                <option value="cz">Czechia / &Ccaron;esko (CZ)</option>
+                <option value="sk">Slovakia / Slovensko (SK)</option>
+                <option value="hu">Hungary / Magyarorsz&aacute;g (HU)</option>
+                <option value="se">Sweden / Sverige (SE)</option>
+                <option value="no">Norway / Norge (NO)</option>
+                <option value="dk">Denmark / Danmark (DK)</option>
+                <option value="fi">Finland / Suomi (FI)</option>
+                <option value="ie">Ireland (IE)</option>
+                <option value="ua">Ukraine (UA)</option>
+                <option value="ru">Russian (RU)</option>
+                <option value="rs">Serbia / Balkan (RS)</option>
+                <option value="hr">Croatia / Hrvatska (HR)</option>
+                <option value="bg">Bulgaria (BG)</option>
+                <option value="al">Albania / Shqip (AL)</option>
+                <option value="lt">Lithuania (LT)</option>
+                <option value="lv">Latvia (LV)</option>
+                <option value="ee">Estonia (EE)</option>
+                <option value="jp">Japan (JP)</option>
+                <option value="kr">South Korea (KR)</option>
+                <option value="cn">China (CN)</option>
+                <option value="tw">Taiwan (TW)</option>
+                <option value="in">India (IN)</option>
+                <option value="id">Indonesia (ID)</option>
+                <option value="ph">Philippines (PH)</option>
+                <option value="vn">Vietnam (VN)</option>
+                <option value="th">Thailand (TH)</option>
+                <option value="my">Malaysia (MY)</option>
+                <option value="sg">Singapore (SG)</option>
+                <option value="nz">New Zealand (NZ)</option>
+                <option value="sa">Arabic / MENA (SA)</option>
+                <option value="ae">United Arab Emirates (AE)</option>
+                <option value="eg">Egypt (EG)</option>
+                <option value="ma">Morocco (MA)</option>
+                <option value="il">Israel (IL)</option>
+                <option value="za">South Africa (ZA)</option>
               </select>
             </div>
           </div>
@@ -287,6 +363,6 @@
     </div>
   </div>
 
-  <script src="assets/js/app.js?v=4.3"></script>
+  <script src="assets/js/app.js?v=4.4"></script>
 </body>
 </html>
