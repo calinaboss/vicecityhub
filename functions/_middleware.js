@@ -22,10 +22,6 @@ export async function onRequest(context) {
   const { request } = context;
   const reqUrl = new URL(request.url);
 
-  if (reqUrl.pathname === '/sitemap.xml') {
-    return serveDynamicSitemap(context);
-  }
-
   const origin = request.headers.get('Origin') || '';
   const isAllowedOrigin = checkAllowedOrigin(origin);
 
@@ -67,7 +63,9 @@ export async function onRequest(context) {
     });
   }
 
-  const response = await context.next();
+  const response = (reqUrl.pathname === '/sitemap.xml')
+    ? await serveDynamicSitemap(context)
+    : await context.next();
   const newHeaders = new Headers(response.headers);
 
   newHeaders.set('X-Content-Type-Options', 'nosniff');

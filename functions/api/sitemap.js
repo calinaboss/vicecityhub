@@ -16,12 +16,11 @@ export async function onRequest(context) {
 
   const urls = [
     { loc: 'https://vicecityhub.eu/', lastmod: today, changefreq: 'hourly', priority: '1.0' },
-    { loc: 'https://map.vicecityhub.eu/', lastmod: today, changefreq: 'daily', priority: '1.0' },
     { loc: 'https://vicecityhub.eu/discords.html', lastmod: today, changefreq: 'hourly', priority: '0.95' },
+    { loc: 'https://vicecityhub.eu/submit-discord.html', lastmod: today, changefreq: 'daily', priority: '0.90' },
     { loc: 'https://vicecityhub.eu/cheats.html', lastmod: today, changefreq: 'daily', priority: '0.95' },
     { loc: 'https://vicecityhub.eu/faq.html', lastmod: today, changefreq: 'weekly', priority: '0.85' },
     { loc: 'https://vicecityhub.eu/post.html', lastmod: today, changefreq: 'weekly', priority: '0.80' },
-    { loc: 'https://vicecityhub.eu/submit-discord.html', lastmod: today, changefreq: 'weekly', priority: '0.80' },
     { loc: 'https://vicecityhub.eu/about.html', lastmod: today, changefreq: 'monthly', priority: '0.70' },
     { loc: 'https://vicecityhub.eu/privacy.html', lastmod: today, changefreq: 'monthly', priority: '0.50' },
     { loc: 'https://vicecityhub.eu/terms.html', lastmod: today, changefreq: 'monthly', priority: '0.50' },
@@ -83,7 +82,7 @@ ${xmlItems}
     status: 200,
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=1800',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
       'X-Content-Type-Options': 'nosniff'
     }
   });
