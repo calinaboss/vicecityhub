@@ -40,7 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (!videoUrl) {
-        showToast('Please enter a YouTube, TikTok, or Instagram video link.');
+        showToast('Please paste the video embed code.');
+        return;
+      }
+
+      if (!/<(?:iframe|blockquote)[^>]*>/i.test(videoUrl)) {
+        showToast('ONLY EMBEDS (just search in the share or three dots buttons of the video and option with the embed and copy the code paste it here)');
         return;
       }
 

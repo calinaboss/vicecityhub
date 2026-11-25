@@ -455,6 +455,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
           }
 
+          if (!/<(?:iframe|blockquote)[^>]*>/i.test(video_url)) {
+            showToast('ONLY EMBEDS (just search in the share or three dots buttons of the video and option with the embed and copy the code paste it here)');
+            return;
+          }
+
           if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';

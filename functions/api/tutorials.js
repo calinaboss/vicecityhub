@@ -395,9 +395,13 @@ export async function onRequest(context) {
           return jsonResponse({ error: 'Invalid category selected' }, 400);
         }
 
+        if (!rawVideoUrl || !/<(?:iframe|blockquote)[^>]*>/i.test(rawVideoUrl)) {
+          return jsonResponse({ error: 'ONLY EMBEDS (just search in the share or three dots buttons of the video and option with the embed and copy the code paste it here)' }, 400);
+        }
+
         const videoInfo = parseVideoInfo(rawVideoUrl);
         if (!videoInfo) {
-          return jsonResponse({ error: 'Please enter a valid YouTube, TikTok, or Instagram video URL (HTTPS only)' }, 400);
+          return jsonResponse({ error: 'Please enter a valid YouTube, TikTok, or Instagram embed code' }, 400);
         }
 
         let resolvedThumbnail = '';
