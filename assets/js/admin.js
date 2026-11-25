@@ -309,44 +309,91 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
       }
 
-      function renderTutorials(tutorials) {
+      function renderTutorials(pending = [], approved = []) {
+        const pendingCountEl = document.getElementById('count-pending-tutorials');
+        if (pendingCountEl) pendingCountEl.textContent = pending.length;
+        const approvedCountEl = document.getElementById('count-approved-tutorials');
+        if (approvedCountEl) approvedCountEl.textContent = approved.length;
         const countEl = document.getElementById('count-all-tutorials');
-        if (countEl) countEl.textContent = tutorials.length;
-        if (!tutorialsList) return;
-        if (tutorials.length === 0) {
-          tutorialsList.innerHTML = `<div class="empty-feed-state" style="padding: 20px 0;"><p style="color: var(--text-muted); font-size: 0.85rem;">No tutorials or easter eggs added yet.</p></div>`;
-          return;
+        if (countEl) countEl.textContent = pending.length > 0 ? `${pending.length} pending` : approved.length;
+
+        const pendingListEl = document.getElementById('admin-pending-tutorials-list');
+        if (pendingListEl) {
+          if (pending.length === 0) {
+            pendingListEl.innerHTML = `<div class="empty-feed-state" style="padding: 20px 0;"><p style="color: var(--text-muted); font-size: 0.85rem;">No tutorials waiting for moderator approval.</p></div>`;
+          } else {
+            pendingListEl.innerHTML = pending.map(t => `
+              <div class="admin-row-item">
+                <div style="display: flex; gap: 14px; align-items: center; width: 100%;">
+                  <div style="width: 100px; height: 60px; border-radius: 8px; overflow: hidden; background: #000; flex-shrink: 0; position: relative;">
+                    <img src="${escapeHtml(t.thumbnail_url)}" alt="${escapeHtml(t.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                    <div style="position: absolute; bottom: 3px; right: 4px; background: rgba(0,0,0,0.7); font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; text-transform: uppercase;">
+                      ${escapeHtml(t.platform || 'video')}
+                    </div>
+                  </div>
+                  <div class="admin-row-info" style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                      <span class="badge-pill mod"><i class="fa-solid fa-clock"></i> PENDING APPROVAL</span>
+                      <span class="badge-pill verified">${escapeHtml(t.category_label || t.category)}</span>
+                      <strong>${escapeHtml(t.title)}</strong>
+                    </div>
+                    <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">${escapeHtml(t.description)}</p>
+                    <div style="margin-top: 4px;">
+                      <a href="${escapeHtml(t.video_url)}" target="_blank" rel="noopener noreferrer" style="font-size: 0.76rem; color: var(--accent-cyan); text-decoration: none;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Video Link
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="admin-row-actions">
+                  <button type="button" class="btn-post-submit" style="height: 34px; padding: 0 12px; font-size: 0.78rem;" data-act="approve_tutorial" data-id="${escapeHtml(t.id)}">
+                    <i class="fa-solid fa-check"></i> Approve
+                  </button>
+                  <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem; color: #fca5a5;" data-act="delete_tutorial" data-id="${escapeHtml(t.id)}" data-confirm="Reject and permanently delete this tutorial submission?">
+                    <i class="fa-solid fa-trash-can"></i> Reject
+                  </button>
+                </div>
+              </div>
+            `).join('');
+          }
         }
-        tutorialsList.innerHTML = tutorials.map(t => `
-          <div class="admin-row-item">
-            <div style="display: flex; gap: 14px; align-items: center; width: 100%;">
-              <div style="width: 100px; height: 60px; border-radius: 8px; overflow: hidden; background: #000; flex-shrink: 0; position: relative;">
-                <img src="${escapeHtml(t.thumbnail_url)}" alt="${escapeHtml(t.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
-                <div style="position: absolute; bottom: 3px; right: 4px; background: rgba(0,0,0,0.7); font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; text-transform: uppercase;">
-                  ${escapeHtml(t.platform || 'video')}
+
+        if (tutorialsList) {
+          if (approved.length === 0) {
+            tutorialsList.innerHTML = `<div class="empty-feed-state" style="padding: 20px 0;"><p style="color: var(--text-muted); font-size: 0.85rem;">No published tutorials or easter eggs in directory.</p></div>`;
+          } else {
+            tutorialsList.innerHTML = approved.map(t => `
+              <div class="admin-row-item">
+                <div style="display: flex; gap: 14px; align-items: center; width: 100%;">
+                  <div style="width: 100px; height: 60px; border-radius: 8px; overflow: hidden; background: #000; flex-shrink: 0; position: relative;">
+                    <img src="${escapeHtml(t.thumbnail_url)}" alt="${escapeHtml(t.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                    <div style="position: absolute; bottom: 3px; right: 4px; background: rgba(0,0,0,0.7); font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; text-transform: uppercase;">
+                      ${escapeHtml(t.platform || 'video')}
+                    </div>
+                  </div>
+                  <div class="admin-row-info" style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                      <span class="badge-pill verified">${escapeHtml(t.category_label || t.category)}</span>
+                      <strong>${escapeHtml(t.title)}</strong>
+                      <span style="font-size: 0.76rem; color: var(--text-dim);"><i class="fa-solid fa-eye"></i> ${escapeHtml(t.views_count || 0)} views</span>
+                    </div>
+                    <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">${escapeHtml(t.description)}</p>
+                    <div style="margin-top: 4px;">
+                      <a href="${escapeHtml(t.video_url)}" target="_blank" rel="noopener noreferrer" style="font-size: 0.76rem; color: var(--accent-cyan); text-decoration: none;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Video Link
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="admin-row-actions">
+                  <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem; color: #fca5a5;" data-act="delete_tutorial" data-id="${escapeHtml(t.id)}" data-confirm="Permanently delete this tutorial/easter egg video?">
+                    <i class="fa-solid fa-trash-can"></i> Delete
+                  </button>
                 </div>
               </div>
-              <div class="admin-row-info" style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                  <span class="badge-pill verified">${escapeHtml(t.category_label || t.category)}</span>
-                  <strong>${escapeHtml(t.title)}</strong>
-                  <span style="font-size: 0.76rem; color: var(--text-dim);"><i class="fa-solid fa-eye"></i> ${escapeHtml(t.views_count || 0)} views</span>
-                </div>
-                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">${escapeHtml(t.description)}</p>
-                <div style="margin-top: 4px;">
-                  <a href="${escapeHtml(t.video_url)}" target="_blank" rel="noopener noreferrer" style="font-size: 0.76rem; color: var(--accent-cyan); text-decoration: none;">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Video Link
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="admin-row-actions">
-              <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem; color: #fca5a5;" data-act="delete_tutorial" data-id="${escapeHtml(t.id)}" data-confirm="Permanently delete this tutorial/easter egg video?">
-                <i class="fa-solid fa-trash-can"></i> Delete
-              </button>
-            </div>
-          </div>
-        `).join('');
+            `).join('');
+          }
+        }
       }
 
       async function loadAdminData() {
@@ -371,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
           renderUsersList();
           renderReports(data.reports || []);
           renderTickets(data.tickets || []);
-          renderTutorials(data.tutorials || []);
+          renderTutorials(data.pendingTutorials || [], data.approvedTutorials || data.tutorials || []);
         } catch (err) {
           showToast('Error loading admin panel.');
         }

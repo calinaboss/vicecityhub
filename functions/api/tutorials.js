@@ -8,7 +8,8 @@ import {
   ensureTursoSchema,
   checkRateLimit,
   getAuthenticatedUser,
-  sanitizePlainText
+  sanitizePlainText,
+  verifyTurnstileToken
 } from './_turso.js';
 
 const CATEGORY_MAP = {
@@ -283,11 +284,41 @@ export async function onRequest(context) {
       }
 
       const authUser = await getAuthenticatedUser(request, env);
-      if (!authUser || authUser.role !== 'admin') {
-        return jsonResponse({ error: 'Forbidden: Administrator privileges required' }, 403);
+
+      if (action === 'delete') {
+        if (!authUser || authUser.role !== 'admin') {
+          return jsonResponse({ error: 'Forbidden: Administrator privileges required' }, 403);
+        }
+        const tutorialId = sanitizePlainText(body.targetId || body.id, 64);
+        if (!tutorialId) {
+          return jsonResponse({ error: 'Missing targetId' }, 400);
+        }
+        await runTursoSql(env, 'DELETE FROM tutorials WHERE id = ?', [tutorialId]);
+        return jsonResponse({ ok: true, deleted: tutorialId });
       }
 
-      if (action === 'create' || action === 'add') {
+      if (action === 'create' || action === 'add' || action === 'submit') {
+        const allowed = await checkRateLimit(env, `submit_tut_${ipHash}`, 6, 600000);
+        if (!allowed) {
+          return jsonResponse({ error: 'Too many submissions. Please wait 10 minutes before submitting again.' }, 429);
+        }
+
+        if (body.tutorial_hp_url && String(body.tutorial_hp_url).trim().length > 0) {
+          return jsonResponse({ error: 'Automated bot submission rejected' }, 400);
+        }
+
+        const turnstileToken = body.cfTurnstileResponse || body['cf-turnstile-response'] || '';
+        if (turnstileToken) {
+          const turnstileCheck = await verifyTurnstileToken(env, turnstileToken, ip, 'submit_tutorial');
+          if (!turnstileCheck.valid) {
+            return jsonResponse({ error: turnstileCheck.error || 'Security verification failed.' }, 403);
+          }
+        }
+
+        if (!authUser) {
+          return jsonResponse({ error: 'Authentication required. Please log in or create an account to share your video tutorial.' }, 401);
+        }
+
         const title = sanitizePlainText(body.title, 140);
         const description = sanitizePlainText(body.description, 1000);
         const category = sanitizePlainText(body.category, 40).toLowerCase();
@@ -298,8 +329,8 @@ export async function onRequest(context) {
           return jsonResponse({ error: 'Title must be at least 3 characters long' }, 400);
         }
 
-        if (!description || description.length < 5) {
-          return jsonResponse({ error: 'Description must be at least 5 characters long' }, 400);
+        if (!description || description.length < 10) {
+          return jsonResponse({ error: 'Description must be at least 10 characters long' }, 400);
         }
 
         if (!ALLOWED_CATEGORIES.includes(category)) {
@@ -321,11 +352,13 @@ export async function onRequest(context) {
         const tutorialId = generateUuid();
         const categoryLabel = CATEGORY_MAP[category] || 'Easter Eggs';
         const embedUrl = videoInfo.embedUrl || '';
+        const requiresApproval = authUser.role !== 'admin';
+        const status = requiresApproval ? 'pending' : 'approved';
 
         await runTursoSql(
           env,
           `INSERT INTO tutorials (id, title, description, category, category_label, video_url, platform, thumbnail_url, embed_url, views_count, status)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'approved')`,
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)`,
           [
             tutorialId,
             title,
@@ -335,12 +368,17 @@ export async function onRequest(context) {
             videoInfo.cleanUrl,
             videoInfo.platform,
             resolvedThumbnail,
-            embedUrl
+            embedUrl,
+            status
           ]
         );
 
         return jsonResponse({
           ok: true,
+          pending: requiresApproval,
+          message: requiresApproval
+            ? 'Your video tutorial has been submitted for review! It will appear publicly as soon as a moderator approves it.'
+            : 'Video tutorial published successfully!',
           tutorial: {
             id: tutorialId,
             title,
@@ -350,18 +388,10 @@ export async function onRequest(context) {
             video_url: videoInfo.cleanUrl,
             platform: videoInfo.platform,
             thumbnail_url: resolvedThumbnail,
-            embed_url: embedUrl
+            embed_url: embedUrl,
+            status
           }
         }, 201);
-      }
-
-      if (action === 'delete') {
-        const tutorialId = sanitizePlainText(body.targetId || body.id, 64);
-        if (!tutorialId) {
-          return jsonResponse({ error: 'Missing targetId' }, 400);
-        }
-        await runTursoSql(env, 'DELETE FROM tutorials WHERE id = ?', [tutorialId]);
-        return jsonResponse({ ok: true, deleted: tutorialId });
       }
 
       return jsonResponse({ error: 'Unsupported action' }, 400);

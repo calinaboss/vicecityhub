@@ -144,9 +144,14 @@
     </section>
 
     <section id="admin-tab-tutorials" class="admin-tab-panel" style="display: none;">
+      <h2 class="settings-section-title" style="margin-bottom: 12px;">
+        <i class="fa-solid fa-clock" style="color: var(--accent-pink);"></i> Tutorials Waiting for Approval (<span id="count-pending-tutorials">0</span>)
+      </h2>
+      <div id="admin-pending-tutorials-list" class="admin-flat-list" style="margin-bottom: 28px;"></div>
+
       <div class="submit-card" style="margin-bottom: 24px;">
         <h2 class="settings-section-title" style="margin-bottom: 8px;">
-          <i class="fa-solid fa-plus-circle" style="color: var(--accent-pink);"></i> Add New Tutorial / Easter Egg Video
+          <i class="fa-solid fa-plus-circle" style="color: var(--accent-pink);"></i> Add New Tutorial / Easter Egg Video (Fast Publish)
         </h2>
         <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 16px;">
           Paste a video link from YouTube, TikTok, or Instagram. The cover thumbnail is extracted automatically.
@@ -195,7 +200,7 @@
       </div>
 
       <h2 class="settings-section-title" style="margin-bottom: 12px;">
-        <i class="fa-solid fa-list-check" style="color: var(--accent-cyan);"></i> Published Tutorials &amp; Easter Eggs
+        <i class="fa-solid fa-list-check" style="color: var(--accent-cyan);"></i> Published Tutorials &amp; Easter Eggs (<span id="count-approved-tutorials">0</span>)
       </h2>
       <div id="admin-tutorials-list" class="admin-flat-list"></div>
     </section>

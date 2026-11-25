@@ -128,10 +128,20 @@ export async function onRequest(context) {
          LIMIT 50`
       ).catch(() => ({ rows: [] }));
 
-      const { rows: tutorials } = await runTursoSql(
+      const { rows: pendingTutorials } = await runTursoSql(
         env,
         `SELECT id, title, description, category, category_label, video_url, platform, thumbnail_url, embed_url, views_count, status, created_at
          FROM tutorials
+         WHERE status = 'pending'
+         ORDER BY created_at DESC
+         LIMIT 60`
+      ).catch(() => ({ rows: [] }));
+
+      const { rows: approvedTutorials } = await runTursoSql(
+        env,
+        `SELECT id, title, description, category, category_label, video_url, platform, thumbnail_url, embed_url, views_count, status, created_at
+         FROM tutorials
+         WHERE status = 'approved'
          ORDER BY created_at DESC
          LIMIT 100`
       ).catch(() => ({ rows: [] }));
@@ -144,7 +154,9 @@ export async function onRequest(context) {
         pendingDiscords: pendingDiscords || [],
         approvedDiscords: approvedDiscords || [],
         users: users || [],
-        tutorials: tutorials || [],
+        tutorials: approvedTutorials || [],
+        pendingTutorials: pendingTutorials || [],
+        approvedTutorials: approvedTutorials || [],
         tickets: (tickets || []).map(t => ({
           ...t,
           messages: ticketMessagesMap[t.id] || []
@@ -187,7 +199,9 @@ export async function onRequest(context) {
         await runTursoSql(env, "UPDATE discord_servers SET status = 'approved', verified = 1 WHERE id = ?", [targetId]);
       } else if (action === 'delete_discord' || action === 'reject_discord' || action === 'hide_discord') {
         await runTursoSql(env, 'DELETE FROM discord_servers WHERE id = ?', [targetId]);
-      } else if (action === 'delete_tutorial') {
+      } else if (action === 'approve_tutorial') {
+        await runTursoSql(env, "UPDATE tutorials SET status = 'approved' WHERE id = ?", [targetId]);
+      } else if (action === 'delete_tutorial' || action === 'reject_tutorial') {
         await runTursoSql(env, 'DELETE FROM tutorials WHERE id = ?', [targetId]);
       } else if (action === 'delete_user') {
         if (targetId === authUser.id) {
