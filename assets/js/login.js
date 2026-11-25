@@ -80,15 +80,15 @@ if (oauthSetup === 'google' && standardContainer && oauthCard) {
     authFeedback.style.background = 'rgba(239, 68, 68, 0.16)';
     authFeedback.style.color = '#fca5a5';
     if (oauthError === 'google_cancelled') {
-      authFeedback.textContent = 'Accesso con Google annullato.';
+      authFeedback.textContent = 'Google Sign-In was cancelled.';
     } else if (oauthError === 'account_suspended') {
-      authFeedback.textContent = 'Questo account è stato sospeso dai moderatori.';
+      authFeedback.textContent = 'This account has been suspended by moderators.';
     } else if (oauthError === 'invalid_state') {
-      authFeedback.textContent = 'Richiesta scaduta o non valida. Riprova ad accedere.';
+      authFeedback.textContent = 'Request expired or invalid. Please try logging in again.';
     } else if (oauthError === 'oauth_config_missing') {
-      authFeedback.textContent = 'Configurazione Google in corso. Inserisci GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET nelle variabili Cloudflare Pages.';
+      authFeedback.textContent = 'Google Sign-In configuration missing. Please verify GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET variables.';
     } else {
-      authFeedback.textContent = 'Autenticazione con Google non riuscita. Riprova o usa email e password.';
+      authFeedback.textContent = 'Google authentication failed. Please try again or use email and password.';
     }
   }
 }
@@ -103,7 +103,7 @@ if (oauthForm) {
       oauthFeedback.style.display = 'block';
       oauthFeedback.style.background = 'rgba(59, 130, 246, 0.14)';
       oauthFeedback.style.color = '#93c5fd';
-      oauthFeedback.textContent = 'Configurazione profilo in corso...';
+      oauthFeedback.textContent = 'Setting up profile...';
     }
     if (oauthSubmitBtn) {
       oauthSubmitBtn.disabled = true;
@@ -121,14 +121,14 @@ if (oauthForm) {
       try {
         data = JSON.parse(rawText);
       } catch (parseErr) {
-        data = { error: `Errore server (${res.status}). Riprova tra poco.` };
+        data = { error: `Server error (${res.status}). Please try again shortly.` };
       }
 
       if (!res.ok) {
         if (oauthFeedback) {
           oauthFeedback.style.background = 'rgba(239, 68, 68, 0.16)';
           oauthFeedback.style.color = '#fca5a5';
-          oauthFeedback.textContent = data.error || 'Errore durante la registrazione.';
+          oauthFeedback.textContent = data.error || 'Error during registration.';
         }
         if (oauthSubmitBtn) oauthSubmitBtn.disabled = false;
         return;
@@ -137,7 +137,7 @@ if (oauthForm) {
       if (oauthFeedback) {
         oauthFeedback.style.background = 'rgba(16, 185, 129, 0.16)';
         oauthFeedback.style.color = '#6ee7b7';
-        oauthFeedback.textContent = 'Account creato! Ti stiamo portando al tuo profilo...';
+        oauthFeedback.textContent = 'Account created! Redirecting to your profile...';
       }
 
       if (data.user && data.user.username) {
@@ -151,7 +151,7 @@ if (oauthForm) {
       if (oauthFeedback) {
         oauthFeedback.style.background = 'rgba(239, 68, 68, 0.16)';
         oauthFeedback.style.color = '#fca5a5';
-        oauthFeedback.textContent = err && err.message ? `Errore di connessione: ${err.message}` : 'Errore di rete. Riprova.';
+        oauthFeedback.textContent = err && err.message ? `Connection error: ${err.message}` : 'Network error. Please try again.';
       }
       if (oauthSubmitBtn) oauthSubmitBtn.disabled = false;
     }

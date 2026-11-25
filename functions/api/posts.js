@@ -419,7 +419,7 @@ export async function onRequest(context) {
                 authUser.username.toLowerCase() === (p.author || '').toLowerCase()
               ))
             )) {
-              return jsonResponse({ error: 'Non puoi segnalare il tuo stesso post.' }, 400);
+              return jsonResponse({ error: 'You cannot report your own post.' }, 400);
             }
           }
         } catch (e) {}

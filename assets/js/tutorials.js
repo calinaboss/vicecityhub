@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="tutorial-action-bar">
               <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-watch-btn" data-view-id="${escapeHtml(tut.id)}">
-                <i class="fa-solid fa-circle-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.74rem;"></i>
+                <i class="fa-solid fa-circle-play"></i> Watch Tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.74rem;"></i>
               </a>
             </div>
           </article>

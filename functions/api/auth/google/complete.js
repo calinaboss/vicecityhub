@@ -39,7 +39,7 @@ export async function onRequest(context) {
 
     if (!pendingToken) {
       return jsonResponse({
-        error: 'Sessione di autenticazione Google scaduta o non trovata. Riavvia l\'accesso con Google.'
+        error: 'Google authentication session expired or not found. Please restart Google Sign-In.'
       }, 401);
     }
 
@@ -48,7 +48,7 @@ export async function onRequest(context) {
 
     if (!oauthData || !oauthData.googleId || !oauthData.email) {
       return jsonResponse({
-        error: 'Token di autorizzazione Google non valido o scaduto. Effettua nuovamente il login con Google.'
+        error: 'Invalid or expired Google authorization token. Please log in with Google again.'
       }, 401);
     }
 
@@ -56,19 +56,19 @@ export async function onRequest(context) {
     try {
       body = await request.json();
     } catch (e) {
-      return jsonResponse({ error: 'Payload JSON non valido' }, 400);
+      return jsonResponse({ error: 'Invalid JSON request payload' }, 400);
     }
 
     const rawUsername = (body && typeof body.username === 'string') ? body.username.trim() : '';
     const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
     if (!usernameRegex.test(rawUsername)) {
       return jsonResponse({
-        error: 'Il nome utente deve avere da 3 a 20 caratteri alfanumerici o underscore (nessuno spazio o simbolo speciale).'
+        error: 'Username must be between 3 and 20 alphanumeric characters or underscore (no spaces or special symbols).'
       }, 400);
     }
 
     if (!isTursoConfigured(env)) {
-      return jsonResponse({ error: 'Database non disponibile al momento. Riprova più tardi.' }, 500);
+      return jsonResponse({ error: 'Database temporarily unavailable. Please try again later.' }, 500);
     }
 
     await ensureTursoSchema(env);
@@ -81,7 +81,7 @@ export async function onRequest(context) {
 
     if (takenUsers && takenUsers.length > 0) {
       return jsonResponse({
-        error: 'Questo nome utente è già in uso. Per favore scegline uno diverso.'
+        error: 'This username is already taken. Please choose a different one.'
       }, 409);
     }
 
@@ -99,7 +99,7 @@ export async function onRequest(context) {
     if (existingAccount && existingAccount.length > 0) {
       user = existingAccount[0];
       if (Number(user.is_banned) === 1) {
-        return jsonResponse({ error: 'Questo account è stato sospeso.' }, 403);
+        return jsonResponse({ error: 'This account has been suspended.' }, 403);
       }
       await runTursoSql(
         env,
@@ -160,7 +160,7 @@ export async function onRequest(context) {
     });
   } catch (err) {
     return jsonResponse({
-      error: err && err.message ? err.message : 'Errore imprevisto durante il completamento dell\'account.'
+      error: err && err.message ? err.message : 'Unexpected error during account setup.'
     }, 500);
   }
 }

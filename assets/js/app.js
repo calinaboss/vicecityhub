@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ${extraComments.map(renderComment).join('')}
       </div>
       <button type="button" class="btn-show-more-comments" data-id="${post.id}">
-        <i class="fa-solid fa-chevron-down"></i> Visualizza altri ${extraComments.length} commenti
+        <i class="fa-solid fa-chevron-down"></i> View ${extraComments.length} more comments
       </button>
     ` : '';
 
@@ -531,11 +531,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const isHidden = extraBox.style.display === 'none';
           if (isHidden) {
             extraBox.style.display = 'flex';
-            moreCommentsBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Mostra meno commenti';
+            moreCommentsBtn.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Show fewer comments';
           } else {
             extraBox.style.display = 'none';
             const count = extraBox.querySelectorAll('.single-comment').length;
-            moreCommentsBtn.innerHTML = `<i class="fa-solid fa-chevron-down"></i> Visualizza altri ${count} commenti`;
+            moreCommentsBtn.innerHTML = `<i class="fa-solid fa-chevron-down"></i> View ${count} more comments`;
           }
         }
         return;
@@ -2582,7 +2582,7 @@ document.addEventListener('DOMContentLoaded', () => {
         (currentUser.username && targetPost.author && currentUser.username.toLowerCase() === targetPost.author.toLowerCase())
       );
       if (isOwner) {
-        showToast('Non puoi segnalare il tuo stesso post.');
+        showToast('You cannot report your own post.');
         return;
       }
     }
