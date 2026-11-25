@@ -80,13 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
 
-            <h2 class="tutorial-title">${escapeHtml(tut.title)}</h2>
-            <p class="tutorial-desc">${escapeHtml(tut.description)}</p>
-
             <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
               <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
               <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
             </a>
+
+            <div class="tutorial-info-block">
+              <h2 class="tutorial-title">${escapeHtml(tut.title)}</h2>
+              <p class="tutorial-desc">${escapeHtml(tut.description)}</p>
+            </div>
 
             <div class="tutorial-action-bar">
               <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-watch-btn" data-view-id="${escapeHtml(tut.id)}">

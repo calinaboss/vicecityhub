@@ -4011,18 +4011,19 @@ body.page-map-view {
 }
 
 .tutorial-title {
-  font-size: 1.25rem;
-  font-weight: 800;
+  font-size: 0.98rem;
+  font-weight: 700;
   color: #ffffff;
-  line-height: 1.35;
-  margin-bottom: 8px;
+  line-height: 1.4;
+  margin: 12px 0 4px;
+  letter-spacing: -0.2px;
 }
 
 .tutorial-desc {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 18px;
+  line-height: 1.55;
+  margin-bottom: 12px;
 }
 
 .tutorial-phone-preview {
@@ -4129,46 +4130,50 @@ body.page-map-view {
     padding: 16px;
   }
   .tutorial-title {
-    font-size: 1.1rem;
+    font-size: 0.94rem;
   }
 }
 
 .seo-editorial-clean {
-  margin-top: 50px;
-  padding: 32px 0 20px;
+  margin-top: 48px;
+  padding: 32px 16px 20px;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  max-width: 740px;
+  max-width: 680px;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
 
 .seo-editorial-clean h2 {
-  font-size: 1.45rem;
-  color: var(--text-main);
-  font-weight: 800;
-  margin-bottom: 16px;
-  letter-spacing: -0.3px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.seo-editorial-clean h3 {
   font-size: 1.15rem;
   color: #ffffff;
   font-weight: 700;
-  margin-top: 24px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  letter-spacing: -0.2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.seo-editorial-clean h3 {
+  font-size: 0.96rem;
+  color: #e2e8f0;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  text-align: center;
 }
 
 .seo-editorial-clean p {
-  font-size: 0.88rem;
-  line-height: 1.68;
+  font-size: 0.82rem;
+  line-height: 1.6;
   margin-bottom: 14px;
-  color: #cbd5e1;
+  color: var(--text-muted);
+  text-align: center;
 }
 
 .seo-editorial-clean a {
@@ -4179,14 +4184,6 @@ body.page-map-view {
 
 .seo-editorial-clean a:hover {
   color: var(--accent-cyan);
-}
-  line-height: 1.5;
-  margin-bottom: 14px;
-  flex: 1;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .tutorial-footer {
@@ -4202,36 +4199,37 @@ body.page-map-view {
 
 .seo-editorial-section {
   margin-top: 40px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
-  padding: 32px 28px;
+  background: transparent !important;
+  border: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0 !important;
+  padding: 32px 0 10px !important;
   color: var(--text-muted);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  box-shadow: none !important;
 }
 
 .seo-editorial-section h2 {
-  font-size: 1.45rem;
+  font-size: 1.25rem;
   color: var(--text-main);
   font-weight: 800;
-  margin-bottom: 16px;
-  letter-spacing: -0.3px;
+  margin-bottom: 14px;
+  letter-spacing: -0.2px;
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
 .seo-editorial-section h3 {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   color: #ffffff;
   font-weight: 700;
-  margin-top: 24px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 8px;
 }
 
 .seo-editorial-section p {
-  font-size: 0.88rem;
-  line-height: 1.68;
+  font-size: 0.85rem;
+  line-height: 1.65;
   margin-bottom: 14px;
   color: #cbd5e1;
 }
@@ -4242,7 +4240,7 @@ body.page-map-view {
 }
 
 .seo-editorial-section li {
-  font-size: 0.86rem;
+  font-size: 0.84rem;
   line-height: 1.6;
   margin-bottom: 6px;
   color: #cbd5e1;
@@ -4261,15 +4259,15 @@ body.page-map-view {
 .seo-editorial-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 14px;
   margin: 20px 0;
 }
 
 .seo-card {
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 10px;
-  padding: 18px;
+  padding: 16px;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -4279,17 +4277,17 @@ body.page-map-view {
 }
 
 .seo-card h4 {
-  font-size: 0.96rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #ffffff;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .seo-card p {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   line-height: 1.5;
   color: var(--text-muted);
   margin-bottom: 0;

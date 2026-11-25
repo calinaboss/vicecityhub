@@ -30,8 +30,11 @@ const ALLOWED_VIDEO_HOSTS = new Set([
   'tiktok.com',
   'www.tiktok.com',
   'vm.tiktok.com',
+  'vt.tiktok.com',
+  'm.tiktok.com',
   'instagram.com',
-  'www.instagram.com'
+  'www.instagram.com',
+  'm.instagram.com'
 ]);
 
 function parseVideoInfo(rawUrl) {
@@ -95,12 +98,31 @@ function parseVideoInfo(rawUrl) {
 
 async function fetchOEmbedThumbnail(platform, videoUrl) {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 3500);
+  const timeoutId = setTimeout(() => controller.abort(), 4000);
   try {
     if (platform === 'tiktok') {
+      try {
+        const pageRes = await fetch(videoUrl, {
+          redirect: 'follow',
+          headers: {
+            'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'
+          },
+          signal: controller.signal
+        });
+        if (pageRes.ok) {
+          const html = await pageRes.text();
+          const ogMatch = html.match(/property=["']og:image["']\s+content=["']([^"']+)["']/i) ||
+                          html.match(/content=["']([^"']+)["']\s+property=["']og:image["']/i) ||
+                          html.match(/name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
+          if (ogMatch && ogMatch[1]) {
+            clearTimeout(timeoutId);
+            return ogMatch[1].replace(/&amp;/g, '&');
+          }
+        }
+      } catch (tiktokErr) {}
       const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(videoUrl)}`;
       const res = await fetch(oembedUrl, {
-        headers: { 'User-Agent': 'ViceCityHub-Bot/1.0' },
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
         signal: controller.signal
       });
       clearTimeout(timeoutId);
@@ -111,9 +133,28 @@ async function fetchOEmbedThumbnail(platform, videoUrl) {
         }
       }
     } else if (platform === 'instagram') {
+      try {
+        const pageRes = await fetch(videoUrl, {
+          redirect: 'follow',
+          headers: {
+            'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'
+          },
+          signal: controller.signal
+        });
+        if (pageRes.ok) {
+          const html = await pageRes.text();
+          const ogMatch = html.match(/property=["']og:image["']\s+content=["']([^"']+)["']/i) ||
+                          html.match(/content=["']([^"']+)["']\s+property=["']og:image["']/i) ||
+                          html.match(/name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
+          if (ogMatch && ogMatch[1]) {
+            clearTimeout(timeoutId);
+            return ogMatch[1].replace(/&amp;/g, '&');
+          }
+        }
+      } catch (instaErr) {}
       const oembedUrl = `https://api.instagram.com/oembed/?url=${encodeURIComponent(videoUrl)}`;
       const res = await fetch(oembedUrl, {
-        headers: { 'User-Agent': 'ViceCityHub-Bot/1.0' },
+        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
         signal: controller.signal
       });
       clearTimeout(timeoutId);
