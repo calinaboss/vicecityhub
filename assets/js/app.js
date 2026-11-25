@@ -1254,6 +1254,25 @@ document.addEventListener('DOMContentLoaded', () => {
         ? `<img src="${escapeHtml(rawIcon)}" alt="${escapeHtml(s.name)}" class="discord-server-logo-img" loading="lazy">`
         : `<i class="fa-brands fa-discord"></i>`;
 
+      const rawDesc = s.desc || '';
+      const isLong = rawDesc.length > 95 || rawDesc.includes('\n');
+      let descMarkup = '';
+
+      if (isLong) {
+        const shortText = rawDesc.replace(/\s+/g, ' ').slice(0, 95).trim() + '...';
+        descMarkup = `
+          <div class="discord-desc-container">
+            <div class="discord-list-desc discord-desc-short">${escapeHtml(shortText)}</div>
+            <div class="discord-list-desc discord-desc-full" style="display: none;">${escapeHtml(rawDesc)}</div>
+            <button type="button" class="btn-discord-desc-toggle" aria-expanded="false">
+              See more <i class="fa-solid fa-chevron-down"></i>
+            </button>
+          </div>
+        `;
+      } else {
+        descMarkup = `<p class="discord-list-desc">${escapeHtml(rawDesc)}</p>`;
+      }
+
       return `
       <div class="discord-list-item">
         <div class="discord-list-left">
@@ -1266,7 +1285,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="discord-pill-tag">${escapeHtml(s.tag)}</span>
               <span class="discord-country-tag">${escapeHtml(s.countryLabel)}</span>
             </div>
-            <p class="discord-list-desc">${escapeHtml(s.desc)}</p>
+            ${descMarkup}
           </div>
         </div>
         <div class="discord-list-right">
@@ -1283,6 +1302,19 @@ document.addEventListener('DOMContentLoaded', () => {
   if (discordGrid) {
     localStorage.removeItem('vicecityhub_custom_discords');
     renderDiscords();
+
+    discordGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-discord-desc-toggle');
+      if (!btn) return;
+      e.preventDefault();
+      const container = btn.closest('.discord-desc-container');
+      if (!container) return;
+      const isExpanded = container.classList.toggle('is-expanded');
+      btn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+      btn.innerHTML = isExpanded
+        ? 'See less <i class="fa-solid fa-chevron-up"></i>'
+        : 'See more <i class="fa-solid fa-chevron-down"></i>';
+    });
 
     fetch('/api/discords')
       .then(r => r.ok ? r.json() : null)

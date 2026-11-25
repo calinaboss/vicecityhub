@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   <strong>${escapeHtml(d.name)}</strong>
                   <a href="${escapeHtml(d.invite_url)}" target="_blank" rel="noopener noreferrer" style="font-size: 0.76rem; color: var(--accent-cyan);">${escapeHtml(d.invite_url)}</a>
                 </div>
-                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">${escapeHtml(d.description)}</p>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; white-space: pre-line; word-break: break-word;">${escapeHtml(d.description)}</p>
               </div>
               <div class="admin-row-actions">
                 <button type="button" class="btn-post-submit" style="height: 34px; padding: 0 12px; font-size: 0.78rem;" data-act="approve_discord" data-id="${escapeHtml(d.id)}">

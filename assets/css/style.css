@@ -999,7 +999,7 @@ img {
   border-radius: 0;
   padding: 14px 8px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
   transition: background-color 0.15s ease;
@@ -1011,7 +1011,7 @@ img {
 
 .discord-list-left {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
   flex: 1;
   min-width: 0;
@@ -1028,6 +1028,7 @@ img {
   font-size: 1.35rem;
   color: var(--color-discord);
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .discord-list-info {
@@ -1035,6 +1036,7 @@ img {
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  flex: 1;
 }
 
 .discord-list-title-row {
@@ -1073,14 +1075,51 @@ img {
   border-radius: 4px;
 }
 
+.discord-desc-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  max-width: 680px;
+  width: 100%;
+}
+
 .discord-list-desc {
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   color: var(--text-muted);
-  line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 640px;
+  line-height: 1.5;
+  white-space: pre-line;
+  word-break: break-word;
+  max-width: 680px;
+}
+
+.discord-desc-container.is-expanded .discord-desc-short {
+  display: none !important;
+}
+
+.discord-desc-container.is-expanded .discord-desc-full {
+  display: block !important;
+}
+
+.btn-discord-desc-toggle {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-top: 3px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: inherit;
+  transition: color 0.15s ease;
+}
+
+.btn-discord-desc-toggle:hover {
+  color: var(--accent-pink);
+  text-decoration: underline;
 }
 
 .discord-list-right {
@@ -1088,6 +1127,7 @@ img {
   align-items: center;
   gap: 18px;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .discord-members-count {
@@ -1132,7 +1172,7 @@ img {
     border-top: 1px solid var(--border-light);
   }
   .discord-list-desc {
-    white-space: normal;
+    white-space: pre-line;
   }
 }
 
