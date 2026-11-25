@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "@type": "VideoObject",
             "name": tut.title,
             "description": tut.description || tut.title,
-            "thumbnailUrl": [tut.thumbnail_url && tut.thumbnail_url !== '/assets/brand/vicecityhub-og.jpg' ? tut.thumbnail_url : (tut.platform === 'instagram' && tut.video_url ? `https://www.instagram.com/p/${(tut.video_url.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i) || [])[1] || ''}/media/?size=l` : 'https://vicecityhub.eu/assets/brand/og-banner.png')],
+            "thumbnailUrl": [tut.thumbnail_url && tut.thumbnail_url !== '/assets/brand/vicecityhub-og.jpg' && tut.thumbnail_url !== '/assets/brand/video-fallback-16x9.webp' ? tut.thumbnail_url : (tut.platform === 'instagram' ? 'https://vicecityhub.eu/assets/brand/instagram-fallback.webp' : 'https://vicecityhub.eu/assets/brand/video-fallback-16x9.webp')],
             "uploadDate": rawDate,
             "contentUrl": tut.video_url,
             "embedUrl": tut.embed_url || tut.video_url,
@@ -129,13 +129,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let thumbUrl = tut.thumbnail_url || '';
         if (platform === 'instagram') {
           thumbUrl = '/assets/brand/instagram-fallback.webp';
-        } else if (!thumbUrl || thumbUrl === '/assets/brand/vicecityhub-og.jpg') {
+        } else if (!thumbUrl || thumbUrl === '/assets/brand/vicecityhub-og.jpg' || thumbUrl === '/assets/brand/video-fallback-16x9.webp') {
           if (platform === 'youtube') {
             const ym = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
             if (ym && ym[1]) thumbUrl = `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
           }
         }
-        if (!thumbUrl) thumbUrl = platform === 'instagram' ? '/assets/brand/instagram-fallback.webp' : '/assets/brand/vicecityhub-og.jpg';
+        if (!thumbUrl) thumbUrl = platform === 'instagram' ? '/assets/brand/instagram-fallback.webp' : '/assets/brand/video-fallback-16x9.webp';
         const dateStr = tut.created_at ? tut.created_at.slice(0, 10) : '';
 
         let mediaHtml = '';
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             mediaHtml = `
               <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
-                <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/video-fallback-16x9.webp'">
                 <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
               </a>
             `;
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             mediaHtml = `
               <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
-                <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/video-fallback-16x9.webp'">
                 <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
               </a>
             `;
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           mediaHtml = `
             <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
-              <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+              <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/video-fallback-16x9.webp'">
               <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
             </a>
           `;

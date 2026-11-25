@@ -15,7 +15,7 @@ function formatTutorialRow(r) {
   let tUrl = (r.thumbnail_url || '').trim();
   if (r.platform === 'instagram') {
     tUrl = '/assets/brand/instagram-fallback.webp';
-  } else if (!tUrl || tUrl === '/assets/brand/vicecityhub-og.jpg') {
+  } else if (!tUrl || tUrl === '/assets/brand/vicecityhub-og.jpg' || tUrl === '/assets/brand/video-fallback-16x9.webp') {
     if (r.platform === 'youtube' && r.video_url) {
       const ym = r.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
       if (ym && ym[1]) {
@@ -23,7 +23,7 @@ function formatTutorialRow(r) {
       }
     }
   }
-  return { ...r, thumbnail_url: tUrl || '/assets/brand/vicecityhub-og.jpg' };
+  return { ...r, thumbnail_url: tUrl || '/assets/brand/video-fallback-16x9.webp' };
 }
 
 export async function onRequest(context) {
