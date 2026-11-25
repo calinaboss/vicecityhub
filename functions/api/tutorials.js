@@ -39,15 +39,22 @@ const ALLOWED_VIDEO_HOSTS = new Set([
 
 function parseVideoInfo(rawUrl) {
   if (!rawUrl || typeof rawUrl !== 'string') return null;
-  const trimmed = rawUrl.trim();
+  let str = rawUrl.trim();
+  if (str.includes('<iframe')) {
+    const srcMatch = str.match(/src=["']([^"']+)["']/i);
+    if (srcMatch && srcMatch[1]) {
+      str = srcMatch[1];
+    }
+  }
+
   let parsed;
   try {
-    parsed = new URL(trimmed);
+    parsed = new URL(str);
   } catch (e) {
     return null;
   }
 
-  if (parsed.protocol !== 'https:') return null;
+  if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
   const host = parsed.hostname.toLowerCase();
   if (!ALLOWED_VIDEO_HOSTS.has(host)) return null;
 
@@ -56,7 +63,9 @@ function parseVideoInfo(rawUrl) {
     if (/^[a-zA-Z0-9_-]{11}$/.test(id)) {
       return {
         platform: 'youtube',
+        videoId: id,
         cleanUrl: `https://www.youtube.com/watch?v=${id}`,
+        embedUrl: `https://www.youtube-nocookie.com/embed/${id}`,
         thumbnailUrl: `https://img.youtube.com/vi/${id}/hqdefault.jpg`
       };
     }
@@ -71,24 +80,40 @@ function parseVideoInfo(rawUrl) {
     if (id && /^[a-zA-Z0-9_-]{11}$/.test(id)) {
       return {
         platform: 'youtube',
+        videoId: id,
         cleanUrl: `https://www.youtube.com/watch?v=${id}`,
+        embedUrl: `https://www.youtube-nocookie.com/embed/${id}`,
         thumbnailUrl: `https://img.youtube.com/vi/${id}/hqdefault.jpg`
       };
     }
   }
 
   if (host.includes('tiktok.com')) {
+    const idMatch = str.match(/\/video\/(\d+)/i) || str.match(/\/v1\/(\d+)/i) || str.match(/[?&]item_id=(\d+)/i);
+    const videoId = idMatch ? idMatch[1] : '';
+    const embedUrl = videoId
+      ? `https://www.tiktok.com/player/v1/${videoId}?embed_from=webapp_share&music_info=1&description=1&autoplay=0&muted=0`
+      : str;
     return {
       platform: 'tiktok',
-      cleanUrl: trimmed,
+      videoId,
+      cleanUrl: videoId ? `https://www.tiktok.com/@community/video/${videoId}` : str,
+      embedUrl,
       thumbnailUrl: ''
     };
   }
 
   if (host.includes('instagram.com')) {
+    let code = '';
+    const match = parsed.pathname.match(/\/(reel|p)\/([a-zA-Z0-9_-]+)/i);
+    if (match) {
+      code = match[2];
+    }
     return {
       platform: 'instagram',
-      cleanUrl: trimmed,
+      videoId: code,
+      cleanUrl: code ? `https://www.instagram.com/reel/${code}/` : str,
+      embedUrl: code ? `https://www.instagram.com/p/${code}/embed/captioned/` : str,
       thumbnailUrl: ''
     };
   }
@@ -213,7 +238,7 @@ export async function onRequest(context) {
       }
 
       const whereClause = conditions.join(' AND ');
-      const sql = `SELECT id, title, description, category, category_label, video_url, platform, thumbnail_url, views_count, status, created_at
+      const sql = `SELECT id, title, description, category, category_label, video_url, platform, thumbnail_url, embed_url, views_count, status, created_at
                    FROM tutorials
                    WHERE ${whereClause}
                    ORDER BY created_at DESC
@@ -290,11 +315,12 @@ export async function onRequest(context) {
 
         const tutorialId = generateUuid();
         const categoryLabel = CATEGORY_MAP[category] || 'Easter Eggs';
+        const embedUrl = videoInfo.embedUrl || '';
 
         await runTursoSql(
           env,
-          `INSERT INTO tutorials (id, title, description, category, category_label, video_url, platform, thumbnail_url, views_count, status)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, 'approved')`,
+          `INSERT INTO tutorials (id, title, description, category, category_label, video_url, platform, thumbnail_url, embed_url, views_count, status)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 'approved')`,
           [
             tutorialId,
             title,
@@ -303,7 +329,8 @@ export async function onRequest(context) {
             categoryLabel,
             videoInfo.cleanUrl,
             videoInfo.platform,
-            resolvedThumbnail
+            resolvedThumbnail,
+            embedUrl
           ]
         );
 
@@ -317,7 +344,8 @@ export async function onRequest(context) {
             category_label: categoryLabel,
             video_url: videoInfo.cleanUrl,
             platform: videoInfo.platform,
-            thumbnail_url: resolvedThumbnail
+            thumbnail_url: resolvedThumbnail,
+            embed_url: embedUrl
           }
         }, 201);
       }

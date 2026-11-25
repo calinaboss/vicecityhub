@@ -396,6 +396,9 @@ export async function ensureTursoSchema(env) {
     try {
       await runTursoSql(env, "DELETE FROM tutorials WHERE id LIKE 'tut-%'");
     } catch (cleanTutErr) {}
+    try {
+      await runTursoSql(env, 'ALTER TABLE tutorials ADD COLUMN embed_url TEXT');
+    } catch (colTutErr) {}
     tursoSchemaReady = true;
   } catch (e) {}
 }

@@ -4010,20 +4010,57 @@ body.page-map-view {
   gap: 5px;
 }
 
-.tutorial-title {
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: #ffffff;
-  line-height: 1.4;
-  margin: 12px 0 4px;
-  letter-spacing: -0.2px;
+.tutorial-title,
+.tutorial-card .tutorial-title {
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  line-height: 1.4 !important;
+  margin: 12px 0 4px !important;
+  letter-spacing: -0.2px !important;
 }
 
-.tutorial-desc {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.55;
-  margin-bottom: 12px;
+.tutorial-desc,
+.tutorial-card .tutorial-desc {
+  font-size: 0.82rem !important;
+  color: var(--text-muted) !important;
+  line-height: 1.55 !important;
+  margin-bottom: 12px !important;
+}
+
+.tutorial-media-frame {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.tutorial-media-frame.tiktok-frame {
+  max-width: 325px;
+  height: 578px;
+  margin: 0 auto;
+}
+
+.tutorial-tiktok-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.tutorial-media-frame.youtube-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.tutorial-youtube-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
 }
 
 .tutorial-phone-preview {

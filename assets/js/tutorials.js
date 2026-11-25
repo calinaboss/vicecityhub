@@ -68,6 +68,72 @@ document.addEventListener('DOMContentLoaded', () => {
         const thumbUrl = tut.thumbnail_url || '/assets/brand/vicecityhub-og.jpg';
         const dateStr = tut.created_at ? tut.created_at.slice(0, 10) : '';
 
+        let mediaHtml = '';
+        let tiktokEmbed = tut.embed_url || '';
+        if (platform === 'tiktok') {
+          if (!tiktokEmbed && videoUrl) {
+            const m = videoUrl.match(/\/video\/(\d+)/i) || videoUrl.match(/\/v1\/(\d+)/i) || videoUrl.match(/item_id=(\d+)/i);
+            if (m) {
+              tiktokEmbed = `https://www.tiktok.com/player/v1/${m[1]}?embed_from=webapp_share&music_info=1&description=1&autoplay=0&muted=0`;
+            }
+          }
+          if (tiktokEmbed) {
+            mediaHtml = `
+              <div class="tutorial-media-frame tiktok-frame">
+                <iframe src="${escapeHtml(tiktokEmbed)}"
+                        class="tutorial-tiktok-iframe"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                        loading="lazy"
+                        title="${escapeHtml(tut.title)}">
+                </iframe>
+              </div>
+            `;
+          } else {
+            mediaHtml = `
+              <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
+                <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
+              </a>
+            `;
+          }
+        } else if (platform === 'youtube') {
+          let ytEmbed = tut.embed_url || '';
+          if (!ytEmbed && videoUrl) {
+            const m = videoUrl.match(/(?:v=|\/embed\/|\/shorts\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+            if (m) {
+              ytEmbed = `https://www.youtube-nocookie.com/embed/${m[1]}`;
+            }
+          }
+          if (ytEmbed) {
+            mediaHtml = `
+              <div class="tutorial-media-frame youtube-frame">
+                <iframe src="${escapeHtml(ytEmbed)}"
+                        class="tutorial-youtube-iframe"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                        loading="lazy"
+                        title="${escapeHtml(tut.title)}">
+                </iframe>
+              </div>
+            `;
+          } else {
+            mediaHtml = `
+              <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
+                <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
+              </a>
+            `;
+          }
+        } else {
+          mediaHtml = `
+            <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
+              <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+              <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
+            </a>
+          `;
+        }
+
         return `
           <article class="tutorial-card">
             <div class="tutorial-header-row">
@@ -80,10 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
 
-            <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
-              <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
-              <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
-            </a>
+            ${mediaHtml}
 
             <div class="tutorial-info-block">
               <h2 class="tutorial-title">${escapeHtml(tut.title)}</h2>

@@ -130,7 +130,7 @@ export async function onRequest(context) {
 
       const { rows: tutorials } = await runTursoSql(
         env,
-        `SELECT id, title, description, category, category_label, video_url, platform, thumbnail_url, views_count, status, created_at
+        `SELECT id, title, description, category, category_label, video_url, platform, thumbnail_url, embed_url, views_count, status, created_at
          FROM tutorials
          ORDER BY created_at DESC
          LIMIT 100`
