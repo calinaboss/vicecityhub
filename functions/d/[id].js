@@ -24,10 +24,28 @@ function stripTags(str) {
 
 function formatIsoTime(val) {
   if (!val) return new Date().toISOString();
+  if (typeof val === 'number') {
+    const ms = val > 1e11 ? val : val * 1000;
+    const d = new Date(ms);
+    return !isNaN(d.getTime()) ? d.toISOString() : new Date().toISOString();
+  }
   let str = String(val).trim();
-  if (str.includes(' ') && !str.includes('T')) str = str.replace(' ', 'T');
-  if (/Z$|[+-]\d{2}:\d{2}$/.test(str)) return str;
-  return str + 'Z';
+  if (!str) return new Date().toISOString();
+  if (/^(just now|recently|today|\d+[smhdw]\s*ago)/i.test(str)) {
+    return new Date().toISOString();
+  }
+  if (str.includes(' ') && !str.includes('T')) {
+    str = str.replace(' ', 'T');
+  }
+  const direct = new Date(str);
+  if (!isNaN(direct.getTime())) {
+    return direct.toISOString();
+  }
+  const withZ = new Date(str.endsWith('Z') ? str : (str + 'Z'));
+  if (!isNaN(withZ.getTime())) {
+    return withZ.toISOString();
+  }
+  return new Date().toISOString();
 }
 
 function formatDisplayDate(val) {
@@ -213,14 +231,13 @@ export async function onRequest(context) {
       dateCreated: formatIsoTime(c.created_at),
       author: {
         '@type': 'Person',
-        name: c.author
+        name: c.author || c.username || 'ViceCityHub Member',
+        url: `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(c.username || c.author || 'member')}`
       }
     }))
   };
 
-  if (fullMediaUrl) {
-    discussionSchema.image = fullMediaUrl;
-  }
+  discussionSchema.image = fullMediaUrl || 'https://vicecityhub.eu/assets/brand/og-banner.png';
 
   const videoOgMeta = isVideoMedia ? `
   <meta property="og:video" content="${escapeHtml(fullMediaUrl)}">

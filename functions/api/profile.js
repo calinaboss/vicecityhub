@@ -203,7 +203,7 @@ export async function onRequest(context) {
           username: targetUser.username,
           email: isOwnProfile ? targetUser.email : undefined,
           role: targetUser.role || 'user',
-          avatar_url: targetUser.avatar_url || 'assets/brand/favicon-192x192.png',
+          avatar_url: targetUser.avatar_url ? (targetUser.avatar_url.startsWith('assets/') ? `https://vicecityhub.eu/${targetUser.avatar_url}` : targetUser.avatar_url) : 'https://vicecityhub.eu/assets/brand/favicon-192x192.png',
           banner_color: sanitizeHexColor(targetUser.banner_color),
           bio: targetUser.bio || '',
           discord_handle: targetUser.discord_handle || '',

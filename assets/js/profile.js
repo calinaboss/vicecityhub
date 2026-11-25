@@ -73,6 +73,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function resolveAbsoluteImageUrl(url) {
+    if (!url || typeof url !== 'string') return 'https://vicecityhub.eu/assets/brand/favicon-512x512.png';
+    const clean = url.trim();
+    if (!clean || clean.startsWith('data:') || clean.includes(';base64')) {
+      return 'https://vicecityhub.eu/assets/brand/favicon-512x512.png';
+    }
+    if (/^https?:\/\//i.test(clean)) {
+      return clean;
+    }
+    if (clean.startsWith('//')) {
+      return `https:${clean}`;
+    }
+    if (clean.startsWith('/')) {
+      return `https://vicecityhub.eu${clean}`;
+    }
+    return `https://vicecityhub.eu/${clean.replace(/^\.?\//, '')}`;
+  }
+
   function renderSocialsBar(profile) {
     if (!socialsBar) return;
     socialsBar.innerHTML = '';
@@ -216,17 +234,18 @@ document.addEventListener('DOMContentLoaded', () => {
       schemaTag.id = 'dynamic-profile-jsonld';
       document.head.appendChild(schemaTag);
     }
+    const resolvedAvatar = resolveAbsoluteImageUrl(currentProfile.avatar_url);
     const socialUrls = Object.values(currentProfile.social_links || {}).filter(v => typeof v === 'string' && v.startsWith('https://'));
     schemaTag.textContent = JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'ProfilePage',
       mainEntity: {
         '@type': 'Person',
-        name: currentProfile.username,
-        alternateName: `@${currentProfile.username}`,
+        name: currentProfile.username || 'ViceCityHub Member',
+        alternateName: currentProfile.username ? `@${currentProfile.username}` : '@member',
         description: currentProfile.bio || 'ViceCityHub GTA VI community member.',
-        image: currentProfile.avatar_url || 'https://vicecityhub.eu/assets/brand/favicon-192x192.png',
-        url: `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(currentProfile.username)}`,
+        image: resolvedAvatar,
+        url: `https://vicecityhub.eu/profile.html?u=${encodeURIComponent(currentProfile.username || 'member')}`,
         sameAs: socialUrls,
         interactionStatistic: {
           '@type': 'InteractionCounter',
