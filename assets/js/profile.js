@@ -314,13 +314,13 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const res = await fetch(endpoint, { credentials: 'same-origin' });
       if (res.status === 404 && !u) {
-        window.location.href = 'login.html';
+        window.location.href = 'login.html?tab=signup';
         return;
       }
       const data = await res.json();
       if (!res.ok || !data.profile) {
         if (!u) {
-          window.location.href = 'login.html';
+          window.location.href = 'login.html?tab=signup';
           return;
         }
         if (usernameDisplay) usernameDisplay.textContent = 'User Not Found';
@@ -337,6 +337,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnFollowToggle) {
     btnFollowToggle.addEventListener('click', async () => {
+      const u = localStorage.getItem('vicecityhub_user');
+      if (!u) {
+        window.location.href = 'login.html?tab=signup';
+        return;
+      }
       if (!currentProfile) return;
       try {
         const res = await fetch('/api/profile?action=follow', {
@@ -346,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
           body: JSON.stringify({ username: currentProfile.username })
         });
         if (res.status === 401) {
-          window.location.href = 'login.html';
+          window.location.href = 'login.html?tab=signup';
           return;
         }
         const data = await res.json();

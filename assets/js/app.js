@@ -64,8 +64,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
   }
 
-  openPostModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(postModal)));
-  openDiscordModalBtns.forEach(btn => btn.addEventListener('click', () => openModal(discordModal)));
+  openPostModalBtns.forEach(btn => btn.addEventListener('click', (e) => {
+    if (!getCurrentUser()) {
+      e.preventDefault();
+      window.location.href = 'login.html?tab=signup';
+      return;
+    }
+    openModal(postModal);
+  }));
+  openDiscordModalBtns.forEach(btn => btn.addEventListener('click', (e) => {
+    if (!getCurrentUser()) {
+      e.preventDefault();
+      window.location.href = 'login.html?tab=signup';
+      return;
+    }
+    openModal(discordModal);
+  }));
 
   if (discordModal && (window.location.search.includes('action=submit') || window.location.hash === '#submit')) {
     openModal(discordModal);
@@ -461,6 +475,10 @@ document.addEventListener('DOMContentLoaded', () => {
     feedContainer.addEventListener('click', (e) => {
       const likeBtn = e.target.closest('.btn-like');
       if (likeBtn) {
+        if (!getCurrentUser()) {
+          window.location.href = 'login.html?tab=signup';
+          return;
+        }
         const p = posts.find(item => item.id === likeBtn.dataset.id);
         if (p) {
           p.isLiked = !p.isLiked;
@@ -484,6 +502,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const bookmarkBtn = e.target.closest('.btn-bookmark');
       if (bookmarkBtn) {
+        if (!getCurrentUser()) {
+          window.location.href = 'login.html?tab=signup';
+          return;
+        }
         const p = posts.find(item => item.id === bookmarkBtn.dataset.id);
         if (p) {
           p.isBookmarked = !p.isBookmarked;
@@ -543,6 +565,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const commentSubmit = e.target.closest('.comment-submit-btn');
       if (commentSubmit) {
+        if (!getCurrentUser()) {
+          window.location.href = 'login.html?tab=signup';
+          return;
+        }
         const drawer = document.getElementById(`comments-${commentSubmit.dataset.id}`);
         const input = drawer.querySelector('.comment-input-field');
         const val = (input.value || '').trim();
@@ -583,6 +609,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const reportBtn = e.target.closest('.btn-report-post');
       if (reportBtn) {
+        if (!getCurrentUser()) {
+          window.location.href = 'login.html?tab=signup';
+          return;
+        }
         if (typeof window.openReportPostPopup === 'function') {
           window.openReportPostPopup(reportBtn.dataset.id, reportBtn.dataset.title || 'Post');
         }
@@ -901,6 +931,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (dedicatedPostForm) {
     dedicatedPostForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!getCurrentUser()) {
+        window.location.href = 'login.html?tab=signup';
+        return;
+      }
       if (isUploadingPostMedia) {
         showToast('Please wait for the media upload to finish.');
         return;
@@ -1360,6 +1394,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (dedicatedDiscordForm) {
     dedicatedDiscordForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!getCurrentUser()) {
+        window.location.href = 'login.html?tab=signup';
+        return;
+      }
       const hp = document.getElementById('discord_hp_url')?.value || '';
       if (hp.trim().length > 0) return;
 
@@ -2308,7 +2346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('vicecityhub_user');
 
         const path = window.location.pathname.toLowerCase();
-        if (path.endsWith('/post.html') || path.endsWith('/submit-discord.html') || path.endsWith('/post') || path.endsWith('/submit-discord')) {
+        if (path.endsWith('/post.html') || path.endsWith('/submit-discord.html') || path.endsWith('/submit-tutorial.html') || path.endsWith('/post') || path.endsWith('/submit-discord') || path.endsWith('/submit-tutorial')) {
           window.location.href = 'login.html?tab=signup';
         }
       }
@@ -2316,7 +2354,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(() => {});
 
   document.addEventListener('click', (e) => {
-    const postLink = e.target.closest('a[href*="post.html"], a[href*="submit-discord.html"]');
+    const postLink = e.target.closest('a[href*="post.html"], a[href*="submit-discord.html"], a[href*="submit-tutorial.html"]');
     if (postLink) {
       const cached = localStorage.getItem('vicecityhub_user');
       if (!cached) {
@@ -2573,6 +2611,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.openReportPostPopup = function(postId, postTitle) {
     if (!postId) return;
+    if (!getCurrentUser()) {
+      window.location.href = 'login.html?tab=signup';
+      return;
+    }
     const targetPost = posts.find(p => p.id === postId);
     const currentUser = getCurrentUser();
     if (targetPost && currentUser) {

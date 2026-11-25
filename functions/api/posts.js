@@ -269,6 +269,9 @@ export async function onRequest(context) {
     }
 
     if (action === 'comment') {
+      if (!authUser) {
+        return jsonResponse({ error: 'Authentication required. Please log in or create an account.' }, 401);
+      }
       const allowed = await checkRateLimit(env, `posts_comment_${ipHash}`, 20, 60000);
       if (!allowed) {
         return jsonResponse({ error: 'Too many comments. Please slow down.' }, 429);
@@ -310,6 +313,9 @@ export async function onRequest(context) {
     }
 
     if (action === 'like') {
+      if (!authUser) {
+        return jsonResponse({ error: 'Authentication required. Please log in or create an account.' }, 401);
+      }
       const allowed = await checkRateLimit(env, `posts_like_${ipHash}`, 40, 60000);
       if (!allowed) {
         return jsonResponse({ error: 'Rate limit exceeded' }, 429);
@@ -354,6 +360,9 @@ export async function onRequest(context) {
     }
 
     if (action === 'bookmark') {
+      if (!authUser) {
+        return jsonResponse({ error: 'Authentication required. Please log in or create an account.' }, 401);
+      }
       const postId = sanitizePlainText(body.postId, 64);
       if (!postId) return jsonResponse({ error: 'postId required' }, 400);
 

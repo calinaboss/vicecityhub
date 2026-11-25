@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const cachedUser = localStorage.getItem('vicecityhub_user');
+  if (!cachedUser) {
+    window.location.href = 'login.html?tab=signup';
+    return;
+  }
+
+  fetch('/api/auth?action=me', { credentials: 'same-origin' })
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data || !data.authenticated) {
+        localStorage.removeItem('vicecityhub_user');
+        window.location.href = 'login.html?tab=signup';
+      }
+    })
+    .catch(() => {});
+
   const form = document.getElementById('dedicated-tutorial-form');
   const modBanner = document.getElementById('tutorial-moderation-banner');
   const submitBtn = document.getElementById('btn-submit-tutorial');
