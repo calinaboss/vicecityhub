@@ -157,9 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
               <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-watch-btn" data-view-id="${escapeHtml(tut.id)}">
                 <i class="fa-solid fa-circle-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.74rem;"></i>
               </a>
-              <div class="tutorial-stat-pill">
-                <i class="fa-solid fa-eye" style="color: var(--accent-cyan);"></i> ${Number(tut.views_count || 0).toLocaleString()} views
-              </div>
             </div>
           </article>
         `;
