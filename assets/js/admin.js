@@ -37,13 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let thumb = (t.thumbnail_url || '').trim();
         const platform = (t.platform || '').toLowerCase();
         const vUrl = t.video_url || '';
+        if (platform === 'instagram') {
+          return '/assets/brand/instagram-fallback.webp';
+        }
         if (!thumb || thumb === '/assets/brand/vicecityhub-og.jpg') {
           if (platform === 'youtube') {
             const ym = vUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
             if (ym && ym[1]) return `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
-          } else if (platform === 'instagram') {
-            const im = vUrl.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
-            if (im && im[1]) return `https://www.instagram.com/p/${im[1]}/media/?size=l`;
           }
         }
         return thumb || '/assets/brand/vicecityhub-og.jpg';

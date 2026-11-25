@@ -148,13 +148,12 @@ function parseVideoInfo(rawUrl) {
     if (match) {
       code = match[2];
     }
-    const mediaThumb = code ? `https://www.instagram.com/p/${code}/media/?size=l` : '';
     return {
       platform: 'instagram',
       videoId: code,
       cleanUrl: code ? `https://www.instagram.com/reel/${code}/` : cleanStr,
       embedUrl: code ? `https://www.instagram.com/p/${code}/embed/` : cleanStr,
-      thumbnailUrl: mediaThumb
+      thumbnailUrl: '/assets/brand/instagram-fallback.webp'
     };
   }
 
@@ -163,13 +162,10 @@ function parseVideoInfo(rawUrl) {
 
 function formatTutorialRow(r) {
   let tUrl = (r.thumbnail_url || '').trim();
-  if (!tUrl || tUrl === '/assets/brand/vicecityhub-og.jpg') {
-    if (r.platform === 'instagram' && r.video_url) {
-      const m = r.video_url.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
-      if (m && m[1]) {
-        tUrl = `https://www.instagram.com/p/${m[1]}/media/?size=l`;
-      }
-    } else if (r.platform === 'youtube' && r.video_url) {
+  if (r.platform === 'instagram') {
+    tUrl = '/assets/brand/instagram-fallback.webp';
+  } else if (!tUrl || tUrl === '/assets/brand/vicecityhub-og.jpg') {
+    if (r.platform === 'youtube' && r.video_url) {
       const ym = r.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
       if (ym && ym[1]) {
         tUrl = `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
@@ -216,43 +212,8 @@ async function fetchOEmbedThumbnail(platform, videoUrl, videoId) {
         }
       }
     } else if (platform === 'instagram') {
-      const code = videoId || (videoUrl.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i) || [])[1];
-      if (code) {
-        try {
-          const mediaRes = await fetch(`https://www.instagram.com/p/${code}/media/?size=l`, {
-            redirect: 'manual',
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-            signal: controller.signal
-          });
-          const loc = mediaRes.headers.get('location');
-          if (loc && loc.startsWith('https://')) {
-            clearTimeout(timeoutId);
-            return loc;
-          }
-        } catch (mediaErr) {}
-      }
-      try {
-        const pageRes = await fetch(videoUrl, {
-          redirect: 'follow',
-          headers: {
-            'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'
-          },
-          signal: controller.signal
-        });
-        if (pageRes.ok) {
-          const html = await pageRes.text();
-          const ogMatch = html.match(/property=["']og:image["']\s+content=["']([^"']+)["']/i) ||
-                          html.match(/content=["']([^"']+)["']\s+property=["']og:image["']/i) ||
-                          html.match(/name=["']twitter:image["']\s+content=["']([^"']+)["']/i);
-          if (ogMatch && ogMatch[1]) {
-            clearTimeout(timeoutId);
-            return ogMatch[1].replace(/&amp;/g, '&');
-          }
-        }
-      } catch (instaErr) {}
-      if (code) {
-        return `https://www.instagram.com/p/${code}/media/?size=l`;
-      }
+      clearTimeout(timeoutId);
+      return '/assets/brand/instagram-fallback.webp';
     }
   } catch (e) {
   } finally {

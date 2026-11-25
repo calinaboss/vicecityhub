@@ -4100,16 +4100,22 @@ body.page-map-view {
   box-sizing: border-box;
 }
 
+.tutorial-phone-preview.instagram-phone-preview {
+  aspect-ratio: auto;
+  height: 578px;
+}
+
+@media (max-width: 480px) {
+  .tutorial-phone-preview.instagram-phone-preview {
+    height: 520px;
+  }
+}
+
 .tutorial-thumb-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
   display: block;
-}
-
-.tutorial-phone-preview:hover .tutorial-thumb-img {
-  transform: scale(1.03);
 }
 
 .tutorial-play-center {
@@ -4119,8 +4125,8 @@ body.page-map-view {
   transform: translate(-50%, -50%);
   width: 48px;
   height: 48px;
-  background: rgba(13, 17, 23, 0.85);
-  border: 2px solid rgba(255, 42, 133, 0.7);
+  background: rgba(13, 17, 23, 0.88);
+  border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -4128,14 +4134,13 @@ body.page-map-view {
   color: #ffffff;
   font-size: 1.1rem;
   padding-left: 3px;
-  box-shadow: 0 0 20px rgba(255, 42, 133, 0.5);
-  transition: transform 0.2s ease, background 0.2s ease;
-  backdrop-filter: blur(4px);
+  box-shadow: none;
 }
 
-.tutorial-phone-preview:hover .tutorial-play-center {
-  transform: translate(-50%, -50%) scale(1.1);
-  background: var(--accent-pink);
+.tutorial-phone-preview:active .tutorial-play-center,
+.tutorial-phone-preview.preview-clicked .tutorial-play-center {
+  background: #ffffff;
+  color: #000000;
   border-color: #ffffff;
 }
 
@@ -4160,24 +4165,34 @@ body.page-map-view {
   gap: 8px;
   width: 100%;
   padding: 10px 14px;
-  background: linear-gradient(135deg, #ff2a85 0%, #d81b60 100%);
+  background: #141419;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   color: #ffffff;
   font-size: 0.82rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-radius: 10px;
-  box-shadow: 0 4px 14px rgba(255, 42, 133, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  box-shadow: none;
   text-decoration: none;
   cursor: pointer;
   box-sizing: border-box;
 }
 
 .tutorial-watch-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(255, 42, 133, 0.55);
-  filter: brightness(1.08);
+  background: #141419;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: none;
+  box-shadow: none;
+  filter: none;
+}
+
+.tutorial-watch-btn:active,
+.tutorial-watch-btn.btn-clicked {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
 }
 
 .tutorial-stat-pill {

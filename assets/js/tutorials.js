@@ -127,16 +127,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const platform = (tut.platform || 'youtube').toLowerCase();
         const videoUrl = tut.video_url || '#';
         let thumbUrl = tut.thumbnail_url || '';
-        if (!thumbUrl || thumbUrl === '/assets/brand/vicecityhub-og.jpg') {
+        if (platform === 'instagram') {
+          thumbUrl = '/assets/brand/instagram-fallback.webp';
+        } else if (!thumbUrl || thumbUrl === '/assets/brand/vicecityhub-og.jpg') {
           if (platform === 'youtube') {
             const ym = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
             if (ym && ym[1]) thumbUrl = `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
-          } else if (platform === 'instagram') {
-            const im = videoUrl.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
-            if (im && im[1]) thumbUrl = `https://www.instagram.com/p/${im[1]}/media/?size=l`;
           }
         }
-        if (!thumbUrl) thumbUrl = '/assets/brand/vicecityhub-og.jpg';
+        if (!thumbUrl) thumbUrl = platform === 'instagram' ? '/assets/brand/instagram-fallback.webp' : '/assets/brand/vicecityhub-og.jpg';
         const dateStr = tut.created_at ? tut.created_at.slice(0, 10) : '';
 
         let mediaHtml = '';
@@ -202,35 +201,12 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
           }
         } else if (platform === 'instagram') {
-          let instaEmbed = tut.embed_url;
-          if (!instaEmbed) {
-            const m = videoUrl.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
-            if (m && m[1]) {
-              instaEmbed = `https://www.instagram.com/p/${m[1]}/embed/`;
-            }
-          }
-          if (instaEmbed) {
-            mediaHtml = `
-              <div class="tutorial-media-frame instagram-frame">
-                <iframe
-                  src="${escapeHtml(instaEmbed)}"
-                  class="tutorial-instagram-iframe"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                  loading="lazy"
-                  title="${escapeHtml(tut.title)}"
-                ></iframe>
-              </div>
-            `;
-          } else {
-            mediaHtml = `
-              <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
-                <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
-                <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
-              </a>
-            `;
-          }
+          mediaHtml = `
+            <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview instagram-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
+              <img src="/assets/brand/instagram-fallback.webp" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy">
+              <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
+            </a>
+          `;
         } else {
           mediaHtml = `
             <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
@@ -367,6 +343,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.body.addEventListener('click', (e) => {
+    const watchBtn = e.target.closest('.tutorial-watch-btn');
+    if (watchBtn) {
+      watchBtn.classList.add('btn-clicked');
+    }
+    const preview = e.target.closest('.tutorial-phone-preview');
+    if (preview) {
+      preview.classList.add('preview-clicked');
+    }
     const link = e.target.closest('[data-view-id]');
     if (link) {
       const id = link.getAttribute('data-view-id');

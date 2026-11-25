@@ -13,13 +13,10 @@ import {
 
 function formatTutorialRow(r) {
   let tUrl = (r.thumbnail_url || '').trim();
-  if (!tUrl || tUrl === '/assets/brand/vicecityhub-og.jpg') {
-    if (r.platform === 'instagram' && r.video_url) {
-      const m = r.video_url.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
-      if (m && m[1]) {
-        tUrl = `https://www.instagram.com/p/${m[1]}/media/?size=l`;
-      }
-    } else if (r.platform === 'youtube' && r.video_url) {
+  if (r.platform === 'instagram') {
+    tUrl = '/assets/brand/instagram-fallback.webp';
+  } else if (!tUrl || tUrl === '/assets/brand/vicecityhub-og.jpg') {
+    if (r.platform === 'youtube' && r.video_url) {
       const ym = r.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
       if (ym && ym[1]) {
         tUrl = `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
