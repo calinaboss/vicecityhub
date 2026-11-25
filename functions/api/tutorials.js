@@ -148,19 +148,38 @@ function parseVideoInfo(rawUrl) {
     if (match) {
       code = match[2];
     }
+    const mediaThumb = code ? `https://www.instagram.com/p/${code}/media/?size=l` : '';
     return {
       platform: 'instagram',
       videoId: code,
       cleanUrl: code ? `https://www.instagram.com/reel/${code}/` : cleanStr,
       embedUrl: code ? `https://www.instagram.com/p/${code}/embed/` : cleanStr,
-      thumbnailUrl: ''
+      thumbnailUrl: mediaThumb
     };
   }
 
   return null;
 }
 
-async function fetchOEmbedThumbnail(platform, videoUrl) {
+function formatTutorialRow(r) {
+  let tUrl = (r.thumbnail_url || '').trim();
+  if (!tUrl || tUrl === '/assets/brand/vicecityhub-og.jpg') {
+    if (r.platform === 'instagram' && r.video_url) {
+      const m = r.video_url.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
+      if (m && m[1]) {
+        tUrl = `https://www.instagram.com/p/${m[1]}/media/?size=l`;
+      }
+    } else if (r.platform === 'youtube' && r.video_url) {
+      const ym = r.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+      if (ym && ym[1]) {
+        tUrl = `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
+      }
+    }
+  }
+  return { ...r, thumbnail_url: tUrl || '/assets/brand/vicecityhub-og.jpg' };
+}
+
+async function fetchOEmbedThumbnail(platform, videoUrl, videoId) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 4000);
   try {
@@ -197,6 +216,21 @@ async function fetchOEmbedThumbnail(platform, videoUrl) {
         }
       }
     } else if (platform === 'instagram') {
+      const code = videoId || (videoUrl.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i) || [])[1];
+      if (code) {
+        try {
+          const mediaRes = await fetch(`https://www.instagram.com/p/${code}/media/?size=l`, {
+            redirect: 'manual',
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+            signal: controller.signal
+          });
+          const loc = mediaRes.headers.get('location');
+          if (loc && loc.startsWith('https://')) {
+            clearTimeout(timeoutId);
+            return loc;
+          }
+        } catch (mediaErr) {}
+      }
       try {
         const pageRes = await fetch(videoUrl, {
           redirect: 'follow',
@@ -216,17 +250,8 @@ async function fetchOEmbedThumbnail(platform, videoUrl) {
           }
         }
       } catch (instaErr) {}
-      const oembedUrl = `https://api.instagram.com/oembed/?url=${encodeURIComponent(videoUrl)}`;
-      const res = await fetch(oembedUrl, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && typeof data.thumbnail_url === 'string' && data.thumbnail_url.startsWith('https://')) {
-          return data.thumbnail_url;
-        }
+      if (code) {
+        return `https://www.instagram.com/p/${code}/media/?size=l`;
       }
     }
   } catch (e) {
@@ -288,7 +313,7 @@ export async function onRequest(context) {
 
       return jsonResponse({
         ok: true,
-        tutorials: rows || [],
+        tutorials: (rows || []).map(formatTutorialRow),
         category,
         total: (rows || []).length
       });
@@ -375,11 +400,17 @@ export async function onRequest(context) {
           return jsonResponse({ error: 'Please enter a valid YouTube, TikTok, or Instagram video URL (HTTPS only)' }, 400);
         }
 
-        let resolvedThumbnail = videoInfo.thumbnailUrl;
+        let resolvedThumbnail = '';
         if (customThumbnail && (customThumbnail.startsWith('https://') || customThumbnail.startsWith('/assets/'))) {
           resolvedThumbnail = customThumbnail;
-        } else if (!resolvedThumbnail) {
-          resolvedThumbnail = await fetchOEmbedThumbnail(videoInfo.platform, videoInfo.cleanUrl);
+        } else {
+          resolvedThumbnail = await fetchOEmbedThumbnail(videoInfo.platform, videoInfo.cleanUrl, videoInfo.videoId);
+          if ((!resolvedThumbnail || resolvedThumbnail === '/assets/brand/vicecityhub-og.jpg') && videoInfo.thumbnailUrl) {
+            resolvedThumbnail = videoInfo.thumbnailUrl;
+          }
+        }
+        if (!resolvedThumbnail) {
+          resolvedThumbnail = '/assets/brand/vicecityhub-og.jpg';
         }
 
         const tutorialId = generateUuid();

@@ -11,6 +11,24 @@ import {
   sanitizePlainText
 } from './_turso.js';
 
+function formatTutorialRow(r) {
+  let tUrl = (r.thumbnail_url || '').trim();
+  if (!tUrl || tUrl === '/assets/brand/vicecityhub-og.jpg') {
+    if (r.platform === 'instagram' && r.video_url) {
+      const m = r.video_url.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
+      if (m && m[1]) {
+        tUrl = `https://www.instagram.com/p/${m[1]}/media/?size=l`;
+      }
+    } else if (r.platform === 'youtube' && r.video_url) {
+      const ym = r.video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+      if (ym && ym[1]) {
+        tUrl = `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
+      }
+    }
+  }
+  return { ...r, thumbnail_url: tUrl || '/assets/brand/vicecityhub-og.jpg' };
+}
+
 export async function onRequest(context) {
   try {
     const { request, env } = context;
@@ -154,9 +172,9 @@ export async function onRequest(context) {
         pendingDiscords: pendingDiscords || [],
         approvedDiscords: approvedDiscords || [],
         users: users || [],
-        tutorials: approvedTutorials || [],
-        pendingTutorials: pendingTutorials || [],
-        approvedTutorials: approvedTutorials || [],
+        tutorials: (approvedTutorials || []).map(formatTutorialRow),
+        pendingTutorials: (pendingTutorials || []).map(formatTutorialRow),
+        approvedTutorials: (approvedTutorials || []).map(formatTutorialRow),
         tickets: (tickets || []).map(t => ({
           ...t,
           messages: ticketMessagesMap[t.id] || []

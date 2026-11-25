@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "@type": "VideoObject",
             "name": tut.title,
             "description": tut.description || tut.title,
-            "thumbnailUrl": [tut.thumbnail_url || 'https://vicecityhub.eu/assets/brand/og-banner.png'],
+            "thumbnailUrl": [tut.thumbnail_url && tut.thumbnail_url !== '/assets/brand/vicecityhub-og.jpg' ? tut.thumbnail_url : (tut.platform === 'instagram' && tut.video_url ? `https://www.instagram.com/p/${(tut.video_url.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i) || [])[1] || ''}/media/?size=l` : 'https://vicecityhub.eu/assets/brand/og-banner.png')],
             "uploadDate": rawDate,
             "contentUrl": tut.video_url,
             "embedUrl": tut.embed_url || tut.video_url,
@@ -126,7 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
       container.innerHTML = items.map(tut => {
         const platform = (tut.platform || 'youtube').toLowerCase();
         const videoUrl = tut.video_url || '#';
-        const thumbUrl = tut.thumbnail_url || '/assets/brand/vicecityhub-og.jpg';
+        let thumbUrl = tut.thumbnail_url || '';
+        if (!thumbUrl || thumbUrl === '/assets/brand/vicecityhub-og.jpg') {
+          if (platform === 'youtube') {
+            const ym = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+            if (ym && ym[1]) thumbUrl = `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
+          } else if (platform === 'instagram') {
+            const im = videoUrl.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
+            if (im && im[1]) thumbUrl = `https://www.instagram.com/p/${im[1]}/media/?size=l`;
+          }
+        }
+        if (!thumbUrl) thumbUrl = '/assets/brand/vicecityhub-og.jpg';
         const dateStr = tut.created_at ? tut.created_at.slice(0, 10) : '';
 
         let mediaHtml = '';

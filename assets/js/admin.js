@@ -33,6 +33,22 @@ document.addEventListener('DOMContentLoaded', () => {
           .replace(/'/g, '&#039;');
       }
 
+      function resolveTutorialThumb(t) {
+        let thumb = (t.thumbnail_url || '').trim();
+        const platform = (t.platform || '').toLowerCase();
+        const vUrl = t.video_url || '';
+        if (!thumb || thumb === '/assets/brand/vicecityhub-og.jpg') {
+          if (platform === 'youtube') {
+            const ym = vUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+            if (ym && ym[1]) return `https://img.youtube.com/vi/${ym[1]}/hqdefault.jpg`;
+          } else if (platform === 'instagram') {
+            const im = vUrl.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
+            if (im && im[1]) return `https://www.instagram.com/p/${im[1]}/media/?size=l`;
+          }
+        }
+        return thumb || '/assets/brand/vicecityhub-og.jpg';
+      }
+
       tabButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           tabButtons.forEach(b => b.classList.remove('active'));
@@ -326,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="admin-row-item">
                 <div style="display: flex; gap: 14px; align-items: center; width: 100%;">
                   <div style="width: 100px; height: 60px; border-radius: 8px; overflow: hidden; background: #000; flex-shrink: 0; position: relative;">
-                    <img src="${escapeHtml(t.thumbnail_url)}" alt="${escapeHtml(t.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                    <img src="${escapeHtml(resolveTutorialThumb(t))}" alt="${escapeHtml(t.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
                     <div style="position: absolute; bottom: 3px; right: 4px; background: rgba(0,0,0,0.7); font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; text-transform: uppercase;">
                       ${escapeHtml(t.platform || 'video')}
                     </div>
@@ -366,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="admin-row-item">
                 <div style="display: flex; gap: 14px; align-items: center; width: 100%;">
                   <div style="width: 100px; height: 60px; border-radius: 8px; overflow: hidden; background: #000; flex-shrink: 0; position: relative;">
-                    <img src="${escapeHtml(t.thumbnail_url)}" alt="${escapeHtml(t.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                    <img src="${escapeHtml(resolveTutorialThumb(t))}" alt="${escapeHtml(t.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
                     <div style="position: absolute; bottom: 3px; right: 4px; background: rgba(0,0,0,0.7); font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; text-transform: uppercase;">
                       ${escapeHtml(t.platform || 'video')}
                     </div>
