@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (empty) empty.style.display = 'none';
     if (container) {
-      container.style.display = 'grid';
+      container.style.display = 'flex';
       container.innerHTML = items.map(tut => {
         const platform = (tut.platform || 'youtube').toLowerCase();
         const videoUrl = tut.video_url || '#';
@@ -70,23 +70,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return `
           <article class="tutorial-card">
-            <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-thumb-container" data-view-id="${escapeHtml(tut.id)}">
+            <div class="tutorial-header-row">
+              <div class="tutorial-badges-group">
+                <span class="tutorial-category-tag">${escapeHtml(tut.category_label || tut.category)}</span>
+                <span class="tutorial-platform-badge ${escapeHtml(platform)}">${getPlatformIcon(platform)}</span>
+              </div>
+              <div class="tutorial-meta-time">
+                <i class="fa-regular fa-clock"></i> ${escapeHtml(dateStr)}
+              </div>
+            </div>
+
+            <h2 class="tutorial-title">${escapeHtml(tut.title)}</h2>
+            <p class="tutorial-desc">${escapeHtml(tut.description)}</p>
+
+            <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
               <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
-              <span class="tutorial-category-tag">${escapeHtml(tut.category_label || tut.category)}</span>
-              <span class="tutorial-platform-badge ${escapeHtml(platform)}">${getPlatformIcon(platform)}</span>
-              <div class="tutorial-play-overlay">
-                <span class="tutorial-watch-btn">
-                  <i class="fa-solid fa-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem; margin-left: 2px;"></i>
-                </span>
-              </div>
+              <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
             </a>
-            <div class="tutorial-content">
-              <h2 class="tutorial-title">${escapeHtml(tut.title)}</h2>
-              <p class="tutorial-desc">${escapeHtml(tut.description)}</p>
-              <div class="tutorial-footer">
-                <span><i class="fa-solid fa-eye"></i> ${Number(tut.views_count || 0).toLocaleString()} views</span>
-                <span><i class="fa-regular fa-clock"></i> ${escapeHtml(dateStr)}</span>
-              </div>
+
+            <div class="tutorial-action-bar">
+              <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-watch-btn" data-view-id="${escapeHtml(tut.id)}">
+                <i class="fa-solid fa-circle-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.76rem;"></i>
+              </a>
+              <span class="tutorial-stat-pill">
+                <i class="fa-solid fa-eye" style="color: var(--accent-cyan);"></i> ${Number(tut.views_count || 0).toLocaleString()} views
+              </span>
             </div>
           </article>
         `;
@@ -162,11 +170,28 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const mobileToggle = document.getElementById('mobile-menu-toggle');
-  if (mobileToggle) {
+  const mobileDrawer = document.getElementById('mobile-drawer');
+  const closeDrawerBtn = document.getElementById('close-drawer');
+
+  if (mobileToggle && mobileDrawer) {
     mobileToggle.addEventListener('click', () => {
-      const navLeft = document.querySelector('.header-nav-left');
-      if (navLeft) {
-        navLeft.classList.toggle('mobile-open');
+      mobileDrawer.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  if (closeDrawerBtn && mobileDrawer) {
+    closeDrawerBtn.addEventListener('click', () => {
+      mobileDrawer.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  }
+
+  if (mobileDrawer) {
+    mobileDrawer.addEventListener('click', (e) => {
+      if (e.target === mobileDrawer) {
+        mobileDrawer.classList.remove('open');
+        document.body.style.overflow = '';
       }
     });
   }

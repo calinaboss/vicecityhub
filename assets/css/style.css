@@ -3933,73 +3933,160 @@ body.page-map-view {
 }
 
 .tutorials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 22px;
-  margin-top: 20px;
-}
-
-@media (max-width: 640px) {
-  .tutorials-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 680px;
+  margin: 24px auto 0;
+  width: 100%;
 }
 
 .tutorial-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 14px;
+  border-radius: 18px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   position: relative;
+  padding: 22px;
 }
 
 .tutorial-card:hover {
-  transform: translateY(-4px);
   border-color: rgba(255, 42, 133, 0.45);
-  box-shadow: 0 8px 24px rgba(255, 42, 133, 0.15), 0 0 16px rgba(0, 240, 255, 0.08);
+  box-shadow: 0 8px 30px rgba(255, 42, 133, 0.12), 0 0 16px rgba(0, 240, 255, 0.06);
 }
 
-.tutorial-thumb-container {
+.tutorial-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.tutorial-badges-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tutorial-category-tag {
+  background: rgba(255, 42, 133, 0.14);
+  border: 1px solid rgba(255, 42, 133, 0.35);
+  color: #ff7ebb;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tutorial-platform-badge {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tutorial-platform-badge.youtube { color: #ff4d61; }
+.tutorial-platform-badge.tiktok { color: #25f4ee; }
+.tutorial-platform-badge.instagram { color: #f43f5e; }
+
+.tutorial-meta-time {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tutorial-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.tutorial-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.tutorial-phone-preview {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #06090e;
+  background: #000;
+  border-radius: 14px;
   overflow: hidden;
-  cursor: pointer;
-  text-decoration: none;
   display: block;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
 .tutorial-thumb-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.35s ease;
+  transition: transform 0.35s ease, filter 0.35s ease;
   display: block;
 }
 
 .tutorial-card:hover .tutorial-thumb-img {
-  transform: scale(1.05);
+  transform: scale(1.03);
+  filter: brightness(1.05);
 }
 
-.tutorial-play-overlay {
+.tutorial-play-center {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.38) 60%, rgba(0,0,0,0.85) 100%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 58px;
+  height: 58px;
+  background: rgba(13, 17, 23, 0.82);
+  border: 2px solid rgba(255, 42, 133, 0.7);
+  border-radius: 50%;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 12px;
-  transition: background 0.2s ease;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.25rem;
+  padding-left: 4px;
+  box-shadow: 0 0 24px rgba(255, 42, 133, 0.5), inset 0 0 12px rgba(255, 42, 133, 0.3);
+  transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  backdrop-filter: blur(6px);
 }
 
-.tutorial-card:hover .tutorial-play-overlay {
-  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.92) 100%);
+.tutorial-card:hover .tutorial-play-center {
+  transform: translate(-50%, -50%) scale(1.12);
+  background: var(--accent-pink);
+  border-color: #ffffff;
+  box-shadow: 0 0 32px rgba(255, 42, 133, 0.85);
+}
+
+.tutorial-action-bar {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .tutorial-watch-btn {
@@ -4007,87 +4094,92 @@ body.page-map-view {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 100%;
-  padding: 9px 14px;
+  flex: 1;
+  min-width: 200px;
+  padding: 11px 18px;
   background: linear-gradient(135deg, #ff2a85 0%, #d81b60 100%);
   color: #ffffff;
-  font-size: 0.84rem;
+  font-size: 0.88rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-radius: 8px;
-  box-shadow: 0 4px 14px rgba(255, 42, 133, 0.4);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  letter-spacing: 0.6px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(255, 42, 133, 0.38);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
   text-decoration: none;
   cursor: pointer;
-  border: none;
 }
 
-.tutorial-card:hover .tutorial-watch-btn {
-  transform: scale(1.02);
-  box-shadow: 0 6px 18px rgba(255, 42, 133, 0.6);
+.tutorial-watch-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 42, 133, 0.6);
+  filter: brightness(1.08);
 }
 
-.tutorial-platform-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(13, 17, 23, 0.88);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.72rem;
-  font-weight: 700;
+.tutorial-stat-pill {
+  font-size: 0.78rem;
+  color: var(--text-dim);
   display: flex;
   align-items: center;
   gap: 5px;
-  z-index: 2;
 }
 
-.tutorial-platform-badge.youtube { color: #ff4d61; }
-.tutorial-platform-badge.tiktok { color: #25f4ee; }
-.tutorial-platform-badge.instagram { color: #f43f5e; }
-
-.tutorial-category-tag {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(13, 17, 23, 0.88);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 42, 133, 0.4);
-  color: #ff7ebb;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  z-index: 2;
+@media (max-width: 640px) {
+  .tutorial-card {
+    padding: 16px;
+  }
+  .tutorial-title {
+    font-size: 1.1rem;
+  }
 }
 
-.tutorial-content {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+.seo-editorial-clean {
+  margin-top: 50px;
+  padding: 32px 0 20px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  max-width: 740px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.tutorial-title {
-  font-size: 1.02rem;
-  font-weight: 700;
+.seo-editorial-clean h2 {
+  font-size: 1.45rem;
   color: var(--text-main);
-  line-height: 1.35;
-  margin-bottom: 8px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.tutorial-desc {
-  font-size: 0.83rem;
-  color: var(--text-muted);
+.seo-editorial-clean h3 {
+  font-size: 1.15rem;
+  color: #ffffff;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 10px;
+}
+
+.seo-editorial-clean p {
+  font-size: 0.88rem;
+  line-height: 1.68;
+  margin-bottom: 14px;
+  color: #cbd5e1;
+}
+
+.seo-editorial-clean a {
+  color: var(--accent-pink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.seo-editorial-clean a:hover {
+  color: var(--accent-cyan);
+}
   line-height: 1.5;
   margin-bottom: 14px;
   flex: 1;
