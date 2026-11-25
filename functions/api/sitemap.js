@@ -19,6 +19,7 @@ export async function onRequest(context) {
     { loc: 'https://vicecityhub.eu/discords.html', lastmod: today, changefreq: 'hourly', priority: '0.95' },
     { loc: 'https://vicecityhub.eu/submit-discord.html', lastmod: today, changefreq: 'daily', priority: '0.90' },
     { loc: 'https://vicecityhub.eu/cheats.html', lastmod: today, changefreq: 'daily', priority: '0.95' },
+    { loc: 'https://vicecityhub.eu/tutorials.html', lastmod: today, changefreq: 'daily', priority: '0.95' },
     { loc: 'https://vicecityhub.eu/faq.html', lastmod: today, changefreq: 'weekly', priority: '0.85' },
     { loc: 'https://vicecityhub.eu/post.html', lastmod: today, changefreq: 'weekly', priority: '0.80' },
     { loc: 'https://vicecityhub.eu/about.html', lastmod: today, changefreq: 'monthly', priority: '0.70' },

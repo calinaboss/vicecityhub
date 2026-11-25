@@ -361,7 +361,21 @@ export async function ensureTursoSchema(env) {
       ip_hash TEXT,
       details TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
-    )`
+    )`,
+    `CREATE TABLE IF NOT EXISTS tutorials (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      category TEXT NOT NULL DEFAULT 'easter_eggs',
+      category_label TEXT NOT NULL DEFAULT 'Easter Eggs',
+      video_url TEXT NOT NULL,
+      platform TEXT NOT NULL DEFAULT 'youtube',
+      thumbnail_url TEXT NOT NULL,
+      views_count INTEGER NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'approved',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )`,
+    `CREATE INDEX IF NOT EXISTS idx_tutorials_feed ON tutorials(status, category, created_at DESC)`
   ];
 
   try {
@@ -379,6 +393,94 @@ export async function ensureTursoSchema(env) {
       await runTursoSql(env, "DELETE FROM community_comments WHERE id IN ('61ec3131-df24-4b1e-b2be-66750b41673d', '40bbdfdb-80ad-4af1-83d9-fac0fe2dbc95', '756d9d82-ca34-498e-b8f9-fdd88e457e0b')");
       await runTursoSql(env, "UPDATE community_posts SET comments_count = (SELECT COUNT(*) FROM community_comments WHERE community_comments.post_id = community_posts.id)");
     } catch (cleanupErr) {}
+    try {
+      const { rows: countRows } = await runTursoSql(env, 'SELECT COUNT(*) AS cnt FROM tutorials');
+      if (countRows && countRows.length > 0 && Number(countRows[0].cnt) === 0) {
+        const initialTutorials = [
+          [
+            'tut-grotti-cheetah-01',
+            'Secret Grotti Cheetah Supercar Spawn Location in Leonida',
+            'How to locate and acquire the secret Grotti Cheetah spawn tucked away in an underground multi-level parking complex in Vice Beach.',
+            'free_cars',
+            'Free Cars',
+            'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            'youtube',
+            'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+            142,
+            'approved'
+          ],
+          [
+            'tut-underwater-ufo-02',
+            'Hidden Underwater UFO Wreckage Easter Egg (Leonida Keys)',
+            'Full underwater expedition guide discovering the sunken submerged disc-shaped craft off the southern reefs of the Leonida Keys.',
+            'easter_eggs',
+            'Easter Eggs',
+            'https://www.youtube.com/watch?v=b007YjC0h08',
+            'youtube',
+            'https://img.youtube.com/vi/b007YjC0h08/hqdefault.jpg',
+            289,
+            'approved'
+          ],
+          [
+            'tut-hanks-waffles-03',
+            'Hanks Waffles Fast Cash Robbery Guide & Safe Combination',
+            'Step-by-step tutorial on how to clean out the cash register, discover the manager safe combination behind the counter, and escape without 3 stars.',
+            'robberies',
+            'Robberies & Heists',
+            'https://www.youtube.com/watch?v=kYJvY6nI8vU',
+            'youtube',
+            'https://img.youtube.com/vi/kYJvY6nI8vU/hqdefault.jpg',
+            314,
+            'approved'
+          ],
+          [
+            'tut-combat-shotgun-04',
+            'Secret Military Combat Shotgun & Body Armor Cache Location',
+            'Where to find the concealed military crate containing body armor, high-capacity magazines, and the pump combat shotgun near Lake Leonida.',
+            'weapons',
+            'Weapons & Gear',
+            'https://www.youtube.com/watch?v=e4BsqK9u37E',
+            'youtube',
+            'https://img.youtube.com/vi/e4BsqK9u37E/hqdefault.jpg',
+            198,
+            'approved'
+          ],
+          [
+            'tut-port-gellhorn-atm-05',
+            'Port Gellhorn ATM Skimming & Fast Early Game Cash Run',
+            'Fast early-game farming route between Port Gellhorn convenience stores and ATM drops to net over $40,000 in under 15 minutes.',
+            'money',
+            'Money & Tips',
+            'https://www.youtube.com/watch?v=L_LUpnjgPso',
+            'youtube',
+            'https://img.youtube.com/vi/L_LUpnjgPso/hqdefault.jpg',
+            452,
+            'approved'
+          ],
+          [
+            'tut-everglades-plane-06',
+            'Abandoned Everglades Aircraft & Smuggler Bunker Easter Egg',
+            'How to navigate deep into the Grassrivers swamp to find the half-buried twin-engine smuggler plane and loot the hidden contraband stash.',
+            'map_secrets',
+            'Map Secrets',
+            'https://www.youtube.com/watch?v=m_c3XzJ6B5A',
+            'youtube',
+            'https://img.youtube.com/vi/m_c3XzJ6B5A/hqdefault.jpg',
+            275,
+            'approved'
+          ]
+        ];
+
+        for (const tut of initialTutorials) {
+          await runTursoSql(
+            env,
+            `INSERT INTO tutorials (id, title, description, category, category_label, video_url, platform, thumbnail_url, views_count, status)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            tut
+          );
+        }
+      }
+    } catch (seedErr) {}
     tursoSchemaReady = true;
   } catch (e) {}
 }

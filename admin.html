@@ -32,6 +32,7 @@
         <a href="discords.html" class="nav-link">GTA VI Discords</a>
         <a href="https://map.vicecityhub.eu" class="nav-link">Map</a>
         <a href="cheats.html" class="nav-link">Cheats</a>
+        <a href="tutorials.html" class="nav-link">Tutorials &amp; Secrets</a>
         <a href="admin.html" class="nav-link active"><i class="fa-solid fa-shield-halved"></i> Admin</a>
       </nav>
 
@@ -81,6 +82,9 @@
       </button>
       <button class="filter-chip" data-admin-tab="tickets">
         <i class="fa-solid fa-headset"></i> Live Support Tickets (<span id="count-all-tickets">0</span>)
+      </button>
+      <button class="filter-chip" data-admin-tab="tutorials">
+        <i class="fa-solid fa-play"></i> Tutorials &amp; Easter Eggs (<span id="count-all-tutorials">0</span>)
       </button>
     </div>
 
@@ -135,6 +139,58 @@
         <i class="fa-solid fa-headset" style="color: #34d399;"></i> Live Support Ticket Chats (Closing erases temporary chat)
       </h2>
       <div id="admin-tickets-list" class="admin-flat-list"></div>
+    </section>
+
+    <section id="admin-tab-tutorials" class="admin-tab-panel" style="display: none;">
+      <div class="submit-card" style="margin-bottom: 24px;">
+        <h2 class="settings-section-title" style="margin-bottom: 8px;">
+          <i class="fa-solid fa-plus-circle" style="color: var(--accent-pink);"></i> Add New Tutorial / Easter Egg Video
+        </h2>
+        <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 16px;">
+          Paste a video link from YouTube, TikTok, or Instagram. The cover thumbnail is extracted automatically.
+        </p>
+        <form id="admin-tutorial-form" style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label class="form-label" for="tut-title">Title</label>
+            <input type="text" id="tut-title" class="form-input" placeholder="e.g. Secret Grotti Cheetah Spawn Location in Leonida" required maxlength="140">
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+            <div>
+              <label class="form-label" for="tut-category">Category</label>
+              <select id="tut-category" class="form-input" style="cursor: pointer;">
+                <option value="free_cars">Free Cars &amp; Vehicles</option>
+                <option value="easter_eggs" selected>Easter Eggs &amp; Secrets</option>
+                <option value="robberies">Robberies &amp; Heists</option>
+                <option value="weapons">Weapons &amp; Gear</option>
+                <option value="money">Money &amp; Tips</option>
+                <option value="map_secrets">Map Secrets</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="tut-url">Video URL (YouTube, TikTok, Instagram)</label>
+              <input type="url" id="tut-url" class="form-input" placeholder="https://www.youtube.com/watch?v=... or https://www.tiktok.com/@..." required>
+            </div>
+          </div>
+          <div>
+            <label class="form-label" for="tut-thumb">Custom Thumbnail URL (Optional)</label>
+            <input type="url" id="tut-thumb" class="form-input" placeholder="Leave blank to auto-detect from YouTube/TikTok">
+          </div>
+          <div>
+            <label class="form-label" for="tut-desc">Description</label>
+            <textarea id="tut-desc" class="form-input" rows="3" placeholder="Brief explanation of how to get the car, find the easter egg, or pull off the robbery..." required maxlength="1000"></textarea>
+          </div>
+          <div>
+            <button type="submit" class="btn-post-submit" id="btn-save-tut" style="height: 40px; padding: 0 20px;">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Publish Video Tutorial
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <h2 class="settings-section-title" style="margin-bottom: 12px;">
+        <i class="fa-solid fa-list-check" style="color: var(--accent-cyan);"></i> Published Tutorials &amp; Easter Eggs
+      </h2>
+      <div id="admin-tutorials-list" class="admin-flat-list"></div>
     </section>
   </main>
 

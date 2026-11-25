@@ -3931,3 +3931,179 @@ body.page-map-view {
   font-size: 0.8rem;
   color: var(--text-dim);
 }
+
+.tutorials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 22px;
+  margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+  .tutorials-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.tutorial-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+.tutorial-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 42, 133, 0.45);
+  box-shadow: 0 8px 24px rgba(255, 42, 133, 0.15), 0 0 16px rgba(0, 240, 255, 0.08);
+}
+
+.tutorial-thumb-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #06090e;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+
+.tutorial-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+  display: block;
+}
+
+.tutorial-card:hover .tutorial-thumb-img {
+  transform: scale(1.05);
+}
+
+.tutorial-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.38) 60%, rgba(0,0,0,0.85) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 12px;
+  transition: background 0.2s ease;
+}
+
+.tutorial-card:hover .tutorial-play-overlay {
+  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.92) 100%);
+}
+
+.tutorial-watch-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 14px;
+  background: linear-gradient(135deg, #ff2a85 0%, #d81b60 100%);
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(255, 42, 133, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+
+.tutorial-card:hover .tutorial-watch-btn {
+  transform: scale(1.02);
+  box-shadow: 0 6px 18px rgba(255, 42, 133, 0.6);
+}
+
+.tutorial-platform-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(13, 17, 23, 0.88);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 2;
+}
+
+.tutorial-platform-badge.youtube { color: #ff4d61; }
+.tutorial-platform-badge.tiktok { color: #25f4ee; }
+.tutorial-platform-badge.instagram { color: #f43f5e; }
+
+.tutorial-category-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(13, 17, 23, 0.88);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 42, 133, 0.4);
+  color: #ff7ebb;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  z-index: 2;
+}
+
+.tutorial-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.tutorial-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.35;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tutorial-desc {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 14px;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tutorial-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 10px;
+  margin-top: auto;
+}

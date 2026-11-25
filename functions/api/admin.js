@@ -128,6 +128,14 @@ export async function onRequest(context) {
          LIMIT 50`
       ).catch(() => ({ rows: [] }));
 
+      const { rows: tutorials } = await runTursoSql(
+        env,
+        `SELECT id, title, description, category, category_label, video_url, platform, thumbnail_url, views_count, status, created_at
+         FROM tutorials
+         ORDER BY created_at DESC
+         LIMIT 100`
+      ).catch(() => ({ rows: [] }));
+
       return jsonResponse({
         ok: true,
         admin: { id: authUser.id, username: authUser.username, email: authUser.email },
@@ -136,6 +144,7 @@ export async function onRequest(context) {
         pendingDiscords: pendingDiscords || [],
         approvedDiscords: approvedDiscords || [],
         users: users || [],
+        tutorials: tutorials || [],
         tickets: (tickets || []).map(t => ({
           ...t,
           messages: ticketMessagesMap[t.id] || []
@@ -178,6 +187,8 @@ export async function onRequest(context) {
         await runTursoSql(env, "UPDATE discord_servers SET status = 'approved', verified = 1 WHERE id = ?", [targetId]);
       } else if (action === 'delete_discord' || action === 'reject_discord' || action === 'hide_discord') {
         await runTursoSql(env, 'DELETE FROM discord_servers WHERE id = ?', [targetId]);
+      } else if (action === 'delete_tutorial') {
+        await runTursoSql(env, 'DELETE FROM tutorials WHERE id = ?', [targetId]);
       } else if (action === 'delete_user') {
         if (targetId === authUser.id) {
           return jsonResponse({ error: 'Cannot delete your own administrator account' }, 400);

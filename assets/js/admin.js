@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const allPostsList = document.getElementById('admin-all-posts-list');
       const usersList = document.getElementById('admin-users-list');
       const ticketsList = document.getElementById('admin-tickets-list');
+      const tutorialsList = document.getElementById('admin-tutorials-list');
+      const tutorialForm = document.getElementById('admin-tutorial-form');
       const userSearchInput = document.getElementById('admin-user-search');
 
       let cachedUsers = [];
@@ -307,6 +309,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
       }
 
+      function renderTutorials(tutorials) {
+        const countEl = document.getElementById('count-all-tutorials');
+        if (countEl) countEl.textContent = tutorials.length;
+        if (!tutorialsList) return;
+        if (tutorials.length === 0) {
+          tutorialsList.innerHTML = `<div class="empty-feed-state" style="padding: 20px 0;"><p style="color: var(--text-muted); font-size: 0.85rem;">No tutorials or easter eggs added yet.</p></div>`;
+          return;
+        }
+        tutorialsList.innerHTML = tutorials.map(t => `
+          <div class="admin-row-item">
+            <div style="display: flex; gap: 14px; align-items: center; width: 100%;">
+              <div style="width: 100px; height: 60px; border-radius: 8px; overflow: hidden; background: #000; flex-shrink: 0; position: relative;">
+                <img src="${escapeHtml(t.thumbnail_url)}" alt="${escapeHtml(t.title)}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                <div style="position: absolute; bottom: 3px; right: 4px; background: rgba(0,0,0,0.7); font-size: 0.65rem; padding: 1px 4px; border-radius: 4px; text-transform: uppercase;">
+                  ${escapeHtml(t.platform || 'video')}
+                </div>
+              </div>
+              <div class="admin-row-info" style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span class="badge-pill verified">${escapeHtml(t.category_label || t.category)}</span>
+                  <strong>${escapeHtml(t.title)}</strong>
+                  <span style="font-size: 0.76rem; color: var(--text-dim);"><i class="fa-solid fa-eye"></i> ${escapeHtml(t.views_count || 0)} views</span>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">${escapeHtml(t.description)}</p>
+                <div style="margin-top: 4px;">
+                  <a href="${escapeHtml(t.video_url)}" target="_blank" rel="noopener noreferrer" style="font-size: 0.76rem; color: var(--accent-cyan); text-decoration: none;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Video Link
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="admin-row-actions">
+              <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem; color: #fca5a5;" data-act="delete_tutorial" data-id="${escapeHtml(t.id)}" data-confirm="Permanently delete this tutorial/easter egg video?">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
       async function loadAdminData() {
         try {
           const res = await fetch('/api/admin', { credentials: 'same-origin' });
@@ -329,9 +371,63 @@ document.addEventListener('DOMContentLoaded', () => {
           renderUsersList();
           renderReports(data.reports || []);
           renderTickets(data.tickets || []);
+          renderTutorials(data.tutorials || []);
         } catch (err) {
           showToast('Error loading admin panel.');
         }
+      }
+
+      if (tutorialForm) {
+        tutorialForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const title = (document.getElementById('tut-title')?.value || '').trim();
+          const category = (document.getElementById('tut-category')?.value || 'easter_eggs').trim();
+          const video_url = (document.getElementById('tut-url')?.value || '').trim();
+          const thumbnail_url = (document.getElementById('tut-thumb')?.value || '').trim();
+          const description = (document.getElementById('tut-desc')?.value || '').trim();
+          const submitBtn = document.getElementById('btn-save-tut');
+
+          if (!title || !video_url || !description) {
+            showToast('Please fill all required fields');
+            return;
+          }
+
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+          }
+
+          try {
+            const res = await fetch('/api/tutorials', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({
+                action: 'create',
+                title,
+                category,
+                video_url,
+                thumbnail_url,
+                description
+              })
+            });
+            const data = await res.json();
+            if (!res.ok || !data.ok) {
+              showToast(data.error || 'Failed to publish tutorial');
+            } else {
+              showToast('Tutorial published successfully!');
+              tutorialForm.reset();
+              await loadAdminData();
+            }
+          } catch (err) {
+            showToast('Network error while saving tutorial');
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Publish Video Tutorial';
+            }
+          }
+        });
       }
 
       document.body.addEventListener('click', async (e) => {
