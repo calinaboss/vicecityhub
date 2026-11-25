@@ -4053,18 +4053,21 @@ body.page-map-view {
   box-sizing: border-box;
 }
 
-.tutorial-media-frame.tiktok-frame {
+.tutorial-media-frame.tiktok-frame,
+.tutorial-media-frame.instagram-frame {
   width: 100%;
   height: 578px;
 }
 
 @media (max-width: 480px) {
-  .tutorial-media-frame.tiktok-frame {
+  .tutorial-media-frame.tiktok-frame,
+  .tutorial-media-frame.instagram-frame {
     height: 520px;
   }
 }
 
-.tutorial-tiktok-iframe {
+.tutorial-tiktok-iframe,
+.tutorial-instagram-iframe {
   width: 100%;
   height: 100%;
   border: none;

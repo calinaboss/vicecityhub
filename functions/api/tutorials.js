@@ -43,28 +43,61 @@ const ALLOWED_VIDEO_HOSTS = new Set([
   'm.instagram.com'
 ]);
 
+function extractUrlFromEmbed(raw) {
+  if (!raw || typeof raw !== 'string') return '';
+  const str = raw.trim();
+
+  const iframeMatch = str.match(/<iframe[^>]+src=["']([^"']+)["']/i);
+  if (iframeMatch && iframeMatch[1]) {
+    return iframeMatch[1];
+  }
+
+  const instaPermalinkMatch = str.match(/data-instgrm-permalink=["']([^"']+)["']/i);
+  if (instaPermalinkMatch && instaPermalinkMatch[1]) {
+    return instaPermalinkMatch[1].replace(/&amp;/g, '&');
+  }
+
+  const citeMatch = str.match(/cite=["']([^"']+)["']/i);
+  if (citeMatch && citeMatch[1]) {
+    return citeMatch[1].replace(/&amp;/g, '&');
+  }
+
+  const hrefMatch = str.match(/href=["'](https?:\/\/[^"']+)["']/i);
+  if (hrefMatch && hrefMatch[1]) {
+    try {
+      const u = new URL(hrefMatch[1]);
+      const host = u.hostname.toLowerCase();
+      if (ALLOWED_VIDEO_HOSTS.has(host) || host.endsWith('.instagram.com') || host.endsWith('.youtube.com') || host.endsWith('.tiktok.com') || host.endsWith('.youtu.be')) {
+        return hrefMatch[1].replace(/&amp;/g, '&');
+      }
+    } catch (e) {}
+  }
+
+  const urlMatch = str.match(/https?:\/\/[^\s"'<>]+/i);
+  if (urlMatch && urlMatch[0]) {
+    return urlMatch[0].replace(/&amp;/g, '&');
+  }
+
+  return str;
+}
+
 function parseVideoInfo(rawUrl) {
   if (!rawUrl || typeof rawUrl !== 'string') return null;
-  let str = rawUrl.trim();
-  if (str.includes('<iframe')) {
-    const srcMatch = str.match(/src=["']([^"']+)["']/i);
-    if (srcMatch && srcMatch[1]) {
-      str = srcMatch[1];
-    }
-  }
+  const cleanStr = extractUrlFromEmbed(rawUrl);
 
   let parsed;
   try {
-    parsed = new URL(str);
+    parsed = new URL(cleanStr);
   } catch (e) {
     return null;
   }
 
   if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
   const host = parsed.hostname.toLowerCase();
-  if (!ALLOWED_VIDEO_HOSTS.has(host)) return null;
+  const isAllowed = ALLOWED_VIDEO_HOSTS.has(host) || host.endsWith('.youtube.com') || host.endsWith('.tiktok.com') || host.endsWith('.instagram.com') || host.endsWith('.youtu.be');
+  if (!isAllowed) return null;
 
-  if (host === 'youtu.be') {
+  if (host === 'youtu.be' || host.endsWith('.youtu.be')) {
     const id = parsed.pathname.replace(/^\/+/, '').split('/')[0].split('?')[0];
     if (/^[a-zA-Z0-9_-]{11}$/.test(id)) {
       return {
@@ -95,15 +128,15 @@ function parseVideoInfo(rawUrl) {
   }
 
   if (host.includes('tiktok.com')) {
-    const idMatch = str.match(/\/video\/(\d+)/i) || str.match(/\/v1\/(\d+)/i) || str.match(/[?&]item_id=(\d+)/i);
+    const idMatch = cleanStr.match(/\/video\/(\d+)/i) || cleanStr.match(/\/v1\/(\d+)/i) || cleanStr.match(/[?&]item_id=(\d+)/i);
     const videoId = idMatch ? idMatch[1] : '';
     const embedUrl = videoId
       ? `https://www.tiktok.com/player/v1/${videoId}?embed_from=webapp_share&music_info=1&description=1&autoplay=0&muted=0`
-      : str;
+      : cleanStr;
     return {
       platform: 'tiktok',
       videoId,
-      cleanUrl: videoId ? `https://www.tiktok.com/@community/video/${videoId}` : str,
+      cleanUrl: videoId ? `https://www.tiktok.com/@community/video/${videoId}` : cleanStr,
       embedUrl,
       thumbnailUrl: ''
     };
@@ -111,15 +144,15 @@ function parseVideoInfo(rawUrl) {
 
   if (host.includes('instagram.com')) {
     let code = '';
-    const match = parsed.pathname.match(/\/(reel|p)\/([a-zA-Z0-9_-]+)/i);
+    const match = parsed.pathname.match(/\/(reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
     if (match) {
       code = match[2];
     }
     return {
       platform: 'instagram',
       videoId: code,
-      cleanUrl: code ? `https://www.instagram.com/reel/${code}/` : str,
-      embedUrl: code ? `https://www.instagram.com/p/${code}/embed/captioned/` : str,
+      cleanUrl: code ? `https://www.instagram.com/reel/${code}/` : cleanStr,
+      embedUrl: code ? `https://www.instagram.com/p/${code}/embed/` : cleanStr,
       thumbnailUrl: ''
     };
   }

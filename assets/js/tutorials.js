@@ -191,6 +191,36 @@ document.addEventListener('DOMContentLoaded', () => {
               </a>
             `;
           }
+        } else if (platform === 'instagram') {
+          let instaEmbed = tut.embed_url;
+          if (!instaEmbed) {
+            const m = videoUrl.match(/\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/i);
+            if (m && m[1]) {
+              instaEmbed = `https://www.instagram.com/p/${m[1]}/embed/`;
+            }
+          }
+          if (instaEmbed) {
+            mediaHtml = `
+              <div class="tutorial-media-frame instagram-frame">
+                <iframe
+                  src="${escapeHtml(instaEmbed)}"
+                  class="tutorial-instagram-iframe"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                  loading="lazy"
+                  title="${escapeHtml(tut.title)}"
+                ></iframe>
+              </div>
+            `;
+          } else {
+            mediaHtml = `
+              <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
+                <img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(tut.title)}" class="tutorial-thumb-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='/assets/brand/vicecityhub-og.jpg'">
+                <div class="tutorial-play-center"><i class="fa-solid fa-play"></i></div>
+              </a>
+            `;
+          }
         } else {
           mediaHtml = `
             <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-phone-preview" data-view-id="${escapeHtml(tut.id)}" aria-label="Play video tutorial">
