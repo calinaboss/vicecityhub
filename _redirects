@@ -1,6 +1,6 @@
-# Cloudflare Pages Redirects
 /home       /                           301
 /clips      /                           301
 /clips.html /                           301
 /map        https://map.vicecityhub.eu  302
 /map.html   https://map.vicecityhub.eu  302
+/sitemap.xml /api/sitemap               200

@@ -1,1 +1,5 @@
-export { onRequest } from './api/sitemap.js';
+import { onRequest as handleSitemap } from './api/sitemap.js';
+
+export async function onRequest(context) {
+  return handleSitemap(context);
+}

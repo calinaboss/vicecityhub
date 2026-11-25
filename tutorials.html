@@ -26,15 +26,44 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "GTA 6 Video Tutorials & Easter Eggs",
-    "description": "Comprehensive video guides and secrets for Grand Theft Auto VI, including free cars, robberies, easter eggs, and map secrets.",
-    "url": "https://vicecityhub.eu/tutorials.html",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "ViceCityHub",
-      "url": "https://vicecityhub.eu"
-    }
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://vicecityhub.eu/tutorials.html#webpage",
+        "name": "GTA 6 Video Tutorials, Easter Eggs & Walkthroughs",
+        "description": "Comprehensive video guides and secrets for Grand Theft Auto VI, including free cars, robberies, easter eggs, cheats, and map secrets.",
+        "url": "https://vicecityhub.eu/tutorials.html",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://vicecityhub.eu/#website",
+          "name": "ViceCityHub",
+          "url": "https://vicecityhub.eu"
+        },
+        "about": {
+          "@type": "VideoGame",
+          "name": "Grand Theft Auto VI",
+          "gamePlatform": ["PlayStation 5", "Xbox Series X", "Xbox Series S"]
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://vicecityhub.eu/tutorials.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://vicecityhub.eu/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Tutorials & Easter Eggs",
+            "item": "https://vicecityhub.eu/tutorials.html"
+          }
+        ]
+      }
+    ]
   }
   </script>
 
@@ -141,6 +170,21 @@
       </button>
       <button class="filter-chip" data-category="map_secrets">
         <i class="fa-solid fa-map-location-dot"></i> Map Secrets (<span id="count-map_secrets">0</span>)
+      </button>
+      <button class="filter-chip" data-category="missions">
+        <i class="fa-solid fa-bullseye"></i> Missions &amp; Story (<span id="count-missions">0</span>)
+      </button>
+      <button class="filter-chip" data-category="cheats">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> Cheats &amp; Glitches (<span id="count-cheats">0</span>)
+      </button>
+      <button class="filter-chip" data-category="collectibles">
+        <i class="fa-solid fa-trophy"></i> Collectibles 100% (<span id="count-collectibles">0</span>)
+      </button>
+      <button class="filter-chip" data-category="tuning">
+        <i class="fa-solid fa-wrench"></i> Cars &amp; Tuning (<span id="count-tuning">0</span>)
+      </button>
+      <button class="filter-chip" data-category="police">
+        <i class="fa-solid fa-shield-halved"></i> Police &amp; Wanted (<span id="count-police">0</span>)
       </button>
     </div>
 
@@ -279,6 +323,6 @@
     </div>
   </div>
 
-  <script src="assets/js/tutorials.js?v=2.2"></script>
+  <script src="assets/js/tutorials.js?v=3.0"></script>
 </body>
 </html>

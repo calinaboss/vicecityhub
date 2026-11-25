@@ -16,6 +16,31 @@ export async function onRequest(context) {
 
   if (isTursoConfigured(env)) {
     try {
+      const { rows: tutorials } = await runTursoSql(
+        env,
+        "SELECT id, title, description, category_label, video_url, thumbnail_url, created_at FROM tutorials WHERE status = 'approved' ORDER BY created_at DESC LIMIT 25"
+      );
+      for (const t of (tutorials || [])) {
+        let pubDate;
+        try {
+          const raw = t.created_at || '';
+          const withT = raw.includes('T') ? raw : raw.replace(' ', 'T') + 'Z';
+          pubDate = new Date(withT).toUTCString();
+        } catch (e) {
+          pubDate = new Date().toUTCString();
+        }
+        items.push({
+          title: `[GTA VI Guide - ${t.category_label || 'Video'}] ${t.title}`,
+          link: `https://vicecityhub.eu/tutorials.html?id=${encodeURIComponent(t.id)}`,
+          desc: t.description || t.title,
+          author: 'ViceCityHub Video Guides',
+          date: pubDate,
+          category: t.category_label || 'Guides',
+          mediaThumbnail: t.thumbnail_url || 'https://vicecityhub.eu/assets/brand/og-banner.png',
+          videoUrl: t.video_url
+        });
+      }
+
       const { rows: posts } = await runTursoSql(
         env,
         "SELECT id, title, content, author, category_label, created_at FROM community_posts WHERE status = 'approved' ORDER BY created_at DESC LIMIT 30"
@@ -46,22 +71,34 @@ export async function onRequest(context) {
     } catch (e) {}
   }
 
-  const rssItems = items.map(it => `    <item>
+  const rssItems = items.map(it => {
+    let extraMedia = '';
+    if (it.mediaThumbnail) {
+      extraMedia += `\n      <media:thumbnail url="${escapeXml(it.mediaThumbnail)}" />`;
+    }
+    if (it.videoUrl) {
+      extraMedia += `\n      <media:content url="${escapeXml(it.videoUrl)}" medium="video" />`;
+    }
+    if (it.category) {
+      extraMedia += `\n      <category>${escapeXml(it.category)}</category>`;
+    }
+    return `    <item>
       <title>${escapeXml(it.title)}</title>
       <link>${escapeXml(it.link)}</link>
       <guid isPermaLink="false">${escapeXml(it.link)}</guid>
       <description>${escapeXml(it.desc)}</description>
       <author>${escapeXml(it.author)}</author>
-      <pubDate>${escapeXml(it.date)}</pubDate>
-    </item>`).join('\n');
+      <pubDate>${escapeXml(it.date)}</pubDate>${extraMedia}
+    </item>`;
+  }).join('\n');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
   <channel>
-    <title>ViceCityHub.eu - GTA VI Community Feed, Leonida Map, Discord Servers &amp; Cheats</title>
+    <title>ViceCityHub.eu - GTA VI Community Feed, Video Walkthroughs, Leonida Map &amp; Cheats</title>
     <link>https://vicecityhub.eu/</link>
     <atom:link href="https://vicecityhub.eu/api/feed" rel="self" type="application/rss+xml"/>
-    <description>Live GTA VI community discussions, verified GTA 6 Discord servers directory, PS5 &amp; Xbox Series X/S cheat codes, and interactive Leonida map updates.</description>
+    <description>Live GTA VI community discussions, video walkthroughs, secret car locations, verified GTA 6 Discord servers, and cheat codes.</description>
     <language>en</language>
 ${rssItems}
   </channel>

@@ -17,7 +17,12 @@ const CATEGORY_MAP = {
   robberies: 'Robberies & Heists',
   weapons: 'Weapons & Gear',
   money: 'Money & Tips',
-  map_secrets: 'Map Secrets'
+  map_secrets: 'Map Secrets',
+  missions: 'Missions & Story',
+  cheats: 'Cheats & Glitches',
+  collectibles: 'Collectibles & 100%',
+  tuning: 'Cars & Tuning',
+  police: 'Police & Wanted Level'
 };
 
 const ALLOWED_CATEGORIES = Object.keys(CATEGORY_MAP);

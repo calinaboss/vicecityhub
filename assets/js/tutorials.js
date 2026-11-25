@@ -5,10 +5,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('tutorial-search');
   const filterChips = document.querySelectorAll('.filter-chip[data-category]');
 
-  let activeCategory = 'all';
-  let searchQuery = '';
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialCategory = urlParams.get('category');
+  const initialQ = urlParams.get('q');
+  const targetId = urlParams.get('id');
+
+  let activeCategory = initialCategory || 'all';
+  let searchQuery = initialQ || '';
   let searchTimeout = null;
   let allItemsCache = [];
+
+  if (initialCategory) {
+    filterChips.forEach(chip => {
+      chip.classList.toggle('active', chip.getAttribute('data-category') === activeCategory);
+    });
+  }
+
+  if (initialQ && searchInput) {
+    searchInput.value = initialQ;
+  }
 
   function escapeHtml(str) {
     if (!str) return '';
@@ -35,7 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
       robberies: 0,
       weapons: 0,
       money: 0,
-      map_secrets: 0
+      map_secrets: 0,
+      missions: 0,
+      cheats: 0,
+      collectibles: 0,
+      tuning: 0,
+      police: 0
     };
 
     items.forEach(item => {
@@ -48,6 +68,47 @@ document.addEventListener('DOMContentLoaded', () => {
       const el = document.getElementById(`count-${cat}`);
       if (el) el.textContent = counts[cat];
     });
+  }
+
+  function updateVideoSchema(items) {
+    let scriptEl = document.getElementById('dynamic-tutorials-video-schema');
+    if (!scriptEl) {
+      scriptEl = document.createElement('script');
+      scriptEl.id = 'dynamic-tutorials-video-schema';
+      scriptEl.type = 'application/ld+json';
+      document.head.appendChild(scriptEl);
+    }
+    const schemaData = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": (items || []).slice(0, 50).map((tut, idx) => {
+        let rawDate = tut.created_at || new Date().toISOString();
+        if (!rawDate.includes('T')) rawDate = rawDate.replace(' ', 'T');
+        if (!rawDate.endsWith('Z') && !rawDate.includes('+')) rawDate += '+00:00';
+        return {
+          "@type": "ListItem",
+          "position": idx + 1,
+          "item": {
+            "@type": "VideoObject",
+            "name": tut.title,
+            "description": tut.description || tut.title,
+            "thumbnailUrl": [tut.thumbnail_url || 'https://vicecityhub.eu/assets/brand/og-banner.png'],
+            "uploadDate": rawDate,
+            "contentUrl": tut.video_url,
+            "embedUrl": tut.embed_url || tut.video_url,
+            "publisher": {
+              "@type": "Organization",
+              "name": "ViceCityHub",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://vicecityhub.eu/assets/brand/logo.png"
+              }
+            }
+          }
+        };
+      })
+    };
+    scriptEl.textContent = JSON.stringify(schemaData);
   }
 
   function renderTutorials(items) {
@@ -69,24 +130,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateStr = tut.created_at ? tut.created_at.slice(0, 10) : '';
 
         let mediaHtml = '';
-        let tiktokEmbed = tut.embed_url || '';
+
         if (platform === 'tiktok') {
-          if (!tiktokEmbed && videoUrl) {
-            const m = videoUrl.match(/\/video\/(\d+)/i) || videoUrl.match(/\/v1\/(\d+)/i) || videoUrl.match(/item_id=(\d+)/i);
-            if (m) {
+          let tiktokEmbed = tut.embed_url;
+          if (!tiktokEmbed) {
+            const m = videoUrl.match(/\/video\/(\d+)/) || videoUrl.match(/\/v1\/(\d+)/) || videoUrl.match(/[?&]item_id=(\d+)/);
+            if (m && m[1]) {
               tiktokEmbed = `https://www.tiktok.com/player/v1/${m[1]}?embed_from=webapp_share&music_info=1&description=1&autoplay=0&muted=0`;
             }
           }
           if (tiktokEmbed) {
             mediaHtml = `
               <div class="tutorial-media-frame tiktok-frame">
-                <iframe src="${escapeHtml(tiktokEmbed)}"
-                        class="tutorial-tiktok-iframe"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen
-                        loading="lazy"
-                        title="${escapeHtml(tut.title)}">
-                </iframe>
+                <iframe
+                  src="${escapeHtml(tiktokEmbed)}"
+                  class="tutorial-tiktok-iframe"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                  loading="lazy"
+                  title="${escapeHtml(tut.title)}"
+                ></iframe>
               </div>
             `;
           } else {
@@ -98,23 +162,25 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
           }
         } else if (platform === 'youtube') {
-          let ytEmbed = tut.embed_url || '';
-          if (!ytEmbed && videoUrl) {
-            const m = videoUrl.match(/(?:v=|\/embed\/|\/shorts\/|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
-            if (m) {
+          let ytEmbed = tut.embed_url;
+          if (!ytEmbed) {
+            const m = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+            if (m && m[1]) {
               ytEmbed = `https://www.youtube-nocookie.com/embed/${m[1]}`;
             }
           }
           if (ytEmbed) {
             mediaHtml = `
               <div class="tutorial-media-frame youtube-frame">
-                <iframe src="${escapeHtml(ytEmbed)}"
-                        class="tutorial-youtube-iframe"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen
-                        loading="lazy"
-                        title="${escapeHtml(tut.title)}">
-                </iframe>
+                <iframe
+                  src="${escapeHtml(ytEmbed)}"
+                  class="tutorial-youtube-iframe"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                  loading="lazy"
+                  title="${escapeHtml(tut.title)}"
+                ></iframe>
               </div>
             `;
           } else {
@@ -135,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         return `
-          <article class="tutorial-card">
+          <article id="tutorial-${escapeHtml(tut.id)}" class="tutorial-card">
             <div class="tutorial-header-row">
               <div class="tutorial-badges-group">
                 <span class="tutorial-category-tag">${escapeHtml(tut.category_label || tut.category)}</span>
@@ -161,6 +227,23 @@ document.addEventListener('DOMContentLoaded', () => {
           </article>
         `;
       }).join('');
+
+      updateVideoSchema(items);
+
+      if (targetId) {
+        setTimeout(() => {
+          const el = document.getElementById(`tutorial-${targetId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.style.transition = 'box-shadow 0.3s ease, border-radius 0.3s ease';
+            el.style.boxShadow = '0 0 24px var(--accent-pink)';
+            el.style.borderRadius = '16px';
+            setTimeout(() => {
+              el.style.boxShadow = 'none';
+            }, 2500);
+          }
+        }, 150);
+      }
     }
   }
 
@@ -181,20 +264,29 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(`/api/tutorials?${params.toString()}`);
       if (!res.ok) throw new Error('Network error');
       const data = await res.json();
-      const tutorials = data.tutorials || [];
 
-      if (!searchQuery && activeCategory === 'all') {
-        allItemsCache = tutorials;
-        updateCategoryCounts(tutorials);
+      if (data && data.ok) {
+        if (!searchQuery && activeCategory === 'all') {
+          allItemsCache = data.tutorials || [];
+          updateCategoryCounts(allItemsCache);
+        } else if (allItemsCache.length === 0 && (data.tutorials || []).length > 0) {
+          fetch('/api/tutorials?limit=60')
+            .then(r => r.json())
+            .then(allData => {
+              if (allData && allData.ok) {
+                allItemsCache = allData.tutorials || [];
+                updateCategoryCounts(allItemsCache);
+              }
+            })
+            .catch(() => {});
+        }
+
+        renderTutorials(data.tutorials || []);
+      } else {
+        renderTutorials([]);
       }
-
-      renderTutorials(tutorials);
     } catch (err) {
-      if (loading) loading.style.display = 'none';
-      if (empty) {
-        empty.style.display = 'block';
-        empty.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-2x" style="color: #f87171; margin-bottom: 8px;"></i><p style="color: var(--text-muted);">Failed to load tutorials. Please try again later.</p>`;
-      }
+      renderTutorials([]);
     }
   }
 
@@ -203,6 +295,15 @@ document.addEventListener('DOMContentLoaded', () => {
       filterChips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
       activeCategory = chip.getAttribute('data-category') || 'all';
+
+      const newUrl = new URL(window.location);
+      if (activeCategory === 'all') {
+        newUrl.searchParams.delete('category');
+      } else {
+        newUrl.searchParams.set('category', activeCategory);
+      }
+      window.history.replaceState({}, '', newUrl);
+
       fetchTutorials();
     });
   });
@@ -212,6 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(searchTimeout);
       searchTimeout = setTimeout(() => {
         searchQuery = searchInput.value.trim();
+        const newUrl = new URL(window.location);
+        if (searchQuery) {
+          newUrl.searchParams.set('q', searchQuery);
+        } else {
+          newUrl.searchParams.delete('q');
+        }
+        window.history.replaceState({}, '', newUrl);
+
         fetchTutorials();
       }, 300);
     });
