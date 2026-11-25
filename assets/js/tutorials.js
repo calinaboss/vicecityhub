@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (empty) empty.style.display = 'none';
     if (container) {
-      container.style.display = 'flex';
+      container.style.display = 'grid';
       container.innerHTML = items.map(tut => {
         const platform = (tut.platform || 'youtube').toLowerCase();
         const videoUrl = tut.video_url || '#';
@@ -155,11 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="tutorial-action-bar">
               <a href="${escapeHtml(videoUrl)}" target="_blank" rel="noopener noreferrer" class="tutorial-watch-btn" data-view-id="${escapeHtml(tut.id)}">
-                <i class="fa-solid fa-circle-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.76rem;"></i>
+                <i class="fa-solid fa-circle-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.74rem;"></i>
               </a>
-              <span class="tutorial-stat-pill">
+              <div class="tutorial-stat-pill">
                 <i class="fa-solid fa-eye" style="color: var(--accent-cyan);"></i> ${Number(tut.views_count || 0).toLocaleString()} views
-              </span>
+              </div>
             </div>
           </article>
         `;
