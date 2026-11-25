@@ -4,6 +4,9 @@ Disallow: /admin.html
 Disallow: /settings.html
 Disallow: /api/admin
 
+User-agent: Mediapartners-Google
+Allow: /
+
 User-agent: Googlebot
 Allow: /
 

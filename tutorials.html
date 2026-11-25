@@ -38,23 +38,25 @@
   }
   </script>
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png?v=2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png?v=2">
-  <link rel="icon" type="image/png" sizes="48x48" href="/assets/brand/favicon-48x48.png?v=2">
-  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192x192.png?v=2">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=2">
-  <link rel="shortcut icon" href="/favicon.ico?v=2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png?v=3">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png?v=3">
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/brand/favicon-48x48.png?v=3">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/brand/favicon-96x96.png?v=3">
+  <link rel="icon" type="image/png" sizes="144x144" href="/assets/brand/favicon-144x144.png?v=3">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192x192.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=3">
+  <link rel="shortcut icon" href="/favicon.ico?v=3">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=4.5">
+  <link rel="stylesheet" href="assets/css/style.css?v=4.6">
   <link rel="canonical" href="https://vicecityhub.eu/tutorials.html">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <meta name="keywords" content="GTA 6 tutorials, GTA 6 easter eggs, GTA 6 secret cars, free supercar GTA 6, GTA 6 robberies guide, GTA 6 map secrets, GTA VI video guides, GTA 6 TikTok, GTA 6 tips, Grand Theft Auto VI secrets">
+  <meta name="keywords" content="GTA 6 tutorials, GTA 6 easter eggs, GTA 6 secret cars, free supercar GTA 6, GTA 6 robberies guide, GTA 6 map secrets, GTA VI video guides, GTA 6 TikTok, GTA 6 tips, Grand Theft Auto VI secrets, easter eggs GTA 6, trucchi soldi GTA 6, macchine gratis GTA 6, armi segrete GTA 6, rapine GTA 6">
   <meta name="author" content="ViceCityHub.eu">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="search" type="application/opensearchdescription+xml" title="ViceCityHub" href="/opensearch.xml">
@@ -142,17 +144,92 @@
       </button>
     </div>
 
-    <div id="tutorials-loading" style="text-align: center; padding: 48px 0; color: var(--text-muted);">
-      <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--accent-pink);"></i>
-      <p style="margin-top: 12px; font-size: 0.9rem;">Loading tutorials &amp; easter eggs...</p>
-    </div>
+    <div id="tutorials-container" class="tutorials-grid">
+      <article class="tutorial-card">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer" class="tutorial-thumb-container">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Secret Grotti Cheetah Supercar Spawn Location" class="tutorial-thumb-img" loading="lazy">
+          <span class="tutorial-category-tag">Free Cars</span>
+          <span class="tutorial-platform-badge youtube"><i class="fa-brands fa-youtube"></i> YouTube</span>
+          <div class="tutorial-play-overlay">
+            <span class="tutorial-watch-btn">
+              <i class="fa-solid fa-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem; margin-left: 2px;"></i>
+            </span>
+          </div>
+        </a>
+        <div class="tutorial-content">
+          <h2 class="tutorial-title">Secret Grotti Cheetah Supercar Spawn Location in Leonida</h2>
+          <p class="tutorial-desc">How to locate and acquire the secret Grotti Cheetah spawn tucked away in an underground multi-level parking complex in Vice Beach.</p>
+          <div class="tutorial-footer">
+            <span><i class="fa-solid fa-eye"></i> 142 views</span>
+            <span><i class="fa-regular fa-clock"></i> 2026-11-25</span>
+          </div>
+        </div>
+      </article>
 
-    <div id="tutorials-container" class="tutorials-grid" style="display: none;"></div>
+      <article class="tutorial-card">
+        <a href="https://www.youtube.com/watch?v=b007YjC0h08" target="_blank" rel="noopener noreferrer" class="tutorial-thumb-container">
+          <img src="https://img.youtube.com/vi/b007YjC0h08/hqdefault.jpg" alt="Hidden Underwater UFO Wreckage Easter Egg" class="tutorial-thumb-img" loading="lazy">
+          <span class="tutorial-category-tag">Easter Eggs</span>
+          <span class="tutorial-platform-badge youtube"><i class="fa-brands fa-youtube"></i> YouTube</span>
+          <div class="tutorial-play-overlay">
+            <span class="tutorial-watch-btn">
+              <i class="fa-solid fa-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem; margin-left: 2px;"></i>
+            </span>
+          </div>
+        </a>
+        <div class="tutorial-content">
+          <h2 class="tutorial-title">Hidden Underwater UFO Wreckage Easter Egg (Leonida Keys)</h2>
+          <p class="tutorial-desc">Full underwater expedition guide discovering the sunken submerged disc-shaped craft off the southern reefs of the Leonida Keys.</p>
+          <div class="tutorial-footer">
+            <span><i class="fa-solid fa-eye"></i> 289 views</span>
+            <span><i class="fa-regular fa-clock"></i> 2026-11-25</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="tutorial-card">
+        <a href="https://www.youtube.com/watch?v=kYJvY6nI8vU" target="_blank" rel="noopener noreferrer" class="tutorial-thumb-container">
+          <img src="https://img.youtube.com/vi/kYJvY6nI8vU/hqdefault.jpg" alt="Hanks Waffles Fast Cash Robbery Guide" class="tutorial-thumb-img" loading="lazy">
+          <span class="tutorial-category-tag">Robberies &amp; Heists</span>
+          <span class="tutorial-platform-badge youtube"><i class="fa-brands fa-youtube"></i> YouTube</span>
+          <div class="tutorial-play-overlay">
+            <span class="tutorial-watch-btn">
+              <i class="fa-solid fa-play"></i> Guarda il tutorial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.72rem; margin-left: 2px;"></i>
+            </span>
+          </div>
+        </a>
+        <div class="tutorial-content">
+          <h2 class="tutorial-title">Hanks Waffles Fast Cash Robbery Guide &amp; Safe Combination</h2>
+          <p class="tutorial-desc">Step-by-step tutorial on how to clean out the cash register, discover the manager safe combination behind the counter, and escape without 3 stars.</p>
+          <div class="tutorial-footer">
+            <span><i class="fa-solid fa-eye"></i> 314 views</span>
+            <span><i class="fa-regular fa-clock"></i> 2026-11-25</span>
+          </div>
+        </div>
+      </article>
+    </div>
 
     <div id="tutorials-empty" class="empty-feed-state" style="display: none; padding: 48px 0;">
       <i class="fa-solid fa-film fa-3x" style="color: var(--text-dim); margin-bottom: 12px;"></i>
       <p style="color: var(--text-muted); font-size: 0.95rem;">No tutorials found matching your selection.</p>
     </div>
+
+    <section class="seo-editorial-section" aria-label="GTA 6 Video Guides and Easter Eggs Directory">
+      <h2><i class="fa-solid fa-lightbulb" style="color: var(--accent-pink);"></i> Curated GTA VI Walkthroughs, Easter Eggs &amp; Secret Supercars</h2>
+      <p>
+        The state of Leonida is packed with mysteries, hidden vehicle spawns, and challenging side-activities. Our <strong>GTA 6 Tutorials &amp; Easter Eggs</strong> directory brings together the best community video walkthroughs from YouTube, TikTok, and Instagram, giving you fast visual references without fluff.
+      </p>
+
+      <h3>How to Find Free Supercars &amp; Secret Vehicles</h3>
+      <p>
+        Across Vice City and Port Gellhorn, several high-end exotics and tuned muscle cars spawn in unmarked garages and secluded alleyways. Keep an eye out for multi-level parking decks in Vice Beach where vehicles like the Grotti Cheetah, Pegassi Torero, and Pfister Comet can be hotwired without triggering an immediate police response.
+      </p>
+
+      <h3>Convenience Store Robberies &amp; Safe Cracking</h3>
+      <p>
+        In Grand Theft Auto VI, dynamic store holdups allow dual protagonists Jason and Lucia to control cashiers, scout manager offices, and discover written safe combinations on bulletin boards. Timing your getaway through back alley exits is essential to break line of sight with Leonida Highway Patrol squad cars.
+      </p>
+    </section>
   </main>
 
   <footer class="site-footer">
