@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>State of Leonida Interactive Map &bull; ViceCityHub.eu</title>
-  <meta name="description" content="ViceCityHub interactive map of Leonida and Vice City for Grand Theft Auto VI. Drag, zoom, and explore landmarks, shops, strip clubs, and secrets.">
+  <meta name="description" content="ViceCityHub interactive map of Leonida and Vice City for Grand Theft Auto VI. Drag, zoom, and explore landmarks, shops, strip clubs, ATMs, collectibles, and secrets.">
   <meta name="theme-color" content="#0d1117">
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -136,7 +136,7 @@
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      max-height: 280px;
+      max-height: 320px;
       overflow-y: auto;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
       display: none;
@@ -165,6 +165,8 @@
       font-size: 12.5px;
       font-weight: 600;
       color: var(--text-main);
+      display: flex;
+      align-items: center;
     }
 
     .search-result-subtitle {
@@ -219,7 +221,7 @@
     }
 
     .map-sidebar {
-      width: 250px;
+      width: 260px;
       background: rgba(13, 17, 23, 0.95);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -232,7 +234,7 @@
     }
 
     .map-sidebar.collapsed {
-      margin-left: -250px;
+      margin-left: -260px;
     }
 
     .sidebar-head {
@@ -272,7 +274,7 @@
       padding: 8px 10px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .sidebar-list::-webkit-scrollbar {
@@ -288,7 +290,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 7px 10px;
+      padding: 6px 10px;
       border-radius: 6px;
       background: transparent;
       border: 1px solid transparent;
@@ -371,6 +373,36 @@
       color: var(--accent-pink) !important;
     }
 
+    .custom-pin-marker-wrapper {
+      background: transparent;
+      border: none;
+    }
+
+    .custom-pin-marker {
+      width: 28px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.85));
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .custom-pin-marker:hover {
+      transform: scale(1.3) translateY(-2px);
+      filter: drop-shadow(0 4px 10px rgba(0, 210, 255, 0.6));
+      z-index: 10000 !important;
+    }
+
+    .custom-pin-marker img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+
     .symbol-marker-pin {
       display: flex;
       align-items: center;
@@ -391,20 +423,6 @@
       z-index: 10000 !important;
     }
 
-    .symbol-marker-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      border: 1px solid #ffffff;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-
-    .symbol-marker-dot:hover {
-      transform: scale(1.5);
-    }
-
     .leaflet-popup-content-wrapper {
       background: var(--bg-surface) !important;
       color: var(--text-main) !important;
@@ -422,13 +440,14 @@
     .leaflet-popup-content {
       margin: 14px !important;
       line-height: 1.4 !important;
-      min-width: 210px;
+      min-width: 220px;
+      max-width: 320px;
     }
 
     .popup-badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       padding: 3px 8px;
       border-radius: 4px;
       font-size: 11px;
@@ -449,13 +468,24 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-size: 11.5px;
       color: var(--text-muted);
     }
 
     .popup-row strong {
       color: var(--text-main);
+    }
+
+    .popup-desc {
+      font-size: 11.5px;
+      color: #c9d1d9;
+      line-height: 1.45;
+      margin-bottom: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 6px 8px;
+      border-radius: 4px;
+      border-left: 2px solid var(--accent-cyan);
     }
 
     .popup-coords-box {
@@ -526,7 +556,7 @@
       .search-wrapper { max-width: 180px; }
       .map-hud-bar { bottom: 8px; right: 8px; font-size: 10px; padding: 4px 8px; }
     }
-</style>
+  </style>
 </head>
 <body>
 
@@ -540,7 +570,7 @@
       <div class="search-wrapper">
         <div class="search-input-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="map-search-input" class="search-input" placeholder="Search landmarks, clubs, roads..." autocomplete="off">
+          <input type="text" id="map-search-input" class="search-input" placeholder="Search landmarks, shops, ATMs, secrets..." autocomplete="off">
         </div>
         <div class="search-dropdown" id="search-dropdown"></div>
       </div>
@@ -564,7 +594,6 @@
           <button class="sidebar-reset-btn" id="btn-filter-reset">Show All</button>
         </div>
         <div class="sidebar-list" id="sidebar-categories-list">
-
         </div>
       </aside>
 
@@ -590,20 +619,26 @@
       'use strict';
 
       const CAT_CONFIG = {
-        stripclub: { label: 'Strip Clubs', color: '#ff2a85', icon: 'fa-venus', priority: 1 },
-        nightlife: { label: 'Nightclubs & Bars', color: '#c084fc', icon: 'fa-martini-glass', priority: 1 },
-        weapons: { label: 'Weapons & Ammunition', color: '#ef4444', icon: 'fa-gun', priority: 1 },
-        safehouse: { label: 'Safehouses', color: '#fbbf24', icon: 'fa-house-chimney', priority: 1 },
-        police: { label: 'Police & Prisons', color: '#3b82f6', icon: 'fa-shield-halved', priority: 1 },
-        hospital: { label: 'Hospitals & Medical', color: '#10b981', icon: 'fa-truck-medical', priority: 1 },
-        gas: { label: 'Gas Stations & Mods', color: '#f97316', icon: 'fa-gas-pump', priority: 1 },
-        easteregg: { label: 'Easter Eggs & Cinema', color: '#ec4899', icon: 'fa-skull', priority: 1 },
-        hotel: { label: 'Hotels & Motels', color: '#00d2ff', icon: 'fa-hotel', priority: 1 },
-        food: { label: 'Diners & Restaurants', color: '#fb923c', icon: 'fa-utensils', priority: 1 },
-        shops: { label: 'Retail & Supermarkets', color: '#38bdf8', icon: 'fa-bag-shopping', priority: 1 },
-        transport: { label: 'Airports & Transit', color: '#14b8a6', icon: 'fa-plane-departure', priority: 2 },
-        enterable: { label: 'Enterable Interiors', color: '#818cf8', icon: 'fa-door-open', priority: 2 },
-        general: { label: 'Other Mapped Buildings', color: '#94a3b8', icon: 'fa-city', priority: 3 }
+        atm: { label: 'ATMs & Cash', color: '#2ec4b6', icon: 'fa-money-bill-wave' },
+        shops: { label: 'Shops & Boutiques', color: '#38bdf8', icon: 'fa-bag-shopping' },
+        food: { label: 'Restaurants & Takeout', color: '#fb923c', icon: 'fa-utensils' },
+        nightlife: { label: 'Nightclubs & Bars', color: '#c084fc', icon: 'fa-martini-glass' },
+        stripclub: { label: 'Strip Clubs', color: '#ff2a85', icon: 'fa-venus' },
+        weapons: { label: 'Weapons & Ammunition', color: '#ef4444', icon: 'fa-gun' },
+        safehouse: { label: 'Safehouses & Garages', color: '#fbbf24', icon: 'fa-house-chimney' },
+        vehicles: { label: 'Standout Vehicles', color: '#f72585', icon: 'fa-car' },
+        gas: { label: 'Gas Stations & Mods', color: '#f97316', icon: 'fa-gas-pump' },
+        crime: { label: 'Banks, Safes & Crime', color: '#eab308', icon: 'fa-vault' },
+        police: { label: 'Police & Public Safety', color: '#3b82f6', icon: 'fa-shield-halved' },
+        hospital: { label: 'Hospitals & Medical', color: '#10b981', icon: 'fa-truck-medical' },
+        collectibles: { label: 'Collectibles & Packages', color: '#ffd166', icon: 'fa-box-open' },
+        activities: { label: 'Stunts, Races & Sports', color: '#ef476f', icon: 'fa-motorcycle' },
+        waink: { label: 'WAiNK & Street Art', color: '#7ae582', icon: 'fa-camera' },
+        transport: { label: 'Transit & Marinas', color: '#14b8a6', icon: 'fa-bus' },
+        hotel: { label: 'Hotels & Motels', color: '#00d2ff', icon: 'fa-hotel' },
+        easteregg: { label: 'Easter Eggs & Secrets', color: '#ec4899', icon: 'fa-skull' },
+        enterable: { label: 'Enterable Interiors', color: '#818cf8', icon: 'fa-door-open' },
+        general: { label: 'Buildings & Landmarks', color: '#94a3b8', icon: 'fa-city' }
       };
 
       const MAP_SIZE = 10000;
@@ -673,12 +708,21 @@
       };
 
       let allLandmarks = window.LEONIDA_LANDMARKS || [];
-      let activeCategories = new Set(['stripclub']);
+      let activeCategories = new Set(['atm', 'shops', 'weapons', 'safehouse', 'stripclub', 'vehicles']);
 
       const markersLayer = L.layerGroup().addTo(map);
 
       function createSymbolIcon(item) {
         const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
+        if (item.pin) {
+          return L.divIcon({
+            className: 'custom-pin-marker-wrapper',
+            html: `<div class="custom-pin-marker" title="${escapeHtml(item.name)}"><img src="images/pins/${encodeURIComponent(item.pin)}.webp" alt="" onerror="this.onerror=null;this.parentElement.className='symbol-marker-pin';this.parentElement.style.background='${conf.color}';this.parentElement.innerHTML='<i class=\\\'fa-solid ${conf.icon}\\\'></i>';"/></div>`,
+            iconSize: [28, 32],
+            iconAnchor: [14, 32],
+            popupAnchor: [0, -30]
+          });
+        }
         return L.divIcon({
           className: 'custom-symbol-icon',
           html: `<div class="symbol-marker-pin" style="background: ${conf.color};" title="${escapeHtml(item.name)}"><i class="fa-solid ${conf.icon}"></i></div>`,
@@ -690,14 +734,17 @@
 
       function buildPopupContent(item) {
         const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
+        const pinBadge = item.pin ? `<img src="images/pins/${encodeURIComponent(item.pin)}.webp" style="width: 16px; height: 16px; object-fit: contain; vertical-align: middle;" alt="">` : `<i class="fa-solid ${conf.icon}"></i>`;
         return `
           <div>
             <span class="popup-badge" style="background: ${conf.color}22; color: ${conf.color}; border: 1px solid ${conf.color}55;">
-              <i class="fa-solid ${conf.icon}"></i> ${conf.label}
+              ${pinBadge} ${conf.label}
             </span>
             <div class="popup-title">${escapeHtml(item.name)}</div>
-            ${item.inGameAddr ? `<div class="popup-row"><strong>In-Game Area:</strong> <span>${escapeHtml(item.inGameAddr)}</span></div>` : ''}
+            ${item.type && item.type !== item.name ? `<div class="popup-row"><strong>Type:</strong> <span>${escapeHtml(item.type)}</span></div>` : ''}
+            ${item.inGameAddr ? `<div class="popup-row"><strong>Area:</strong> <span>${escapeHtml(item.inGameAddr)}</span></div>` : ''}
             ${item.realAddr ? `<div class="popup-row"><strong>Real-World Match:</strong> <span>${escapeHtml(item.realAddr)}</span></div>` : ''}
+            ${item.desc ? `<div class="popup-desc">${escapeHtml(item.desc)}</div>` : ''}
             <div class="popup-coords-box">
               <span>X: ${item.wx} &bull; Y: ${item.wy}</span>
               <button class="copy-btn" onclick="copyCoords(${item.wx}, ${item.wy})" title="Copy coordinates">
@@ -717,16 +764,42 @@
           .replace(/"/g, '&quot;');
       }
 
+      let renderTimer = null;
+      function debouncedRenderMarkers() {
+        if (renderTimer) clearTimeout(renderTimer);
+        renderTimer = setTimeout(renderMarkers, 60);
+      }
+
       function renderMarkers() {
         markersLayer.clearLayers();
+        if (activeCategories.size === 0) return;
 
-        const filtered = allLandmarks.filter(item => activeCategories.has(item.cat));
+        const bounds = map.getBounds().pad(0.35);
+        const sw = bounds.getSouthWest();
+        const ne = bounds.getNorthEast();
+        const minLat = sw.lat;
+        const maxLat = ne.lat;
+        const minLng = sw.lng;
+        const maxLng = ne.lng;
 
-        const useCanvas = filtered.length > 150;
-
-        filtered.forEach(item => {
+        const visibleItems = [];
+        for (let i = 0; i < allLandmarks.length; i++) {
+          const item = allLandmarks[i];
+          if (!activeCategories.has(item.cat)) continue;
           const lat = MAP_SIZE - item.py;
           const lng = item.px;
+          if (lat >= minLat && lat <= maxLat && lng >= minLng && lng <= maxLng) {
+            visibleItems.push({ item, lat, lng });
+          }
+        }
+
+        const useCanvas = visibleItems.length > 250;
+
+        for (let i = 0; i < visibleItems.length; i++) {
+          const entry = visibleItems[i];
+          const item = entry.item;
+          const lat = entry.lat;
+          const lng = entry.lng;
           const conf = CAT_CONFIG[item.cat] || CAT_CONFIG.general;
 
           let marker;
@@ -749,17 +822,20 @@
           marker.bindPopup(buildPopupContent(item));
           marker.itemData = item;
           markersLayer.addLayer(marker);
-        });
+        }
       }
+
+      map.on('moveend zoomend', debouncedRenderMarkers);
 
       function buildSidebar() {
         const listEl = document.getElementById('sidebar-categories-list');
         if (!listEl) return;
 
         const counts = {};
-        allLandmarks.forEach(l => {
-          counts[l.cat] = (counts[l.cat] || 0) + 1;
-        });
+        for (let i = 0; i < allLandmarks.length; i++) {
+          const c = allLandmarks[i].cat;
+          counts[c] = (counts[c] || 0) + 1;
+        }
 
         const catKeys = Object.keys(CAT_CONFIG);
         listEl.innerHTML = catKeys.map(cat => {
@@ -785,8 +861,7 @@
             const cat = this.getAttribute('data-cat');
 
             if (activeCategories.has(cat) && activeCategories.size === 1) {
-
-              activeCategories = new Set(['stripclub']);
+              activeCategories = new Set(['atm', 'shops', 'weapons', 'safehouse', 'stripclub', 'vehicles']);
             } else {
               activeCategories = new Set([cat]);
               const matches = allLandmarks.filter(l => l.cat === cat);
@@ -812,19 +887,24 @@
             item.classList.remove('active');
           }
         });
+        const btnReset = document.getElementById('btn-filter-reset');
+        if (btnReset) {
+          btnReset.textContent = activeCategories.size === Object.keys(CAT_CONFIG).length ? 'Reset' : 'Show All';
+        }
       }
 
       const btnFilterReset = document.getElementById('btn-filter-reset');
       if (btnFilterReset) {
         btnFilterReset.addEventListener('click', function() {
-
-          activeCategories = new Set([
-            'stripclub', 'nightlife', 'weapons', 'safehouse', 'police',
-            'hospital', 'gas', 'easteregg', 'hotel', 'food', 'shops', 'transport', 'enterable'
-          ]);
+          if (activeCategories.size === Object.keys(CAT_CONFIG).length) {
+            activeCategories = new Set(['atm', 'shops', 'weapons', 'safehouse', 'stripclub', 'vehicles']);
+            btnFilterReset.textContent = 'Show All';
+          } else {
+            activeCategories = new Set(Object.keys(CAT_CONFIG));
+            btnFilterReset.textContent = 'Reset';
+          }
           updateSidebarActiveStates();
           renderMarkers();
-          map.setView([5000, 6000], -2.0);
         });
       }
 
@@ -860,10 +940,12 @@
 
           const matches = allLandmarks.filter(l => {
             return (l.name && l.name.toLowerCase().includes(query)) ||
+                   (l.type && l.type.toLowerCase().includes(query)) ||
                    (l.realAddr && l.realAddr.toLowerCase().includes(query)) ||
                    (l.inGameAddr && l.inGameAddr.toLowerCase().includes(query)) ||
+                   (l.desc && l.desc.toLowerCase().includes(query)) ||
                    (l.cat && l.cat.toLowerCase().includes(query));
-          }).slice(0, 10);
+          }).slice(0, 12);
 
           if (matches.length === 0) {
             searchDropdown.innerHTML = '<div style="padding: 12px; font-size: 12px; color: var(--text-muted); text-align: center;">No matching locations found</div>';
@@ -873,13 +955,14 @@
 
           searchDropdown.innerHTML = matches.map(m => {
             const conf = CAT_CONFIG[m.cat] || CAT_CONFIG.general;
+            const iconHtml = m.pin ? `<img src="images/pins/${encodeURIComponent(m.pin)}.webp" style="width: 16px; height: 16px; object-fit: contain; margin-right: 6px; vertical-align: middle;" alt="">` : `<i class="fa-solid ${conf.icon}" style="color: ${conf.color}; margin-right: 6px;"></i>`;
             return `
               <div class="search-result-item" data-id="${m.id}">
                 <div class="search-result-title">
-                  <i class="fa-solid ${conf.icon}" style="color: ${conf.color}; margin-right: 6px;"></i>
+                  ${iconHtml}
                   ${escapeHtml(m.name)}
                 </div>
-                <div class="search-result-subtitle">${escapeHtml(m.inGameAddr || m.realAddr || conf.label)}</div>
+                <div class="search-result-subtitle">${escapeHtml(m.type || m.inGameAddr || m.realAddr || conf.label)}</div>
               </div>
             `;
           }).join('');
@@ -899,20 +982,20 @@
             if (!activeCategories.has(target.cat)) {
               activeCategories.add(target.cat);
               updateSidebarActiveStates();
-              renderMarkers();
             }
 
             const lat = MAP_SIZE - target.py;
             const lng = target.px;
-            map.flyTo([lat, lng], 1.25, { duration: 1.2 });
+            map.flyTo([lat, lng], 1.25, { duration: 1.0 });
 
             setTimeout(() => {
+              renderMarkers();
               markersLayer.eachLayer(m => {
                 if (m.itemData && m.itemData.id === target.id) {
                   m.openPopup();
                 }
               });
-            }, 1250);
+            }, 1050);
           }
         });
 
@@ -935,6 +1018,6 @@
       }
 
     })();
-</script>
+  </script>
 </body>
 </html>
