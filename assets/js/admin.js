@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+      const cachedUserStr = localStorage.getItem('vicecityhub_user');
+      if (!cachedUserStr) {
+        window.location.replace('403.html');
+        return;
+      }
+
       const welcomeLine = document.getElementById('admin-welcome-line');
       const btnRefresh = document.getElementById('btn-refresh-admin');
       const tabButtons = document.querySelectorAll('[data-admin-tab]');
@@ -416,14 +422,18 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           const res = await fetch('/api/admin', { credentials: 'same-origin' });
           if (res.status === 401 || res.status === 403) {
-            window.location.href = 'index.html';
+            window.location.replace('403.html');
             return;
           }
           const data = await res.json();
-          if (!res.ok || !data.ok) {
-            window.location.href = 'index.html';
+          if (!res.ok || !data.ok || !data.admin) {
+            window.location.replace('403.html');
             return;
           }
+          const guard = document.getElementById('admin-guard-style');
+          if (guard) guard.remove();
+          document.body.style.display = '';
+
           if (welcomeLine && data.admin) {
             welcomeLine.textContent = `Logged in as Administrator @${data.admin.username} (${data.admin.email})`;
           }
@@ -436,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
           renderTickets(data.tickets || []);
           renderTutorials(data.pendingTutorials || [], data.approvedTutorials || data.tutorials || []);
         } catch (err) {
-          showToast('Error loading admin panel.');
+          window.location.replace('403.html');
         }
       }
 

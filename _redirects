@@ -3,4 +3,5 @@
 /clips.html /                           301
 /map        https://map.vicecityhub.eu  302
 /map.html   https://map.vicecityhub.eu  302
+/403        /403.html                   200
 /sitemap.xml /api/sitemap               200

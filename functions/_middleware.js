@@ -1,4 +1,5 @@
 import { onRequest as serveDynamicSitemap } from './api/sitemap.js';
+import { getAuthenticatedUser } from './api/_turso.js';
 
 const ALLOWED_ORIGINS = [
   'https://vicecityhub.eu',
@@ -61,6 +62,21 @@ export async function onRequest(context) {
         'Content-Security-Policy': STRICT_CSP
       }
     });
+  }
+
+  const normPath = reqUrl.pathname.toLowerCase().replace(/\/+$/, '');
+  if (normPath === '/admin' || normPath === '/admin.html') {
+    const authUser = await getAuthenticatedUser(request, context.env);
+    const isAdminEmail = Boolean(
+      authUser &&
+      context.env?.ADMIN_EMAIL &&
+      authUser.email &&
+      authUser.email.toLowerCase() === context.env.ADMIN_EMAIL.trim().toLowerCase()
+    );
+    const isAdmin = Boolean(authUser && (authUser.role === 'admin' || isAdminEmail));
+    if (!isAdmin) {
+      return Response.redirect(`${reqUrl.origin}/403.html`, 302);
+    }
   }
 
   const response = (reqUrl.pathname === '/sitemap.xml')
