@@ -153,6 +153,26 @@ img {
   display: none;
 }
 
+.mobile-brand-link {
+  display: none;
+  align-items: center;
+  text-decoration: none;
+}
+
+.mobile-brand-logo {
+  height: 32px;
+  width: auto;
+  max-width: 48px;
+  display: block;
+  object-fit: contain;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.mobile-brand-link:hover .mobile-brand-logo {
+  transform: scale(1.06);
+  opacity: 0.9;
+}
+
 
 .header-nav-left {
   display: flex;
@@ -2153,6 +2173,13 @@ body.page-map-view {
   min-height: 44px;
 }
 
+.mobile-nav-item span {
+  text-align: center;
+  line-height: 1.15;
+  white-space: nowrap;
+  font-size: 0.64rem;
+}
+
 .mobile-nav-item i {
   font-size: 1.05rem;
 }
@@ -2327,13 +2354,12 @@ body.page-map-view {
   }
 
   .mobile-brand-title {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: none;
+  }
+
+  .mobile-brand-link {
+    display: inline-flex;
+    align-items: center;
   }
 
   .header-nav-left, .header-nav-right .nav-auth-link {
@@ -2688,7 +2714,11 @@ body.page-map-view {
   }
 
   .mobile-brand-title {
-    font-size: 0.84rem;
+    display: none;
+  }
+
+  .mobile-brand-logo {
+    height: 28px;
   }
 }
 
