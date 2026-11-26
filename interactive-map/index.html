@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>State of Leonida Interactive Map &bull; ViceCityHub.eu</title>
-  <meta name="description" content="Explore the high-resolution interactive map of Leonida and Vice City for Grand Theft Auto VI. Complete with in-game locations, collectibles, activities, and real-world counterparts.">
+  <meta name="description" content="Explore the interactive map of Leonida and Vice City for Grand Theft Auto VI. Complete with in-game locations, collectibles, activities, and real-world counterparts.">
   <meta name="theme-color" content="#0d1117">
 
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -15,16 +15,14 @@
   <link rel="stylesheet" href="leaflet/leaflet.css">
 
   <style>
-:root {
+    :root {
       --bg-dark: #0d1117;
       --bg-surface: #161b22;
       --bg-elevated: #21262d;
       --border-color: #30363d;
+      --border-subtle: #21262d;
       --accent-pink: #ff2a85;
       --accent-cyan: #00d2ff;
-      --accent-gold: #fbbf24;
-      --accent-purple: #c084fc;
-      --accent-green: #10b981;
       --text-main: #f0f6fc;
       --text-muted: #8b949e;
       --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -52,6 +50,7 @@
       width: 100%;
       height: 100%;
       position: relative;
+      background: var(--bg-dark);
     }
 
     .map-header {
@@ -62,7 +61,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 14px;
-      gap: 10px;
+      gap: 12px;
       z-index: 1000;
       flex-shrink: 0;
     }
@@ -71,24 +70,33 @@
       display: flex;
       align-items: center;
       text-decoration: none;
-      flex-shrink: 0;
+      gap: 10px;
     }
 
     .header-logo-img {
-      height: 32px;
+      height: 26px;
       width: auto;
       display: block;
-      transition: opacity 0.2s ease;
     }
 
-    .header-logo-img:hover {
-      opacity: 0.85;
+    .brand-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .brand-title span {
+      color: var(--accent-pink);
     }
 
     .search-wrapper {
-      position: relative;
       flex: 1;
       max-width: 380px;
+      position: relative;
     }
 
     .search-input-box {
@@ -104,7 +112,7 @@
     }
 
     .search-input-box:focus-within {
-      border-color: var(--accent-cyan);
+      border-color: #58a6ff;
     }
 
     .search-input-box i {
@@ -176,6 +184,28 @@
       flex-shrink: 0;
     }
 
+    .btn-back-hub {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      height: 32px;
+      border-radius: 6px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-back-hub:hover {
+      border-color: #8b949e;
+      background: var(--bg-elevated);
+    }
+
     .map-btn {
       display: inline-flex;
       align-items: center;
@@ -192,36 +222,18 @@
       cursor: pointer;
       text-decoration: none;
       white-space: nowrap;
-      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+      transition: border-color 0.15s ease, background 0.15s ease;
     }
 
     .map-btn:hover {
-      border-color: var(--accent-pink);
+      border-color: #8b949e;
       background: var(--bg-elevated);
     }
 
-    .map-btn-active {
+    .map-btn.active {
       background: var(--bg-elevated);
-      border-color: var(--accent-cyan);
-      color: var(--accent-cyan);
-    }
-
-    .district-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(0, 210, 255, 0.15);
-      border: 1px solid rgba(0, 210, 255, 0.4);
-      color: var(--accent-cyan);
-      font-size: 11.5px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .district-chip:hover {
-      background: rgba(0, 210, 255, 0.25);
+      border-color: #58a6ff;
+      color: #ffffff;
     }
 
     .map-body {
@@ -234,10 +246,8 @@
     }
 
     .map-sidebar {
-      width: 280px;
-      background: rgba(13, 17, 23, 0.96);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      width: 300px;
+      background: var(--bg-surface);
       border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
@@ -247,38 +257,88 @@
     }
 
     .map-sidebar.collapsed {
-      margin-left: -280px;
+      margin-left: -300px;
     }
 
     .sidebar-head {
       padding: 12px 14px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+      background: var(--bg-surface);
+    }
+
+    .sidebar-head-row {
+      display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-shrink: 0;
+    }
+
+    .sidebar-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .sidebar-head-title {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      color: #ffffff;
     }
 
-    .sidebar-reset-btn {
-      background: transparent;
-      border: none;
-      color: var(--accent-cyan);
+    .sidebar-badge {
+      font-size: 11px;
+      font-weight: 700;
+      font-family: monospace;
+      color: var(--text-muted);
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .sidebar-quick-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .sidebar-action-btn {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      padding: 0;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
     }
 
-    .sidebar-reset-btn:hover {
-      text-decoration: underline;
+    .sidebar-action-btn:hover {
+      color: #ffffff;
+      border-color: #8b949e;
+      background: var(--bg-elevated);
+    }
+
+    .sidebar-search-box {
+      width: 100%;
+      height: 30px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      padding: 0 8px;
+      font-size: 12px;
+      color: var(--text-main);
+      font-family: var(--font-main);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .sidebar-search-box:focus {
+      border-color: #58a6ff;
     }
 
     .sidebar-list {
@@ -291,48 +351,53 @@
     }
 
     .sidebar-list::-webkit-scrollbar {
-      width: 4px;
+      width: 5px;
     }
 
     .sidebar-list::-webkit-scrollbar-thumb {
       background: var(--border-color);
-      border-radius: 2px;
+      border-radius: 3px;
     }
 
     .group-section {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid #21262d;
+      border-radius: 6px;
+      overflow: hidden;
     }
 
     .group-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 6px 8px;
-      font-size: 11px;
+      padding: 8px 10px;
+      font-size: 11.5px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #8b949e;
+      color: #c9d1d9;
       cursor: pointer;
       user-select: none;
-      border-radius: 4px;
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+      transition: background 0.15s ease;
     }
 
     .group-header:hover {
-      background: var(--bg-surface);
-      color: var(--text-main);
+      background: var(--bg-elevated);
+      color: #ffffff;
     }
 
     .group-title-wrap {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
 
     .group-chevron {
       font-size: 10px;
+      color: #8b949e;
       transition: transform 0.2s ease;
     }
 
@@ -347,6 +412,7 @@
     .group-items {
       display: flex;
       flex-direction: column;
+      padding: 4px;
       gap: 2px;
     }
 
@@ -358,7 +424,7 @@
       border-radius: 5px;
       background: transparent;
       border: 1px solid transparent;
-      color: var(--text-muted);
+      color: #8b949e;
       font-size: 12px;
       cursor: pointer;
       user-select: none;
@@ -366,42 +432,80 @@
     }
 
     .sidebar-item:hover {
-      background: var(--bg-surface);
-      color: var(--text-main);
-      border-color: #21262d;
+      background: var(--bg-elevated);
+      color: #f0f6fc;
     }
 
     .sidebar-item.active {
-      background: rgba(255, 42, 133, 0.1);
-      color: var(--text-main);
-      border-color: rgba(255, 42, 133, 0.35);
-      font-weight: 600;
+      background: #21262d;
+      border-color: #30363d;
+      color: #ffffff;
+    }
+
+    .item-left-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .item-checkbox {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1.5px solid #484f58;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: transparent;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-item.active .item-checkbox {
+      background: #238636;
+      border-color: #2ea043;
+      color: #ffffff;
     }
 
     .item-icon-box {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      margin-right: 8px;
+      background: #0d1117;
+      border: 1px solid #30363d;
     }
 
     .item-icon-box img {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
       filter: brightness(0) invert(1);
+    }
+
+    .item-label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+    }
+
+    .sidebar-item.active .item-label {
+      font-weight: 600;
     }
 
     .item-count {
       font-size: 11px;
       font-family: monospace;
-      color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.05);
+      color: #8b949e;
+      background: rgba(255, 255, 255, 0.04);
       padding: 1px 5px;
       border-radius: 3px;
+      flex-shrink: 0;
     }
 
     .map-canvas-wrapper {
@@ -441,47 +545,54 @@
 
     .leaflet-bar a:hover {
       background-color: var(--bg-elevated) !important;
-      color: var(--accent-pink) !important;
+      color: #ffffff !important;
     }
 
     .place-label {
-      background: transparent;
-      border: none;
-      pointer-events: none;
-    }
-
-    .place-label span {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      color: rgba(245, 239, 230, 0.85);
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.8);
-      pointer-events: auto;
-      cursor: pointer;
+      pointer-events: none !important;
+      user-select: none;
       white-space: nowrap;
-      transition: color 0.15s ease, transform 0.15s ease;
+      font-family: var(--font-main);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: rgba(240, 246, 252, 0.7);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.8);
     }
 
-    .place-label span:hover {
-      color: var(--accent-cyan);
-      transform: scale(1.1);
+    .leaflet-tooltip {
+      background: var(--bg-surface) !important;
+      color: var(--text-main) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 5px !important;
+      font-family: var(--font-main) !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      padding: 5px 9px !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .leaflet-tooltip-top:before {
+      border-top-color: var(--border-color) !important;
     }
 
     .pop {
-      padding: 0;
-      font-size: 12px;
-      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--bg-surface);
+      font-family: var(--font-main);
     }
 
     .pop-shot {
-      display: block;
       width: 100%;
-      max-height: 160px;
+      height: 130px;
       overflow: hidden;
-      border-radius: 6px 6px 0 0;
-      background: #000;
+      background: #000000;
+      display: block;
+      position: relative;
     }
 
     .pop-shot img {
@@ -489,15 +600,15 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.2s ease;
+      transition: transform 0.25s ease;
     }
 
-    .pop-shot img:hover {
-      transform: scale(1.05);
+    .pop-shot:hover img {
+      transform: scale(1.04);
     }
 
     .pop-body {
-      padding: 12px 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -511,17 +622,17 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--accent-cyan);
+      color: #58a6ff;
     }
 
     .pop-kind img {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       object-fit: contain;
     }
 
     .pop-title {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 700;
       color: #ffffff;
       line-height: 1.3;
@@ -538,7 +649,7 @@
     }
 
     .pop-row a {
-      color: var(--accent-cyan);
+      color: #58a6ff;
       text-decoration: none;
     }
 
@@ -553,7 +664,7 @@
       background: rgba(0, 0, 0, 0.3);
       padding: 6px 8px;
       border-radius: 4px;
-      border-left: 2px solid var(--accent-cyan);
+      border-left: 2px solid #58a6ff;
     }
 
     .pop-actions {
@@ -582,8 +693,8 @@
     }
 
     .pop-btn:hover {
-      border-color: var(--accent-pink);
-      background: rgba(255, 42, 133, 0.15);
+      border-color: #8b949e;
+      background: #30363d;
     }
 
     .leaflet-popup-content-wrapper {
@@ -612,14 +723,14 @@
       right: 12px;
       font-size: 11px;
       font-family: monospace;
-      color: #6e7681;
+      color: #8b949e;
       z-index: 400;
       pointer-events: none;
       user-select: none;
-      background: rgba(13, 17, 23, 0.7);
+      background: rgba(13, 17, 23, 0.85);
       padding: 3px 8px;
       border-radius: 4px;
-      border: 1px solid rgba(48, 54, 61, 0.5);
+      border: 1px solid var(--border-color);
     }
 
     .toast-notice {
@@ -628,7 +739,7 @@
       left: 50%;
       transform: translateX(-50%);
       background: var(--bg-surface);
-      border: 1px solid var(--accent-cyan);
+      border: 1px solid #58a6ff;
       color: var(--text-main);
       padding: 8px 16px;
       border-radius: 6px;
@@ -645,9 +756,10 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: 240px;
+        width: 260px;
       }
-      .search-wrapper { max-width: 160px; }
+      .brand-title { display: none; }
+      .search-wrapper { max-width: 150px; }
       .map-hud-bar { bottom: 8px; right: 8px; font-size: 10px; }
     }
   </style>
@@ -657,32 +769,37 @@
   <div class="map-app-container">
 
     <header class="map-header">
-      <a href="../index.html" class="brand-section" title="Return to ViceCityHub">
-        <img src="images/logo.webp" alt="ViceCityHub" class="header-logo-img">
-      </a>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <a href="https://vicecityhub.eu" class="brand-section" title="Return to ViceCityHub.eu">
+          <img src="images/logo.webp" alt="ViceCityHub" class="header-logo-img">
+          <span class="brand-title">VICECITY<span>HUB</span></span>
+        </a>
+      </div>
 
       <div class="search-wrapper">
         <div class="search-input-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="map-search-input" class="search-input" placeholder="Search locations, ATMs, cards..." autocomplete="off">
+          <input type="text" id="map-search-input" class="search-input" placeholder="Search places, ATMs, cards..." autocomplete="off">
         </div>
         <div class="search-dropdown" id="search-dropdown"></div>
       </div>
-
-      <div id="district-filter-pill" style="display: none;"></div>
 
       <div class="header-actions">
         <button id="btn-toggle-style" class="map-btn" title="Toggle Day/Night Map">
           <i class="fa-solid fa-moon"></i>
           <span id="style-btn-text">Night</span>
         </button>
-        <button id="btn-toggle-sidebar" class="map-btn map-btn-active" title="Toggle Filters Sidebar">
-          <i class="fa-solid fa-filter"></i>
+        <button id="btn-toggle-sidebar" class="map-btn active" title="Toggle Filters Sidebar">
+          <i class="fa-solid fa-sliders"></i>
           <span>Filters</span>
         </button>
-        <button id="btn-toggle-fullscreen" class="map-btn" title="Toggle Fullscreen">
+        <button id="btn-toggle-fullscreen" class="map-btn" title="Fullscreen">
           <i class="fa-solid fa-expand"></i>
         </button>
+        <a href="https://vicecityhub.eu" class="btn-back-hub">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Hub</span>
+        </a>
       </div>
     </header>
 
@@ -690,20 +807,26 @@
 
       <aside class="map-sidebar" id="map-sidebar">
         <div class="sidebar-head">
-          <span class="sidebar-head-title">Categories</span>
-          <button class="sidebar-reset-btn" id="btn-filter-reset">Show All</button>
+          <div class="sidebar-head-row">
+            <div class="sidebar-title-wrap">
+              <span class="sidebar-head-title">Categories</span>
+              <span class="sidebar-badge" id="sidebar-active-badge">0 / 0</span>
+            </div>
+            <div class="sidebar-quick-actions">
+              <button class="sidebar-action-btn" id="btn-filter-all">All</button>
+              <button class="sidebar-action-btn" id="btn-filter-none">None</button>
+            </div>
+          </div>
+          <input type="text" id="category-filter-search" class="sidebar-search-box" placeholder="Filter categories..." autocomplete="off">
         </div>
-        <div class="sidebar-list" id="sidebar-categories-list">
-        </div>
+        <div class="sidebar-list" id="sidebar-categories-list"></div>
       </aside>
 
       <div class="map-canvas-wrapper">
         <div id="map"></div>
-
         <div class="map-hud-bar">
           <span id="hud-coords-text">X: 0 | Y: 0</span>
         </div>
-
         <div id="map-toast" class="toast-notice"></div>
       </div>
 
@@ -715,42 +838,28 @@
   <script src="data/map-data.js"></script>
 
   <script>
-(function() {
-      'use strict';
-
-      const data = window.MAP_DATA;
-      if (!data) return;
-
-      const items = data.items;
-      const districts = data.districts;
-      const labels = data.labels;
-      const groups = data.groups;
-      const kinds = data.kinds;
-
-      const catBy = {};
-      kinds.forEach(k => catBy[k.key] = k);
-
+    (async function() {
       const BOUNDS = L.latLngBounds([-800, 160], [-160, 832]);
       const CLUSTER_BELOW = 2.5;
       const CELL = 64;
-      const DISTRICT_FILL_UNTIL = 3;
 
-      let currentStyle = 'night';
-      let activeKinds = new Set(kinds.map(k => k.key));
-      let activeDistrict = null;
+      const toGame = (x, y) => ({
+        gx: Math.round(x * 32 - 16384),
+        gy: Math.round(16384 - y * 32)
+      });
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
-        minZoom: -1,
-        maxZoom: 7,
-        zoomSnap: 0.5,
-        preferCanvas: true,
-        maxBounds: BOUNDS.pad(0.35),
-        zoomControl: false
+        minZoom: 0.5,
+        maxZoom: 6,
+        zoomSnap: 0.25,
+        zoomDelta: 0.5,
+        maxBounds: BOUNDS.pad(0.1),
+        maxBoundsViscosity: 0.8,
+        attributionControl: false
       });
 
-      L.control.zoom({ position: 'bottomright' }).addTo(map);
-
+      let currentStyle = 'night';
       let tileLayer = L.tileLayer('https://fbritoferreira.github.io/gta6/tiles/' + currentStyle + '/{z}/{z},{y},{x}.webp', {
         tileSize: 256,
         minZoom: -1,
@@ -760,64 +869,40 @@
         bounds: BOUNDS
       }).addTo(map);
 
-      const toGame = (x, y) => ({ gx: Math.round(x * 32 - 16384), gy: Math.round(16384 - y * 32) });
-
       const hudCoords = document.getElementById('hud-coords-text');
       map.on('mousemove', function(e) {
-        const x = e.latlng.lng;
-        const y = -e.latlng.lat;
-        const { gx, gy } = toGame(x, y);
-        if (hudCoords) {
-          hudCoords.textContent = 'X: ' + gx + '  |  Y: ' + gy;
-        }
+        if (!hudCoords) return;
+        const { gx, gy } = toGame(e.latlng.lng, -e.latlng.lat);
+        hudCoords.textContent = 'X: ' + gx + ' | Y: ' + gy;
       });
 
-      function showToast(msg) {
-        const toast = document.getElementById('map-toast');
-        if (!toast) return;
-        toast.textContent = msg;
-        toast.style.display = 'block';
-        clearTimeout(toast._timer);
-        toast._timer = setTimeout(() => {
-          toast.style.display = 'none';
-        }, 2200);
-      }
+      const data = window.MAP_DATA || { groups: [], kinds: [], items: [], districts: [], labels: [] };
+      const groups = data.groups || [];
+      const kinds = data.kinds || [];
+      const items = data.items || [];
+      const districts = data.districts || [];
+      const labels = data.labels || [];
 
-      window.copyText = function(text, label) {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(text).then(() => {
-            showToast(label + ' copied: ' + text);
-          });
-        } else {
-          showToast(label + ': ' + text);
-        }
-      };
+      const catBy = {};
+      kinds.forEach(k => catBy[k.key] = k);
 
-      const districtBounds = new Map();
+      let activeKinds = new Set(kinds.map(k => k.key));
+
       const districtLayer = L.layerGroup().addTo(map);
       const labelLayer = L.layerGroup().addTo(map);
-
-      const districtStyle = (hover) => ({
-        color: '#00d2ff',
-        weight: 1.5,
-        dashArray: '4 6',
-        fillColor: '#00d2ff',
-        opacity: hover ? 0.9 : 0.45,
-        fill: map.getZoom() < DISTRICT_FILL_UNTIL,
-        fillOpacity: hover ? 0.12 : 0.03
-      });
 
       districts.forEach(d => {
         const poly = L.polygon(
           d.rings.map(ring => ring.map(([x, y]) => [-y, x])),
-          districtStyle(false)
+          {
+            color: '#388bfd',
+            weight: 1.2,
+            dashArray: '3 5',
+            fill: false,
+            opacity: 0.35,
+            interactive: false
+          }
         );
-
-        poly.on('mouseover', () => poly.setStyle(districtStyle(true)));
-        poly.on('mouseout', () => poly.setStyle(districtStyle(false)));
-        poly.on('click', () => setDistrictFilter(d.name));
-
-        districtBounds.set(d.name, poly.getBounds());
         districtLayer.addLayer(poly);
       });
 
@@ -825,11 +910,10 @@
         const m = L.marker([-l.y, l.x], {
           icon: L.divIcon({
             className: 'place-label',
-            html: `<span>${escapeHtml(l.name)}</span>`
+            html: '<span>' + escapeHtml(l.name) + '</span>'
           }),
-          interactive: true
+          interactive: false
         });
-        m.on('click', () => setDistrictFilter(l.name));
         labelLayer.addLayer(m);
       });
 
@@ -849,140 +933,74 @@
         return c;
       };
 
-      const pinPath = (ctx, x0, y0, s, rr, tail) => {
-        const x1 = x0 + s, y1 = y0 + s, cx = x0 + s / 2, tw = s * 0.19;
-        ctx.beginPath();
-        ctx.moveTo(x0 + rr, y0);
-        ctx.lineTo(x1 - rr, y0);
-        ctx.arcTo(x1, y0, x1, y0 + rr, rr);
-        ctx.lineTo(x1, y1 - rr);
-        ctx.arcTo(x1, y1, x1 - rr, y1, rr);
-        if (tail) {
-          ctx.lineTo(cx + tw, y1);
-          ctx.lineTo(cx, y1 + tail);
-          ctx.lineTo(cx - tw, y1);
-        }
-        ctx.lineTo(x0 + rr, y1);
-        ctx.arcTo(x0, y1, x0, y1 - rr, rr);
-        ctx.lineTo(x0, y0 + rr);
-        ctx.arcTo(x0, y0, x0 + rr, y0, rr);
-        ctx.closePath();
-      };
-
-      function badge(kind, r, pin) {
-        const key = `${kind}:${r}:${pin}`;
-        const hit = sprites.get(key);
-        if (hit) return hit;
-
-        const conf = catBy[kind] || { colour: '#ffffff', icon: '📍' };
-        const fill = conf.colour;
-
-        if (r < 6) {
-          const m = r + 2;
-          return makeSprite(key, m * 2, m * 2, m, m, (x) => {
-            x.beginPath();
-            x.arc(m, m, r, 0, Math.PI * 2);
-            x.fillStyle = fill;
-            x.fill();
-            x.lineWidth = 1.25;
-            x.strokeStyle = '#000000';
-            x.stroke();
-          });
-        }
-
-        const side = r * 2;
-        const tail = pin ? Math.round(r * 0.5) : 0;
-        const pad = Math.ceil(r * 0.45) + 2;
-        const w = side + pad * 2;
-        const h = side + tail + pad * 2;
-
-        return makeSprite(key, w, h, w / 2, pin ? pad + side + tail : pad + side / 2, (x) => {
-          x.save();
-          x.shadowColor = 'rgba(0, 0, 0, 0.6)';
-          x.shadowBlur = r * 0.5;
-          x.shadowOffsetY = r * 0.15;
-          pinPath(x, pad, pad, side, r * 0.45, tail);
-          x.fillStyle = fill;
-          x.fill();
-          x.restore();
-
-          x.lineWidth = Math.max(1.5, r * 0.13);
-          x.strokeStyle = '#ffffff';
-          x.stroke();
-
-          const g = side * 0.62;
-          const gx = pad + (side - g) / 2;
-          if (ICONS[kind]) {
-            x.drawImage(ICONS[kind], gx, gx, g, g);
-          } else {
-            const dpr = window.devicePixelRatio || 1;
-            const t = document.createElement('canvas');
-            t.width = t.height = Math.ceil(side * dpr);
-            const tx = t.getContext('2d');
-            tx.scale(dpr, dpr);
-            tx.font = `${Math.round(g)}px sans-serif`;
-            tx.textAlign = 'center';
-            tx.textBaseline = 'middle';
-            tx.fillText(conf.icon || '📍', side / 2, side / 2 + 1);
-            x.drawImage(t, pad, pad, side, side);
-          }
-        });
-      }
-
-      function pinSprite(slug, r) {
-        const key = `pin:${slug}:${r}`;
-        const hit = sprites.get(key);
-        if (hit) return hit;
-
-        const img = PINS[slug];
-        if (!img || !img.naturalWidth) return badge('other', r, true);
-
-        const h = Math.round(r * 2.7);
-        const w = Math.round((h * img.naturalWidth) / img.naturalHeight);
-
-        return makeSprite(key, w, h, w / 2, h, (x) => {
-          x.drawImage(img, 0, 0, w, h);
-        });
-      }
-
-      const BlipClass = L.CircleMarker.extend({
-        _sprite() {
-          const { kind, pin } = this.item;
-          const r = this._radius;
-          return pin && PINS[pin] && r >= 6 ? pinSprite(pin, r) : badge(kind, r, true);
+      const BlipClass = L.Path.extend({
+        _project: function() {
+          this._point = this._map.latLngToLayerPoint(this._latlng);
+          this._radius = this.options.radius;
         },
-        _updateBounds() {
-          const s = this._sprite();
-          const p = this._point;
-          this._pxBounds = L.bounds([p.x - s.ax, p.y - s.ay], [p.x - s.ax + s.w, p.y - s.ay + s.h]);
+        _update: function() {
+          if (this._map) this._updatePath();
         },
-        _updatePath() {
+        _updatePath: function() {
           const ren = this._renderer;
-          if (!ren._drawing || this._empty()) return;
-          const s = this._sprite();
+          if (!ren || !ren._ctx || !this._point) return;
           const ctx = ren._ctx;
-          ctx.globalAlpha = 1;
-          ctx.drawImage(s, this._point.x - s.ax, this._point.y - s.ay, s.w, s.h);
-        },
-        _containsPoint(p) {
-          return this._pxBounds && this._pxBounds.contains(p);
+          const { x, y } = this._point;
+          const it = this.item;
+          const k = catBy[it.kind] || { colour: '#58a6ff' };
+          const pinKey = it.pin || null;
+
+          if (pinKey && PINS[pinKey]) {
+            const size = 26;
+            ctx.drawImage(PINS[pinKey], x - size / 2, y - size / 2, size, size);
+            return;
+          }
+
+          const spriteKey = 'blip:' + it.kind;
+          let sp = sprites.get(spriteKey);
+          if (!sp) {
+            sp = makeSprite(spriteKey, 24, 24, 12, 12, c => {
+              c.beginPath();
+              c.arc(12, 12, 10, 0, Math.PI * 2);
+              c.fillStyle = '#0d1117';
+              c.fill();
+              c.lineWidth = 1.5;
+              c.strokeStyle = k.colour || '#58a6ff';
+              c.stroke();
+
+              const iconImg = ICONS[it.kind];
+              if (iconImg) {
+                c.drawImage(iconImg, 5, 5, 14, 14);
+              }
+            });
+          }
+
+          const dpr = window.devicePixelRatio || 1;
+          ctx.drawImage(sp, x - sp.ax, y - sp.ay, sp.w, sp.h);
         }
       });
 
-      const ClusterClass = L.CircleMarker.extend({
-        _updatePath() {
+      const ClusterClass = L.Path.extend({
+        _project: function() {
+          this._point = this._map.latLngToLayerPoint(this._latlng);
+          this._radius = this.options.radius;
+        },
+        _update: function() {
+          if (this._map) this._updatePath();
+        },
+        _updatePath: function() {
           const ren = this._renderer;
-          if (!ren._drawing || this._empty()) return;
+          if (!ren || !ren._ctx || !this._point) return;
           const ctx = ren._ctx;
           const { x, y } = this._point;
           const r = this._radius;
-          const { count, slices } = this.options;
+          const { count } = this.options;
 
           ctx.globalAlpha = 1;
           ctx.setLineDash([]);
           ctx.save();
-          ctx.shadowColor = 'rgba(0, 210, 255, 0.45)';
-          ctx.shadowBlur = 12;
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+          ctx.shadowBlur = 6;
           ctx.shadowOffsetY = 2;
           ctx.beginPath();
           ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -990,29 +1008,17 @@
           ctx.fill();
           ctx.restore();
 
-          let a = -Math.PI / 2;
-          ctx.lineWidth = 4;
-          ctx.lineCap = 'butt';
-          for (const [colour, n] of slices) {
-            const b = a + (n / count) * Math.PI * 2;
-            ctx.beginPath();
-            ctx.arc(x, y, r - 3, a, b);
-            ctx.strokeStyle = colour;
-            ctx.stroke();
-            a = b;
-          }
-
           ctx.beginPath();
           ctx.arc(x, y, r, 0, Math.PI * 2);
           ctx.lineWidth = 1.5;
-          ctx.strokeStyle = '#00d2ff';
+          ctx.strokeStyle = '#30363d';
           ctx.stroke();
 
           ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.font = `800 ${r < 20 ? 12 : 14}px 'Plus Jakarta Sans', system-ui, sans-serif`;
-          ctx.fillText(count >= 1000 ? `${(count / 1000).toFixed(1)}k` : String(count), x, y + 1);
+          ctx.font = '700 ' + (r < 20 ? 12 : 13) + 'px "Plus Jakarta Sans", system-ui, sans-serif';
+          ctx.fillText(count >= 1000 ? (count / 1000).toFixed(1) + 'k' : String(count), x, y + 0.5);
         }
       });
 
@@ -1023,62 +1029,79 @@
       items.forEach(it => {
         const m = new BlipClass([-it.y, it.x], { radius: 10 });
         m.item = it;
-        m.bindTooltip(escapeHtml(it.name), { direction: 'top', offset: [0, -26] });
+        m.bindTooltip(escapeHtml(it.name), { direction: 'top', offset: [0, -20] });
         m.bindPopup(() => buildPopup(it), {
           maxWidth: 320,
           minWidth: 260,
-          offset: [0, -22]
+          offset: [0, -18]
         });
         markers.set(it.id, m);
       });
 
       function clusterZoom(bounds) {
         const targetZoom = Math.min(Math.max(map.getBoundsZoom(bounds, false, L.point(80, 80)), Math.ceil(map.getZoom()) + 1), 4.5);
-        map.flyTo(bounds.getCenter(), targetZoom, { duration: 0.6 });
+        map.flyTo(bounds.getCenter(), targetZoom, { duration: 0.5 });
       }
 
       function buildPopup(it) {
-        const conf = catBy[it.kind] || { name: 'Location', colour: '#00d2ff' };
-        const iconSrc = it.pin ? `images/pins/${encodeURIComponent(it.pin)}.webp` : `icons/${it.kind}.svg`;
+        const conf = catBy[it.kind] || { name: 'Location', colour: '#58a6ff' };
+        const iconSrc = it.pin ? 'images/pins/' + encodeURIComponent(it.pin) + '.webp' : 'icons/' + it.kind + '.svg';
         const { gx, gy } = toGame(it.x, it.y);
 
         const el = document.createElement('div');
         el.className = 'pop';
 
         const shotHtml = it.screenshot
-          ? `<a class="pop-shot" href="https://fbritoferreira.github.io/gta6/${it.screenshot}" target="_blank" rel="noopener">
-               <img src="https://fbritoferreira.github.io/gta6/${it.screenshot}" alt="${escapeHtml(it.name)}" loading="lazy">
-             </a>`
+          ? '<a class="pop-shot" href="https://fbritoferreira.github.io/gta6/' + it.screenshot + '" target="_blank" rel="noopener">' +
+            '<img src="https://fbritoferreira.github.io/gta6/' + it.screenshot + '" alt="' + escapeHtml(it.name) + '" loading="lazy">' +
+            '</a>'
           : '';
 
-        el.innerHTML = `
-          ${shotHtml}
-          <div class="pop-body">
-            <div class="pop-kind" style="color: ${conf.colour};">
-              <img src="${iconSrc}" alt="" onerror="this.style.display='none';">
-              ${escapeHtml(it.type || conf.name)}
-            </div>
-            <div class="pop-title">${escapeHtml(it.name)}</div>
-            ${it.area ? `<div class="pop-row"><strong>Area:</strong> <span>${escapeHtml(it.area)}</span></div>` : (it.district ? `<div class="pop-row"><strong>District:</strong> <span>${escapeHtml(it.district)}</span></div>` : '')}
-            ${it.real_life ? `<div class="pop-row"><strong>Real life:</strong> <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(it.real_life)}" target="_blank" rel="noopener">${escapeHtml(it.real_life)}</a></div>` : ''}
-            ${it.desc ? `<div class="pop-desc">${escapeHtml(it.desc)}</div>` : ''}
-            <div class="pop-actions">
-              <button type="button" class="pop-btn" onclick="copyText('X: ${gx}, Y: ${gy}', 'Coordinates')">
-                <i class="fa-regular fa-copy"></i> Coords
-              </button>
-              <button type="button" class="pop-btn" onclick="copyText(window.location.origin + window.location.pathname + '?id=${encodeURIComponent(it.id)}', 'Link')">
-                <i class="fa-solid fa-link"></i> Copy Link
-              </button>
-            </div>
-          </div>
-        `;
+        el.innerHTML = shotHtml +
+          '<div class="pop-body">' +
+            '<div class="pop-kind">' +
+              '<img src="' + iconSrc + '" alt="" onerror="this.style.display=\'none\';">' +
+              escapeHtml(it.type || conf.name) +
+            '</div>' +
+            '<div class="pop-title">' + escapeHtml(it.name) + '</div>' +
+            (it.area ? '<div class="pop-row"><strong>Area:</strong> <span>' + escapeHtml(it.area) + '</span></div>' : (it.district ? '<div class="pop-row"><strong>District:</strong> <span>' + escapeHtml(it.district) + '</span></div>' : '')) +
+            (it.real_life ? '<div class="pop-row"><strong>Real life:</strong> <a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(it.real_life) + '" target="_blank" rel="noopener">' + escapeHtml(it.real_life) + '</a></div>' : '') +
+            (it.desc ? '<div class="pop-desc">' + escapeHtml(it.desc) + '</div>' : '') +
+            '<div class="pop-actions">' +
+              '<button type="button" class="pop-btn" onclick="copyText(\'X: ' + gx + ', Y: ' + gy + '\', \'Coordinates\')">' +
+                '<i class="fa-regular fa-copy"></i> Coords' +
+              '</button>' +
+              '<button type="button" class="pop-btn" onclick="copyText(window.location.origin + window.location.pathname + \'?id=' + encodeURIComponent(it.id) + '\', \'Link\')">' +
+                '<i class="fa-solid fa-link"></i> Copy Link' +
+              '</button>' +
+            '</div>' +
+          '</div>';
         return el;
       }
 
+      function showToast(msg) {
+        const toast = document.getElementById('map-toast');
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => {
+          toast.style.display = 'none';
+        }, 2000);
+      }
+
+      window.copyText = function(text, label) {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast(label + ' copied');
+          });
+        } else {
+          showToast(label + ': ' + text);
+        }
+      };
+
       function isVisible(it) {
-        if (!activeKinds.has(it.kind)) return false;
-        if (activeDistrict && it.district !== activeDistrict) return false;
-        return true;
+        return activeKinds.has(it.kind);
       }
 
       function render() {
@@ -1093,7 +1116,7 @@
           for (const m of markers.values()) {
             if (!isVisible(m.item)) continue;
             const c = map.project(m.getLatLng(), z).divideBy(CELL).floor();
-            const key = `${c.x},${c.y}`;
+            const key = c.x + ',' + c.y;
             const cell = cells.get(key);
             if (cell) cell.push(m);
             else cells.set(key, [m]);
@@ -1105,27 +1128,16 @@
               continue;
             }
 
-            const byKind = {};
-            for (const m of ms) byKind[m.item.kind] = (byKind[m.item.kind] || 0) + 1;
-            const top = Object.entries(byKind).sort((p, q) => q[1] - p[1]);
             const lat = ms.reduce((s, m) => s + m.getLatLng().lat, 0) / ms.length;
             const lng = ms.reduce((s, m) => s + m.getLatLng().lng, 0) / ms.length;
-            const radius = Math.round(15 + Math.min(11, Math.log2(ms.length) * 2.2));
+            const radius = Math.round(15 + Math.min(10, Math.log2(ms.length) * 2));
 
             const cl = new ClusterClass([lat, lng], {
               radius,
-              count: ms.length,
-              slices: [
-                ...top.slice(0, 4).map(([k, n]) => [(catBy[k] && catBy[k].colour) || '#00d2ff', n]),
-                ...(top.length > 4 ? [['#30363d', top.slice(4).reduce((s, [, n]) => s + n, 0)]] : [])
-              ]
+              count: ms.length
             });
 
-            cl.bindTooltip(
-              `${ms.length} locations<br>${top.slice(0, 3).map(([k, n]) => `${n} ${(catBy[k] && catBy[k].name) || k}`).join('<br>')}`,
-              { direction: 'top', offset: [0, -radius] }
-            );
-
+            cl.bindTooltip(ms.length + ' locations', { direction: 'top', offset: [0, -radius] });
             cl.on('click', () => clusterZoom(L.latLngBounds(ms.map(m => m.getLatLng()))));
             clusterLayer.addLayer(cl);
           }
@@ -1153,33 +1165,6 @@
 
       map.on('moveend zoomend', debouncedRender);
 
-      function setDistrictFilter(districtName) {
-        if (activeDistrict === districtName) {
-          activeDistrict = null;
-        } else {
-          activeDistrict = districtName;
-          const bounds = districtBounds.get(districtName);
-          if (bounds) {
-            map.flyToBounds(bounds, { maxZoom: 3.5, padding: [60, 60], duration: 0.8 });
-          }
-        }
-        updateDistrictChip();
-        render();
-      }
-
-      function updateDistrictChip() {
-        const pill = document.getElementById('district-filter-pill');
-        if (!pill) return;
-        if (activeDistrict) {
-          pill.style.display = 'inline-flex';
-          pill.className = 'district-chip';
-          pill.innerHTML = `<span>Only ${escapeHtml(activeDistrict)}</span> <i class="fa-solid fa-xmark"></i>`;
-          pill.onclick = () => setDistrictFilter(activeDistrict);
-        } else {
-          pill.style.display = 'none';
-        }
-      }
-
       function buildSidebar() {
         const listEl = document.getElementById('sidebar-categories-list');
         if (!listEl) return;
@@ -1200,35 +1185,35 @@
           const groupKinds = groupMap[groupName] || [];
           if (groupKinds.length === 0) return '';
 
+          const groupTotal = groupKinds.reduce((s, k) => s + (counts[k.key] || 0), 0);
+
           const rowsHtml = groupKinds.map(k => {
             const isActive = activeKinds.has(k.key);
             const count = counts[k.key] || 0;
-            return `
-              <div class="sidebar-item ${isActive ? 'active' : ''}" data-kind="${k.key}">
-                <div style="display: flex; align-items: center;">
-                  <div class="item-icon-box" style="background: ${k.colour};">
-                    <img src="icons/${k.key}.svg" alt="" onerror="this.style.display='none';">
-                  </div>
-                  <span>${escapeHtml(k.name)}</span>
-                </div>
-                <span class="item-count">${count}</span>
-              </div>
-            `;
+            return '<div class="sidebar-item ' + (isActive ? 'active' : '') + '" data-kind="' + k.key + '">' +
+              '<div class="item-left-wrap">' +
+                '<span class="item-checkbox"><i class="fa-solid fa-check"></i></span>' +
+                '<div class="item-icon-box">' +
+                  '<img src="icons/' + k.key + '.svg" alt="" onerror="this.style.display=\'none\';">' +
+                '</div>' +
+                '<span class="item-label">' + escapeHtml(k.name) + '</span>' +
+              '</div>' +
+              '<span class="item-count">' + count + '</span>' +
+            '</div>';
           }).join('');
 
-          return `
-            <div class="group-section" data-group="${groupName}">
-              <div class="group-header">
-                <div class="group-title-wrap">
-                  <i class="fa-solid fa-chevron-down group-chevron"></i>
-                  <span>${groupName}</span>
-                </div>
-              </div>
-              <div class="group-items">
-                ${rowsHtml}
-              </div>
-            </div>
-          `;
+          return '<div class="group-section" data-group="' + groupName + '">' +
+            '<div class="group-header">' +
+              '<div class="group-title-wrap">' +
+                '<i class="fa-solid fa-chevron-down group-chevron"></i>' +
+                '<span>' + groupName + ' (' + groupKinds.length + ')</span>' +
+              '</div>' +
+              '<span class="item-count">' + groupTotal + '</span>' +
+            '</div>' +
+            '<div class="group-items">' +
+              rowsHtml +
+            '</div>' +
+          '</div>';
         }).join('');
 
         listEl.querySelectorAll('.group-header').forEach(header => {
@@ -1242,11 +1227,7 @@
           item.addEventListener('click', function() {
             const kindKey = this.getAttribute('data-kind');
             if (activeKinds.has(kindKey)) {
-              if (activeKinds.size === 1) {
-                activeKinds = new Set(kinds.map(k => k.key));
-              } else {
-                activeKinds.delete(kindKey);
-              }
+              activeKinds.delete(kindKey);
             } else {
               activeKinds.add(kindKey);
             }
@@ -1254,6 +1235,8 @@
             render();
           });
         });
+
+        updateSidebarActiveStates();
       }
 
       function updateSidebarActiveStates() {
@@ -1267,24 +1250,56 @@
             item.classList.remove('active');
           }
         });
-        const btnReset = document.getElementById('btn-filter-reset');
-        if (btnReset) {
-          btnReset.textContent = activeKinds.size === kinds.length ? 'Hide All' : 'Show All';
+
+        const badge = document.getElementById('sidebar-active-badge');
+        if (badge) {
+          badge.textContent = activeKinds.size + ' / ' + kinds.length;
         }
       }
 
-      const btnFilterReset = document.getElementById('btn-filter-reset');
-      if (btnFilterReset) {
-        btnFilterReset.addEventListener('click', function() {
-          if (activeKinds.size === kinds.length) {
-            activeKinds.clear();
-            btnFilterReset.textContent = 'Show All';
-          } else {
-            activeKinds = new Set(kinds.map(k => k.key));
-            btnFilterReset.textContent = 'Hide All';
-          }
+      const btnFilterAll = document.getElementById('btn-filter-all');
+      if (btnFilterAll) {
+        btnFilterAll.addEventListener('click', function() {
+          activeKinds = new Set(kinds.map(k => k.key));
           updateSidebarActiveStates();
           render();
+        });
+      }
+
+      const btnFilterNone = document.getElementById('btn-filter-none');
+      if (btnFilterNone) {
+        btnFilterNone.addEventListener('click', function() {
+          activeKinds.clear();
+          updateSidebarActiveStates();
+          render();
+        });
+      }
+
+      const categoryFilterSearch = document.getElementById('category-filter-search');
+      if (categoryFilterSearch) {
+        categoryFilterSearch.addEventListener('input', function() {
+          const q = this.value.trim().toLowerCase();
+          const listEl = document.getElementById('sidebar-categories-list');
+          if (!listEl) return;
+
+          listEl.querySelectorAll('.sidebar-item').forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (!q || text.includes(q)) {
+              item.style.display = 'flex';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+
+          listEl.querySelectorAll('.group-section').forEach(group => {
+            const visibleItems = group.querySelectorAll('.sidebar-item:not([style*="display: none"])');
+            if (visibleItems.length === 0) {
+              group.style.display = 'none';
+            } else {
+              group.style.display = 'flex';
+              if (q) group.classList.remove('collapsed');
+            }
+          });
         });
       }
 
@@ -1316,9 +1331,9 @@
         toggleSidebarBtn.addEventListener('click', function() {
           const isCollapsed = sidebarEl.classList.toggle('collapsed');
           if (isCollapsed) {
-            toggleSidebarBtn.classList.remove('map-btn-active');
+            toggleSidebarBtn.classList.remove('active');
           } else {
-            toggleSidebarBtn.classList.add('map-btn-active');
+            toggleSidebarBtn.classList.add('active');
           }
           setTimeout(() => map.invalidateSize(), 220);
         });
@@ -1363,17 +1378,15 @@
           }
 
           searchDropdown.innerHTML = matches.map(m => {
-            const conf = catBy[m.kind] || { colour: '#00d2ff', name: m.kind };
-            const iconSrc = m.pin ? `images/pins/${encodeURIComponent(m.pin)}.webp` : `icons/${m.kind}.svg`;
-            return `
-              <div class="search-result-item" data-id="${m.id}">
-                <div class="search-result-title">
-                  <img src="${iconSrc}" style="width: 16px; height: 16px; object-fit: contain;" alt="" onerror="this.style.display='none';">
-                  <span>${escapeHtml(m.name)}</span>
-                </div>
-                <div class="search-result-subtitle">${escapeHtml(m.type || m.area || m.district || conf.name)}</div>
-              </div>
-            `;
+            const conf = catBy[m.kind] || { name: m.kind };
+            const iconSrc = m.pin ? 'images/pins/' + encodeURIComponent(m.pin) + '.webp' : 'icons/' + m.kind + '.svg';
+            return '<div class="search-result-item" data-id="' + m.id + '">' +
+              '<div class="search-result-title">' +
+                '<img src="' + iconSrc + '" style="width: 16px; height: 16px; object-fit: contain;" alt="" onerror="this.style.display=\'none\';">' +
+                '<span>' + escapeHtml(m.name) + '</span>' +
+              '</div>' +
+              '<div class="search-result-subtitle">' + escapeHtml(m.type || m.area || m.district || conf.name) + '</div>' +
+            '</div>';
           }).join('');
 
           searchDropdown.classList.add('open');
@@ -1393,13 +1406,13 @@
               updateSidebarActiveStates();
             }
 
-            map.flyTo([-target.y, target.x], 4.5, { duration: 1.0 });
+            map.flyTo([-target.y, target.x], 4.5, { duration: 0.8 });
 
             setTimeout(() => {
               render();
               const marker = markers.get(target.id);
               if (marker) marker.openPopup();
-            }, 1050);
+            }, 850);
           }
         });
 
@@ -1429,7 +1442,7 @@
         await Promise.all([
           ...kinds.map(async k => {
             try {
-              const r = await fetch(`icons/${k.key}.svg`);
+              const r = await fetch('icons/' + k.key + '.svg');
               if (!r.ok) return;
               const svgText = (await r.text())
                 .replace(/currentColor/g, '#fff')
@@ -1444,7 +1457,7 @@
           }),
           ...[...new Set(items.map(it => it.pin).filter(Boolean))].map(async slug => {
             const img = new Image();
-            img.src = `images/pins/${slug}.webp`;
+            img.src = 'images/pins/' + slug + '.webp';
             try {
               await img.decode();
               PINS[slug] = img;
