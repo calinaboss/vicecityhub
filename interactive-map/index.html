@@ -1041,6 +1041,7 @@
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
+        preferCanvas: true,
         minZoom: 0.5,
         maxZoom: 6,
         zoomSnap: 0.25,
@@ -1049,6 +1050,8 @@
         maxBoundsViscosity: 0.8,
         attributionControl: false
       });
+
+      const canvasRenderer = L.canvas({ padding: 0.5 });
 
       let currentStyle = 'night';
       let tileLayer = L.tileLayer('https://fbritoferreira.github.io/gta6/tiles/' + currentStyle + '/{z}/{z},{y},{x}.webp', {
@@ -1124,14 +1127,7 @@
         return c;
       };
 
-      const BlipClass = L.Path.extend({
-        _project: function() {
-          this._point = this._map.latLngToLayerPoint(this._latlng);
-          this._radius = this.options.radius;
-        },
-        _update: function() {
-          if (this._map) this._updatePath();
-        },
+      const BlipClass = L.CircleMarker.extend({
         _updatePath: function() {
           const ren = this._renderer;
           if (!ren || !ren._ctx || !this._point) return;
@@ -1177,19 +1173,11 @@
             });
           }
 
-          const dpr = window.devicePixelRatio || 1;
           ctx.drawImage(sp, x - sp.ax, y - sp.ay, sp.w, sp.h);
         }
       });
 
-      const ClusterClass = L.Path.extend({
-        _project: function() {
-          this._point = this._map.latLngToLayerPoint(this._latlng);
-          this._radius = this.options.radius;
-        },
-        _update: function() {
-          if (this._map) this._updatePath();
-        },
+      const ClusterClass = L.CircleMarker.extend({
         _updatePath: function() {
           const ren = this._renderer;
           if (!ren || !ren._ctx || !this._point) return;
@@ -1229,7 +1217,7 @@
 
       const markers = new Map();
       items.forEach(it => {
-        const m = new BlipClass([-it.y, it.x], { radius: 10 });
+        const m = new BlipClass([-it.y, it.x], { renderer: canvasRenderer, radius: 13 });
         m.item = it;
         m.bindTooltip(escapeHtml(it.name), { direction: 'top', offset: [0, -20] });
         m.bindPopup(() => buildPopup(it), {
@@ -1335,6 +1323,7 @@
             const radius = Math.round(15 + Math.min(10, Math.log2(ms.length) * 2));
 
             const cl = new ClusterClass([lat, lng], {
+              renderer: canvasRenderer,
               radius,
               count: ms.length
             });
@@ -1671,6 +1660,7 @@
         ]);
         sprites.clear();
         render();
+        if (canvasRenderer && canvasRenderer._redraw) canvasRenderer._redraw();
       };
 
       loadIconsAndPins();
