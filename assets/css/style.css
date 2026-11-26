@@ -159,18 +159,27 @@ img {
   text-decoration: none;
 }
 
+.mobile-brand-link {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
 .mobile-brand-logo {
-  height: 32px;
-  width: auto;
-  max-width: 48px;
+  height: 42px;
+  width: 42px;
+  max-width: none;
   display: block;
   object-fit: contain;
+  border-radius: 8px;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.mobile-brand-link:hover .mobile-brand-logo {
-  transform: scale(1.06);
-  opacity: 0.9;
+.mobile-brand-link:hover .mobile-brand-logo,
+.mobile-brand-link:active .mobile-brand-logo {
+  transform: scale(1.08);
+  opacity: 0.95;
 }
 
 
@@ -2360,6 +2369,12 @@ body.page-map-view {
   .mobile-brand-link {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-brand-logo {
+    height: 42px;
+    width: 42px;
   }
 
   .header-nav-left, .header-nav-right .nav-auth-link {
@@ -2718,7 +2733,8 @@ body.page-map-view {
   }
 
   .mobile-brand-logo {
-    height: 28px;
+    height: 38px;
+    width: 38px;
   }
 }
 
