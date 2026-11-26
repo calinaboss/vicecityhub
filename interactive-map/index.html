@@ -7,7 +7,13 @@
   <meta name="description" content="Explore the interactive map of Leonida and Vice City for Grand Theft Auto VI. Complete with in-game locations, collectibles, activities, and real-world counterparts.">
   <meta name="theme-color" content="#0d1117">
 
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -48,9 +54,11 @@
       display: flex;
       flex-direction: column;
       width: 100%;
-      height: 100%;
+      height: 100vh;
+      max-height: 100vh;
       position: relative;
       background: var(--bg-dark);
+      overflow: hidden;
     }
 
     .map-header {
@@ -70,27 +78,12 @@
       display: flex;
       align-items: center;
       text-decoration: none;
-      gap: 10px;
     }
 
     .header-logo-img {
-      height: 26px;
+      height: 32px;
       width: auto;
       display: block;
-    }
-
-    .brand-title {
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .brand-title span {
-      color: var(--accent-pink);
     }
 
     .search-wrapper {
@@ -260,19 +253,20 @@
       z-index: 500;
       transition: margin-left 0.2s ease;
       overflow: hidden;
+      position: relative;
     }
 
     .map-sidebar.collapsed {
-      margin-left: -300px;
+      margin-left: -320px;
     }
 
     .sidebar-head {
+      flex: 0 0 auto;
       padding: 12px 14px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       gap: 10px;
-      flex-shrink: 0;
       background: var(--bg-surface);
     }
 
@@ -349,9 +343,10 @@
 
     .sidebar-list {
       flex: 1 1 0;
+      height: calc(100% - 90px);
+      max-height: calc(100% - 90px);
       min-height: 0;
-      height: 100%;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       overflow-x: hidden;
       padding: 8px 10px;
       display: flex;
@@ -492,9 +487,9 @@
     }
 
     .item-icon-box img {
-      width: 12px;
-      height: 12px;
-      filter: brightness(0) invert(1);
+      width: 14px;
+      height: 14px;
+      object-fit: contain;
     }
 
     .item-label {
@@ -760,19 +755,6 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
     }
 
-    @media (max-width: 768px) {
-      .map-sidebar {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: 260px;
-      }
-      .brand-title { display: none; }
-      .search-wrapper { max-width: 150px; }
-      .map-hud-bar { bottom: 8px; right: 8px; font-size: 10px; }
-    }
-
     .vch-promo-toast {
       position: absolute;
       bottom: 16px;
@@ -870,19 +852,18 @@
     }
 
     .vch-cookie-banner {
-      position: absolute;
-      bottom: 16px;
-      right: 16px;
-      max-width: 380px;
-      background: rgba(22, 27, 34, 0.98);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid var(--border-color);
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 340px;
+      max-width: calc(100vw - 32px);
+      background: #161b22;
+      border: 1px solid #30363d;
       border-radius: 8px;
       padding: 14px;
-      z-index: 1500;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
-      display: none;
+      z-index: 999999;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.85);
+      display: flex;
       flex-direction: column;
       gap: 10px;
     }
@@ -936,6 +917,19 @@
       border-color: #3fb950;
     }
 
+    @media (max-width: 768px) {
+      .map-sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 270px;
+      }
+      .search-wrapper { max-width: 140px; }
+      .map-hud-bar { bottom: 8px; right: 8px; font-size: 10px; }
+      .vch-cookie-banner { bottom: 12px; right: 12px; left: 12px; width: auto; }
+      .vch-promo-toast { bottom: 80px; left: 12px; right: 12px; width: auto; }
+    }
   </style>
 </head>
 <body>
@@ -946,14 +940,13 @@
       <div style="display: flex; align-items: center; gap: 10px;">
         <a href="https://vicecityhub.eu" class="brand-section" title="Return to ViceCityHub.eu">
           <img src="images/logo.webp" alt="ViceCityHub" class="header-logo-img">
-          <span class="brand-title">VICECITY<span>HUB</span></span>
         </a>
       </div>
 
       <div class="search-wrapper">
         <div class="search-input-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="map-search-input" class="search-input" placeholder="Search places, ATMs, cards..." autocomplete="off">
+          <input type="text" id="map-search-input" class="search-input" placeholder="Search landmarks, ATMs, cards..." autocomplete="off">
         </div>
         <div class="search-dropdown" id="search-dropdown"></div>
       </div>
@@ -1016,21 +1009,20 @@
           </div>
           <button type="button" class="promo-close" id="promo-close" title="Dismiss">&times;</button>
         </div>
-
-        <div id="vch-cookie-banner" class="vch-cookie-banner">
-          <div class="cookie-text">
-            We use cookies and storage to remember your map preferences and deliver our services. Learn more in our <a href="https://vicecityhub.eu/cookies.html" target="_blank" rel="noopener">Cookie Policy</a>.
-          </div>
-          <div class="cookie-actions">
-            <button type="button" class="cookie-btn" id="cookie-btn-decline">Essential Only</button>
-            <button type="button" class="cookie-btn cookie-btn-primary" id="cookie-btn-accept">Accept All</button>
-          </div>
-        </div>
-
       </div>
 
     </div>
 
+  </div>
+
+  <div id="vch-cookie-banner" class="vch-cookie-banner">
+    <div class="cookie-text">
+      We use cookies and storage to remember your map preferences and deliver our services. Learn more in our <a href="https://vicecityhub.eu/cookies.html" target="_blank" rel="noopener">Cookie Policy</a>.
+    </div>
+    <div class="cookie-actions">
+      <button type="button" class="cookie-btn" id="cookie-btn-decline">Essential Only</button>
+      <button type="button" class="cookie-btn cookie-btn-primary" id="cookie-btn-accept">Accept All</button>
+    </div>
   </div>
 
   <script src="leaflet/leaflet.js"></script>
@@ -1039,8 +1031,8 @@
   <script>
     (async function() {
       const BOUNDS = L.latLngBounds([-800, 160], [-160, 832]);
-      const CLUSTER_BELOW = 2.5;
-      const CELL = 64;
+      const CLUSTER_BELOW = 1.8;
+      const CELL = 56;
 
       const toGame = (x, y) => ({
         gx: Math.round(x * 32 - 16384),
@@ -1152,6 +1144,17 @@
           if (pinKey && PINS[pinKey]) {
             const size = 26;
             ctx.drawImage(PINS[pinKey], x - size / 2, y - size / 2, size, size);
+            return;
+          }
+
+          if (it.pin === 'landmark' || it.real_life || (it.id && it.id.startsWith('L'))) {
+            ctx.beginPath();
+            ctx.arc(x, y, 7, 0, Math.PI * 2);
+            ctx.fillStyle = '#fbbf24';
+            ctx.fill();
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = '#0d1117';
+            ctx.stroke();
             return;
           }
 
@@ -1389,11 +1392,12 @@
           const rowsHtml = groupKinds.map(k => {
             const isActive = activeKinds.has(k.key);
             const count = counts[k.key] || 0;
+            const iconSrc = k.key === 'building' || k.key === 'hotel' ? 'images/pins/landmark.webp' : 'icons/' + k.key + '.svg';
             return '<div class="sidebar-item ' + (isActive ? 'active' : '') + '" data-kind="' + k.key + '">' +
               '<div class="item-left-wrap">' +
                 '<span class="item-checkbox"><i class="fa-solid fa-check"></i></span>' +
                 '<div class="item-icon-box">' +
-                  '<img src="icons/' + k.key + '.svg" alt="" onerror="this.style.display=\'none\';">' +
+                  '<img src="' + iconSrc + '" alt="" onerror="this.style.display=\'none\';">' +
                 '</div>' +
                 '<span class="item-label">' + escapeHtml(k.name) + '</span>' +
               '</div>' +
@@ -1637,8 +1641,20 @@
       buildSidebar();
       render();
 
+      const loadImage = (src) => new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+
       const loadIconsAndPins = async () => {
+        const pinSlugs = [...new Set(items.map(it => it.pin).filter(Boolean))];
         await Promise.all([
+          ...pinSlugs.map(async slug => {
+            const img = await loadImage('images/pins/' + slug + '.webp');
+            if (img) PINS[slug] = img;
+          }),
           ...kinds.map(async k => {
             try {
               const r = await fetch('icons/' + k.key + '.svg');
@@ -1648,18 +1664,8 @@
                 .replace(/stroke-width="2"/, 'stroke-width="2.25"')
                 .replace(/width="24"/, 'width="96"')
                 .replace(/height="24"/, 'height="96"');
-              const img = new Image();
-              img.src = URL.createObjectURL(new Blob([svgText], { type: 'image/svg+xml' }));
-              await img.decode();
-              ICONS[k.key] = img;
-            } catch (err) {}
-          }),
-          ...[...new Set(items.map(it => it.pin).filter(Boolean))].map(async slug => {
-            const img = new Image();
-            img.src = 'images/pins/' + slug + '.webp';
-            try {
-              await img.decode();
-              PINS[slug] = img;
+              const img = await loadImage(URL.createObjectURL(new Blob([svgText], { type: 'image/svg+xml' })));
+              if (img) ICONS[k.key] = img;
             } catch (err) {}
           })
         ]);
@@ -1674,10 +1680,10 @@
       const cookieBtnDecline = document.getElementById('cookie-btn-decline');
 
       if (cookieBanner) {
-        if (!localStorage.getItem('vch_cookie_consent')) {
-          setTimeout(() => {
-            cookieBanner.style.display = 'flex';
-          }, 1000);
+        if (localStorage.getItem('vch_cookie_consent')) {
+          cookieBanner.style.display = 'none';
+        } else {
+          cookieBanner.style.display = 'flex';
         }
 
         if (cookieBtnAccept) {
@@ -1773,7 +1779,6 @@
           }, 24000);
         }
       }
-
 
     })();
   </script>
