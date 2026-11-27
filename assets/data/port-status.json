@@ -1,0 +1,331 @@
+{
+  "efforts": [
+    {
+      "id": "kelvaroq",
+      "name": "Kelvaroq"
+    },
+    {
+      "id": "victory-nvidia",
+      "name": "VIctory-NVIDIA"
+    },
+    {
+      "id": "belobug",
+      "name": "Belobug"
+    },
+    {
+      "id": "dexnom",
+      "name": "DexNom"
+    },
+    {
+      "id": "zettrox",
+      "name": "ZETTROX"
+    },
+    {
+      "id": "vitoriabr",
+      "name": "Uilian"
+    }
+  ],
+  "news": [
+    {
+      "id": "2026-11-27-belobug-dmca",
+      "date": "2026-11-27",
+      "publishedAt": "2026-11-27T18:33:11Z",
+      "category": "Takedown",
+      "title": "Exclusive: GitHub removes Belobug's GTA VI build over its Terms of Service",
+      "dek": "The repository and GitHub account behind the best-rated build on our board are gone. PortWatch has confirmed that GitHub removed them for violating its Terms of Service.",
+      "body": [
+        "Belobug's GTA VI build has been taken off GitHub. The Belobug/VIctory-Belobug-AMD repository and the Belobug account behind it both stopped loading on Friday, and PortWatch has confirmed that GitHub removed them for violating its Terms of Service.",
+        "It was the build to beat: a fork of Marvis's VIctory for AMD Radeon cards, very playable at about 22 fps on average with no crashes, and among the furthest into the story on our board. It had over 4,000 stars and 1,200 forks, and at 91.3% it was the top-rated build we track.",
+        "GitHub hasn't said publicly which of its rules the build broke. Unlike DMCA notices, which it posts in a public log, removals under its Terms of Service aren't published. We'll update this article if we learn more.",
+        "Belobug's card on our board is now marked as nuked and no longer ranked, so VIctory-NVIDIA, at 90%, leads the race. The progress it made still counts: our overall number stays at 91.3%. Don't go looking for copies of Belobug's code: forks of a removed repository can go too, and unofficial downloads often carry malware."
+      ],
+      "sources": [
+        {
+          "outlet": "GitHub",
+          "title": "GitHub Terms of Service",
+          "url": "https://docs.github.com/en/site-policy/github-terms/github-terms-of-service"
+        },
+        {
+          "outlet": "PortWatch",
+          "title": "We've seen Belobug's AMD build, and it's way ahead",
+          "url": "https://portwatch-vi.xyz/news/2026-11-25-belobug-way-ahead.html"
+        }
+      ],
+      "image": null,
+      "by": "report"
+    },
+    {
+      "id": "2026-11-26-multiplayer-running",
+      "date": "2026-11-26",
+      "publishedAt": "2026-11-26T22:42:00Z",
+      "category": "Port",
+      "title": "Exclusive: GTA VI multiplayer is running on PC",
+      "dek": "TeK's group has players, cars and proximity voice chat working at a stable 25 to 30 fps, on a private fork of CGBJ's build. PortWatch has verified the video is real.",
+      "body": [
+        "GTA VI multiplayer is running on PC. On Thursday evening TeK (@TeKGameR950) posted a video on X of what the group calls working multiplayer: player characters and vehicles together in the world, with proximity voice chat, so you hear the players near you. PortWatch has verified that the video is real.",
+        "It runs at a stable 25 to 30 frames per second. The build is a private fork of CGBJ's, the VIctory and XCL build that averages 25 fps in single-player, and the group has only just started on multiplayer.",
+        "Until now, every build we track has been single-player: getting GTA VI's story to run on PC at all has taken everyone's effort. Multiplayer means separate copies of the game agreeing on where every player and car is, and no build on our board had shown that before.",
+        "The code is private, so nobody outside the group can try it yet. It isn't on our board either: we rate each build on its own, and this one doesn't have ratings of its own yet."
+      ],
+      "sources": [
+        {
+          "outlet": "X",
+          "title": "TeK's video: GTA VI working multiplayer, characters, vehicles and proximity voice chat",
+          "url": "https://x.com/TeKGameR950/status/2126015173274312796"
+        },
+        {
+          "outlet": "Reddit",
+          "title": "\"GTA 6 multiplayer before GTA 6 multiplayer\", the video on r/FitGirlRepack",
+          "url": "https://www.reddit.com/r/FitGirlRepack/comments/1y6drp0/gta_6_multiplayer_before_gta_6_multiplayer/"
+        }
+      ],
+      "image": null,
+      "by": "report"
+    },
+    {
+      "id": "2026-11-25-belobug-way-ahead",
+      "date": "2026-11-25",
+      "publishedAt": "2026-11-25T11:02:05Z",
+      "category": "Port",
+      "title": "We've seen Belobug's AMD build, and it's way ahead",
+      "dek": "GTA VI's open world looks close to the retail game on an all-AMD PC, and it plays through missions. It runs at about 3 fps, but nothing else on our board looks like it.",
+      "body": [
+        "We've seen Belobug's build of GTA VI running, and the PortWatch team thinks it's way ahead of every other build we track. The open world renders lit, with textures, people, vehicles, vegetation, water and sky, and it looks close to the retail game, just very slowly. It plays through missions, and it rarely crashes.",
+        "It went straight to #1 on our board at 77.4%, more than 13 points clear of ZETTROX's 64.2%, which led until this morning. Its rendering is rated 0.85 on our scale, the highest we've given any build, and its story progress 0.5 (\"First act\"). The next best picture, suri's private build, is at 0.8; ZETTROX's, which draws anything in shadow black, is at 0.3.",
+        "It's built for AMD Radeon, while ZETTROX's, the previous leader, is tuned for NVIDIA. Belobug runs it on a Radeon RX 9070 XT 16 GB with a Ryzen 7 9800X3D, 64 GB of RAM and Windows 11. It's a fork of Marvis's VIctory, following its main branch plus upstream pull requests, and its README says no code from hyphennn's victory-fork is in it. Belobug's own fixes include a stand-in for the game's ray-traced indirect light, which left leaves magenta and indoor scenes in coloured blocks, a fix for lines along every triangle on car paint, glass and skin, and a change that cut the GPU time of one heavy scene from 225 to about 80 milliseconds a frame.",
+        "It isn't fast. The README puts it at 3 to 5 frames per second, about 3 while driving, and still calls it \"not playable yet\" for that reason. Parts of moving vehicles get left behind or stretched, distant trees aren't drawn, shade is flat, and it needs about 22 GB of RAM and more video memory than a 16 GB card has. It has run on one PC so far; nobody has tried it on NVIDIA or Intel.",
+        "The code is public, as Belobug/VIctory-Belobug-AMD, under VIctory's GPL-3.0 licence, so others with AMD cards can try it. It contains no game files: you need your own copy of the game.",
+        "Update, 2026-11-27: GitHub removed Belobug's repository and account for violating its Terms of Service, which PortWatch has confirmed. Its card on our board is now marked as nuked."
+      ],
+      "sources": [
+        {
+          "outlet": "GitHub",
+          "title": "VIctory-Belobug-AMD, Belobug's build and its README",
+          "url": "https://github.com/Belobug/VIctory-Belobug-AMD"
+        },
+        {
+          "outlet": "GitHub",
+          "title": "VIctory, the layer it builds on",
+          "url": "https://github.com/Marvisak/VIctory"
+        }
+      ],
+      "image": null,
+      "by": "report"
+    },
+    {
+      "id": "2026-11-25-zettrox-no-crashes",
+      "date": "2026-11-25",
+      "publishedAt": "2026-11-25T03:00:13Z",
+      "category": "Port",
+      "title": "ZETTROX's GTA VI build looks uncrashable so far",
+      "dek": "It hasn't crashed once from Lucia's prologue to Jason's first mission, and it's slowly heading for free roam. Something in it is different.",
+      "body": [
+        "ZETTROX's build of GTA VI hasn't crashed yet. It has played from Lucia's prologue into Jason's first mission, \"Gone Fishing\", where it showed the first kill with a gun in GTA VI on PC, and it hasn't gone down once along the way. Its README reports more than an hour and a half in one session without a crash.",
+        "That's rare this early. Running a game built for other hardware usually means crashing, and often. ZETTROX's is the only build on our board rated better than \"Crashes sometimes\": on Wednesday its stability went from 0.5 to 0.8 (\"Rarely crashes\"), which puts it first at 64.2%.",
+        "It's also slowly getting toward free roam, the point where the story lets go and the open world is yours. That takes patience: the build runs at 1 to 3 frames per second, and the picture is still poor, with anything in shadow drawn black and bright scenes overexposed.",
+        "What keeps it running isn't clear yet. Like Uilian's VItoriaBr, it's based on VIctory and hyphennn's victory-fork, with ZETTROX's own work for NVIDIA cards, tested on an RTX 3050. Unlike most builds this far along, its code is public, as Zettrox/ztrx, so anyone can compare it with victory-fork and find what's different."
+      ],
+      "sources": [
+        {
+          "outlet": "GitHub",
+          "title": "ztrx, ZETTROX's build and its stability notes",
+          "url": "https://github.com/Zettrox/ztrx"
+        },
+        {
+          "outlet": "Reddit",
+          "title": "\"first kill\", the recording from Gone Fishing",
+          "url": "https://www.reddit.com/r/FitGirlRepack/comments/1y4u9v2/first_kill/"
+        }
+      ],
+      "image": null,
+      "by": "report"
+    },
+    {
+      "id": "2026-11-25-prologue-gone-fishing",
+      "date": "2026-11-25",
+      "publishedAt": "2026-11-25T00:38:35Z",
+      "category": "Port",
+      "title": "GTA VI builds clear Lucia's prologue and reach Jason's first mission",
+      "dek": "Private builds now play through the opening and into \"Gone Fishing\", though most still render badly and vehicles rarely work.",
+      "body": [
+        "Several private PC builds of GTA VI can now play through Lucia's prologue and carry on into Jason's first mission, \"Gone Fishing\". Until now, the furthest builds we track had only reached the prologue itself, so this is the deepest into the story anyone has reported.",
+        "It's rough. Most builds still render the world badly, and vehicles don't work most of the time: in Gone Fishing the boat often can't be steered. On some builds, the map in the pause menu opens.",
+        "We can't say yet whose builds these are. The people getting this far are working in private, and most of them appear to build on hyphennn's victory-fork, the public fork of VIctory behind the top of our board. Their own changes aren't public, so nobody else can test them.",
+        "\"Prologue cleared\" is the first step of our story track, but no score changes until we know which builds did it. If yours is one of them, open an issue on our GitHub with a link to a recording or a stream."
+      ],
+      "sources": [
+        {
+          "outlet": "GitHub",
+          "title": "victory-fork, hyphennn's public fork of VIctory",
+          "url": "https://github.com/fxceless/victory-fork"
+        }
+      ],
+      "image": null,
+      "by": "report"
+    },
+    {
+      "id": "2026-11-24-take-two-dmca-leonida-forks",
+      "date": "2026-11-24",
+      "publishedAt": "2026-11-24T22:09:11Z",
+      "category": "Takedown",
+      "title": "Take-Two's first GTA VI port takedown disables Leonida and 3,007 forks",
+      "dek": "A DMCA notice published by GitHub on Tuesday targets the Leonida repository, and GitHub applied it to the project's entire fork network.",
+      "body": [
+        "Take-Two has filed its first DMCA notice against a GTA VI port. The notice, published in GitHub's public DMCA log on Tuesday, names ItsNotRexed's Leonida repository. Because the fork network was larger than 100 repositories and Take-Two said the forks infringe just as the original does, GitHub processed it against the whole network: 3,007 repositories. Contributor forks that survived Leonida's shutdown on Monday now show GitHub's \"unavailable\" page.",
+        "The publisher calls Leonida a derivative work of GTA VI and says it breaches the reverse-engineering ban in Rockstar's terms of service. It also argues that the project's \"bring your own files\" line is misleading: given the timing, it says, the files users must supply can only be the leaked Xbox build.",
+        "The notice names only Leonida. Projects that aren't GitHub forks of it, such as VIctory and XCL, and Leonida copies uploaded as new repositories, are still online for now. But the same argument could apply to any of them.",
+        "Leonida stays on our board as nuked, for the record."
+      ],
+      "sources": [
+        {
+          "outlet": "GitHub",
+          "title": "DMCA notice from Take-Two Interactive, 2026-11-24",
+          "url": "https://github.com/github/dmca/blob/master/2026/11/2026-11-24-take-two.md"
+        }
+      ],
+      "image": null,
+      "by": "claude"
+    },
+    {
+      "id": "2026-11-24-new-progress-scale",
+      "date": "2026-11-24",
+      "publishedAt": "2026-11-24T20:38:08Z",
+      "category": "Port",
+      "title": "PortWatch's new scale: Playable is halfway, finishing the game is 100%",
+      "dek": "Getting into GTA VI is now half the bar. The other half is how far you can play, how right it looks, how fast it runs and how long it keeps running.",
+      "body": [
+        "We've changed how PortWatch scores projects. The old bar climbed from groundwork to \"In-game\", then to 30 FPS and \"Stable\". Many of you pointed out that this mixed up two different things: getting the game to run at all, and having it play well. Walking around a dark world at 5 frames per second isn't three-quarters of the way to playing GTA VI on PC.",
+        "Getting in is now a ladder to 50%. Groundwork fills the first 10%. Then come Exe runs (10%), First frame (20%), Main menu (30%), In the world (40%), when story mode loads the world and draws it, however broken, and Playable (50%), when you control a character in it.",
+        "Past Playable, four tracks fill the other half side by side: story progress (35 points), from stuck in the opening to 100% completion; rendering (25), from black or broken to matching the console; performance (20), the average frame rate divided by 30; and stability (20). 100% now means the whole game can be finished, looking like the console, at 30 fps or better, without crashing.",
+        "Every project has been re-scored, and the numbers are lower. The furthest builds are now just past halfway: hyphennn's private build at 59.4%, omonkey's at 57.9%, victory-gta6 at 57.3% and CGBJ's at 54.5%. VIctory is at 40%, in the world but not yet playable, and XCL at 35%. Nobody went backwards: the same results now count for less of the whole game.",
+        "The history chart has been converted to the new scale too. The full rules, with the written steps for story and rendering, are in the scoring section at the bottom of the page."
+      ],
+      "sources": [
+        {
+          "outlet": "PortWatch",
+          "title": "How the progress bar works: the full scale, with the written steps",
+          "url": "https://portwatch-vi.xyz/#method"
+        }
+      ],
+      "image": null
+    },
+    {
+      "id": "2026-11-24-omonkey-shaders-prison",
+      "date": "2026-11-24",
+      "publishedAt": "2026-11-24T19:27:03Z",
+      "category": "Port",
+      "title": "GTA VI's shaders start loading on omonkey's build, streamed live on Rumble",
+      "dek": "A player can walk slowly around the opening prison scene, at about 5 frames per second. All of the work goes out live, on a Rumble channel run by someone else.",
+      "updatedAt": "2026-11-24",
+      "body": [
+        "A developer called omonkey has GTA VI running on PC with its shaders starting to load properly. It runs at about 5 frames per second and is stuck in the opening scene, Lucia's prison, but a player can move around in it, slowly.",
+        "That puts omonkey ahead of every project we track. CGBJ, which we added earlier on Tuesday, also has a player moving, but on a black screen, and a video of it shows the opening in flat colours without lighting.",
+        "omonkey streams all of his development work on Rumble, but not on a channel of his own. The streams go out on Swaggely, a channel with about 1,800 followers that belongs to a separate person. It isn't clear why the two work this way.",
+        "We've added omonkey to the tracker at 76%, at our In-game stage, which puts him first. Because the work has been streamed live the whole time, we're confident it's real. We haven't found any public code from him, though, so nobody can test it outside the streams yet.",
+        "Update, 20:10 UTC: omonkey's build is based on victory-gta6, fxceless's public fork of VIctory, which we've now added to the race at 74%. Our race now ranks only projects with public code, so omonkey's private build is listed below it without a rank. At 76% it still leads our overall progress number, and it shows on victory-gta6's card as a build on that code."
+      ],
+      "sources": [
+        {
+          "outlet": "Rumble",
+          "title": "Swaggely, the channel that streams omonkey's development work",
+          "url": "https://rumble.com/user/Swaggely"
+        }
+      ],
+      "image": null,
+      "by": "report"
+    }
+  ],
+  "headlines": [
+    {
+      "title": "\"GTA 6 is finally here\": Microsoft's GitHub hyped a tool that turns PS5 games into Windows 11 apps, days after wiping 3,007 GTA 6 PC port repos, then quietly deleted the post",
+      "outlet": "Windows Latest",
+      "link": "https://news.google.com/rss/articles/CBMiswJBVV95cUxPVE5Mb0o0c0I4aWNnU3ZqaFAzWkxXSnZhNDVBZXJqYnd1Q3BsYWF3UHNlOXgwSlp0LUJBWUVLR1hrRE9RcC11am41X0d1VmZjUGNlTm1CR2h0RUx3cVV5aDNlYXFRalhOVzFwU19zbTUwSElFYUZsYnZqOFFZWHBCLXp0NV9xc0loX0lPemdwa2drbllRRUJhWlQ1cndwd280WmFYYXEwSGZFRWdFOXZVdm9CeUNRZzJtdF9ERjNudXg4OXdncHU3VmdEdzFvMmdUNjZ2d3JPbklrOGU0ZXVicUMzZFZSdXltSW1GWE92cHNaMXg0RFFPZXdIY3F6S2tJM0RZNnM2TUZsYlFKMTE4SnhqRVRhUlg1NE9QVXJrbktfbGRBVk15RVhrMUxUaEVfY09F?oc=5",
+      "date": "2026-11-27T20:45:05.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "GTA 6 Port Takedown: 3,007 GitHub Repositories",
+      "outlet": "NeoTeo",
+      "link": "https://news.google.com/rss/articles/CBMilAFBVV95cUxQZENjZGFlWlh4Q3FLTS0zbVJialVleE93cDZ3elFVUVZfZnhZYW55V0VkeS1ueWZOeGVIUjJ6aDlNZldJVlB1N3lxdmM2MUpzbjdSdWk3U0tJaTlFQXl4RmR2MDJjQm1Nb0Y2aGZna2VrTDNnb1Y0Q3NxcDVBNHhZODVkczNuc0VfZWRqLWtrSllDTVI1?oc=5",
+      "date": "2026-11-27T19:55:23.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "A 15-Year-Old’s AI-Assisted GTA 6 PC Port Survived a Take-Two Takedown",
+      "outlet": "Gadget Review",
+      "link": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQMlVPQndaVEVGV1RPa2c0NlJjR3JsY1Q0YzN4bm9jZGhYT3p3MTdoc2phd2J1R1VHQmV0R1NxdTQzLTI0NFpUcFpWeFJPdVljcV9leWtzLUgtNTl4ZUN5OVBTQzEyU05acVMzWV9zdWZhdkJoZWs0bHc0SGpkRUhmV3ZOOVJDZlh1ci1WZEhybTRfMnFiSUlLVy1rbS1Ta1E?oc=5",
+      "date": "2026-11-27T19:10:35.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "209GB GTA 6 'PC version' appears on Russian torrent site",
+      "outlet": "TweakTown",
+      "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOX29ia0x0UTdoNXBoLXdwckxwWmpEb1AzdTRPcFdzNUxMUE16ZnhPZl91bVUzcEdaVE5nNnFGam5YTDVodnhseElCWFptcUhPNjJVdjlQN0Uxd3NibmRpamdIb291VF8tTExidmx3SlUxb0tvM2p6aldzS1VUZ2xvZTJvU3R3Qmw0R1hpWGRIaTZLVUo2UlNjWjlDZ2p6VlVZTWlibi13?oc=5",
+      "date": "2026-11-27T18:00:11.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "GTA 6 PC Port Takes a Massive Leap Forward in Just Days",
+      "outlet": "Polygon.com",
+      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOTlFpaUdVb3FONVRhb3RPUVpxZU5wWXd0ZXYzbUF2Z0NDcjg1U1UzYmJ2LUd4LXBwVVplaEVUWER6ajZ2ek55WEZpbVkzRGxlOEZ3Z2stZG9ZS01DX2p2VmlHdGlfXzhtTjBmM2I4VjdoWkFxNHdWSi11cWNkeEhPTGpKbTBOMDA?oc=5",
+      "date": "2026-11-27T17:44:33.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "CGBJ GTA 6 PC Project Goes Public, Then Disappears Minutes Later",
+      "outlet": "OpenCritic",
+      "link": "https://news.google.com/rss/articles/CBMingFBVV95cUxQdlI5bkdzYXMxamRmeUxkSThzRkVUek1KX2RDUGpKdzhYY25KTDZKVUg4bVNmeE1kd2VocElCZDItV1AzQk9EdUMxMGV1aXd2UUREM2xyekhwNThHY1ktQXE5VnltQlgyX284QzZSOEJkQVZoOHIxUVFhN1BmaENpYnlvN2U0eGdDTjNfVkF1T2FhNnFlelB0UjFLNktWdw?oc=5",
+      "date": "2026-11-27T16:47:17.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "AI-Powered GTA 6 PC Ports Now Have Multiplayer as Modders Unlock 30 and 60 FPS",
+      "outlet": "Decrypt",
+      "link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPNEh3Q01fYUpqVFIzZHpaVC1SX2RLeC1nd3VCWlBPU2NtTWpuaUZUX09uXzM4QVVMT05hbGhkXzV1MnNVb05sbWl2eTFKSm5FeW8xem9LeXdFbGxuYld5TEhOWVFGQjR3SVlzUTJyLW4tSHV4X0xFVFc5ZWdPNWJLSHZaZk9BUVhGUmdwTDJyX3pFRUE5bXdpR2hLTGFGUU9tVXViVl84VQ?oc=5",
+      "date": "2026-11-27T16:21:40.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "Leaked GTA 6 Xbox Build Boots on Windows at About 1 FPS",
+      "outlet": "shattered.io",
+      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNVjEyU1hNTXFuaVNLRDh3YVFaMTRNNngyOERwRk1ZM0JkOU11Q2dvVXE2dk5ldWxZN2pQZHRmMjdrakZnSlNzMnhvUGJhVlFDcTJWa21aT1NSVEdtQ3YwV2QyUmdpVG5oNU8xUVU3amNoYVNGN1Z5dHFGLWVXOElKLVZQdDZRMXNVUVY0bFNHQXdTZw?oc=5",
+      "date": "2026-11-27T15:35:04.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "GTA 6's pirate PC ports: new tools, old problem | Opinion",
+      "outlet": "GamesIndustry.biz",
+      "link": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNb1BRZTFLVjRYRDRjSnE5aTRPRkE1WUcyMHdIcGdHaHMxNHVvcnRhNWRqU3ZsWEZwdXJzTHdpUkIzQWRSQV9FSGUydXJzUzBOektfWkw4empRZHJ2SGNlZGxSejBILXN4S21XVV9oWHppOXA0TDR6eWlKZG9zMVIwakZ2U1RBRFJqUUE?oc=5",
+      "date": "2026-11-27T14:43:20.000Z",
+      "via": "Google News"
+    },
+    {
+      "title": "GitHub Deletes \"Happy GTA VImas\" Post Celebrating the AnyPS5 PS5 Emulator",
+      "outlet": "TalkEsport",
+      "link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOS3dyOGRmdXBvNlVyczlDeGFOUXZ6WlE2by1uTnBPaXlPVllsRDdyWnY5cEZTU20zVFZmbHM4SDk3T1RVcVhQVU9BY0Y3ZVFUS0hxaGs4OXU4c1lrYmhnYkdLY0xQNlpycENJUlBFdHUzWUNObThxcXRDaGRLLThGSWxR?oc=5",
+      "date": "2026-11-27T12:54:52.000Z",
+      "via": "Google News"
+    }
+  ],
+  "breakdown": {
+    "story": 75,
+    "render": 88,
+    "perf": 64,
+    "stability": 82
+  },
+  "whatWorks": [
+    "Executable boots into open world with character control & HUD",
+    "Full physics engine, collision detection, and character movement",
+    "DLSS and Frame Generation integration working on modern GPUs",
+    "In-engine audio, vehicle radio stations, and dialogue playback",
+    "Prologue and first 3 campaign missions completed successfully",
+    "Experimental multiplayer lobby synchronization demonstrated"
+  ],
+  "whatBlocking": [
+    "Heavy shader compilation stutter on initial run across non-NVIDIA GPUs",
+    "Ray-tracing global illumination causes severe FPS drops in city center",
+    "VRAM memory leakage after 45+ minutes of continuous gameplay",
+    "Take-Two & Rockstar automated DMCA notices against public GitHub repos",
+    "Audio desynchronization in high-density vehicular chases"
+  ]
+}

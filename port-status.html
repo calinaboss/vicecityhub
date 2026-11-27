@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTA 6 PC Port Status &bull; ViceCityHub</title>
+  <meta name="description" content="Live reverse-engineering &amp; recompilation tracker for Grand Theft Auto VI on PC. Monitor progress, playability status, FPS benchmarks, and news since the executable leak.">
+  <meta name="theme-color" content="#0d1117">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="GTA 6 PC Port Status &bull; ViceCityHub">
+  <meta property="og:description" content="Live decompilation and PC porting progress tracker since the executable drop. See what works, milestone scores, and real-time community updates.">
+  <meta property="og:url" content="https://vicecityhub.eu/port-status.html">
+  <meta property="og:image" content="https://vicecityhub.eu/assets/brand/og-banner.png?v=4">
+  <meta property="og:site_name" content="ViceCityHub">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@ViceCityHub">
+  <meta name="twitter:title" content="GTA 6 PC Port Status &bull; ViceCityHub">
+  <meta name="twitter:description" content="Live reverse-engineering progress tracker for GTA 6 PC porting efforts since the executable drop.">
+  <meta name="twitter:image" content="https://vicecityhub.eu/assets/brand/og-banner.png?v=4">
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16x16.png?v=3">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32x32.png?v=3">
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/brand/favicon-48x48.png?v=3">
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/brand/favicon-96x96.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=3">
+  <link rel="shortcut icon" href="/favicon.ico?v=3">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=5.0">
+  <link rel="stylesheet" href="assets/css/port-status.css?v=1.0">
+  <link rel="canonical" href="https://vicecityhub.eu/port-status.html">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="mobile-brand-link" aria-label="ViceCityHub Homepage">
+        <img src="assets/brand/favicon-512x512.png" alt="ViceCityHub" class="mobile-brand-logo">
+      </a>
+
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="https://map.vicecityhub.eu" class="nav-link">Map</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
+        <a href="tutorials.html" class="nav-link">Tutorials &amp; Secrets</a>
+        <a href="port-status.html" class="nav-link active">PC Port</a>
+      </nav>
+
+      <div class="nav-divider" aria-hidden="true"></div>
+
+      <div class="header-nav-right">
+        <a href="post.html" class="btn-post" aria-label="New Post">
+          <i class="fa-solid fa-plus"></i> New Post
+        </a>
+        <a href="login.html" class="nav-auth-link">Log in</a>
+        <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="port-container">
+
+    <section class="port-hero">
+      <div class="port-tag-row">
+        <span class="port-tag"><i class="fa-solid fa-code-fork"></i> RECOMPILATION TRACKER</span>
+        <span class="port-tag cyan"><i class="fa-solid fa-cube"></i> EXECUTABLE DROP</span>
+        <span class="port-tag live">LIVE TRACKING</span>
+      </div>
+
+      <h1 class="port-title">GTA 6 PC Port Status</h1>
+      <p class="port-desc">
+        Real-time community tracking of reverse engineering, decompilation, and native PC recompilation progress following the leaked debug executable drop.
+      </p>
+
+      <div class="timer-card">
+        <div class="timer-left">
+          <span class="timer-label">Time Elapsed Since Executable Drop</span>
+          <span class="timer-drop-info">Leaked on <strong>November 23, 2026 &bull; 14:36 UTC</strong> (Cyberleek build)</span>
+        </div>
+        <div class="timer-units">
+          <div class="timer-box">
+            <span class="timer-num" id="timer-days">00</span>
+            <span class="timer-text">Days</span>
+          </div>
+          <span class="timer-sep">:</span>
+          <div class="timer-box">
+            <span class="timer-num" id="timer-hours">00</span>
+            <span class="timer-text">Hours</span>
+          </div>
+          <span class="timer-sep">:</span>
+          <div class="timer-box">
+            <span class="timer-num" id="timer-mins">00</span>
+            <span class="timer-text">Mins</span>
+          </div>
+          <span class="timer-sep">:</span>
+          <div class="timer-box">
+            <span class="timer-num" id="timer-secs">00</span>
+            <span class="timer-text">Secs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="port-metrics-grid">
+        <div class="metric-card">
+          <span class="metric-title">Overall Playability</span>
+          <span class="metric-value highlight-pink">91%</span>
+          <span class="metric-sub">Prologue &amp; Early Missions Playable</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Highest Stable FPS</span>
+          <span class="metric-value highlight-cyan">28 - 32 FPS</span>
+          <span class="metric-sub">RTX 4090 / 7800X3D (DLSS 3.7)</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Tracked Efforts</span>
+          <span class="metric-value">45 Repos</span>
+          <span class="metric-sub">Leading team: VIctory-NVIDIA</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Graphics Backend</span>
+          <span class="metric-value">DirectX 12</span>
+          <span class="metric-sub">Secondary: Vulkan Port</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="port-section">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-icon"><i class="fa-solid fa-bars-progress"></i></span>
+          <h2 class="section-title">Milestone Breakdown</h2>
+        </div>
+        <span class="port-tag cyan">Engine Subsystems</span>
+      </div>
+
+      <div class="overall-bar-container">
+        <div class="bar-header">
+          <span class="bar-label">Community Decompilation Progress</span>
+          <span class="bar-pct">91.3%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: 91.3%;"></div>
+        </div>
+      </div>
+
+      <div class="tracks-grid">
+        <div class="track-item">
+          <div class="track-top">
+            <span class="track-name">Story &amp; Quests</span>
+            <span class="track-val">75%</span>
+          </div>
+          <div class="mini-track">
+            <div class="mini-fill" style="width: 75%;"></div>
+          </div>
+        </div>
+        <div class="track-item">
+          <div class="track-top">
+            <span class="track-name">Rendering &amp; Shaders</span>
+            <span class="track-val">88%</span>
+          </div>
+          <div class="mini-track">
+            <div class="mini-fill" style="width: 88%;"></div>
+          </div>
+        </div>
+        <div class="track-item">
+          <div class="track-top">
+            <span class="track-name">Performance &amp; FPS</span>
+            <span class="track-val">64%</span>
+          </div>
+          <div class="mini-track">
+            <div class="mini-fill" style="width: 64%;"></div>
+          </div>
+        </div>
+        <div class="track-item">
+          <div class="track-top">
+            <span class="track-name">Stability &amp; Memory</span>
+            <span class="track-val">82%</span>
+          </div>
+          <div class="mini-track">
+            <div class="mini-fill" style="width: 82%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="port-section">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-icon cyan"><i class="fa-solid fa-list-check"></i></span>
+          <h2 class="section-title">Current State of the Port</h2>
+        </div>
+        <span class="port-tag live">Verified Tested Builds</span>
+      </div>
+
+      <div class="split-grid">
+        <div class="split-col">
+          <h3 class="split-col-title works">
+            <i class="fa-solid fa-circle-check"></i> What Works Right Now
+          </h3>
+          <ul class="status-list" id="works-list">
+            <li class="status-item">
+              <i class="fa-solid fa-circle-check status-bullet success"></i>
+              <span>Executable boots directly into open world with full character control &amp; HUD</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-circle-check status-bullet success"></i>
+              <span>Physics engine, collision meshes, and character movement functioning</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-circle-check status-bullet success"></i>
+              <span>DLSS and Frame Generation integration working on modern GPUs</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-circle-check status-bullet success"></i>
+              <span>In-engine audio, vehicle radio stations, and dialogue playback active</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-circle-check status-bullet success"></i>
+              <span>Prologue and first 3 campaign missions completed successfully in tests</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-circle-check status-bullet success"></i>
+              <span>Experimental multiplayer lobby synchronization demonstrated</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="split-col">
+          <h3 class="split-col-title blocking">
+            <i class="fa-solid fa-triangle-exclamation"></i> What's Blocking &amp; Under Work
+          </h3>
+          <ul class="status-list" id="blocking-list">
+            <li class="status-item">
+              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
+              <span>Heavy shader compilation stutter on initial launch across non-NVIDIA GPUs</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
+              <span>Ray-tracing global illumination causes severe FPS drops in downtown areas</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
+              <span>VRAM memory leakage after 45+ minutes of continuous gameplay</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
+              <span>Take-Two &amp; Rockstar automated DMCA notices against public GitHub repos</span>
+            </li>
+            <li class="status-item">
+              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
+              <span>Audio desynchronization in high-density vehicular chases</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="port-section">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-icon"><i class="fa-solid fa-people-group"></i></span>
+          <h2 class="section-title">Leading Community Projects</h2>
+        </div>
+        <span class="port-tag">Open Decompilation</span>
+      </div>
+
+      <div class="efforts-grid" id="efforts-grid">
+        <div class="effort-card">
+          <div class="effort-header">
+            <h3 class="effort-name">VIctory-NVIDIA</h3>
+            <span class="effort-score">91.3%</span>
+          </div>
+          <p class="effort-headline">Playable prologue, character control, in-engine cutscenes and DLSS 3.7 integration.</p>
+          <div class="effort-footer">
+            <span>Lead: <strong>DexNom / NVIDIA Devs</strong></span>
+            <span class="effort-stack">C++20 / DX12</span>
+          </div>
+        </div>
+        <div class="effort-card">
+          <div class="effort-header">
+            <h3 class="effort-name">Kelvaroq Native</h3>
+            <span class="effort-score">84.0%</span>
+          </div>
+          <p class="effort-headline">Vulkan-based renderer reimplementation targeting Linux and AMD graphics hardware.</p>
+          <div class="effort-footer">
+            <span>Lead: <strong>Kelvaroq</strong></span>
+            <span class="effort-stack">Rust / Vulkan</span>
+          </div>
+        </div>
+        <div class="effort-card">
+          <div class="effort-header">
+            <h3 class="effort-name">DexNom Recomp</h3>
+            <span class="effort-score">78.5%</span>
+          </div>
+          <p class="effort-headline">Static binary recompilation targeting raw x86_64 host execution without emulation.</p>
+          <div class="effort-footer">
+            <span>Lead: <strong>DexNom</strong></span>
+            <span class="effort-stack">C++ / HLSL</span>
+          </div>
+        </div>
+        <div class="effort-card">
+          <div class="effort-header">
+            <h3 class="effort-name">Belobug Core</h3>
+            <span class="effort-score">71.2%</span>
+          </div>
+          <p class="effort-headline">Engine bootstrap, archive unbundling toolset, and asset pipeline decompressor.</p>
+          <div class="effort-footer">
+            <span>Lead: <strong>Belobug Team</strong></span>
+            <span class="effort-stack">C++ / LLVM</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="port-section">
+      <div class="section-head">
+        <div class="section-title-wrap">
+          <span class="section-icon cyan"><i class="fa-solid fa-newspaper"></i></span>
+          <h2 class="section-title">Live Port News &amp; Updates</h2>
+        </div>
+        <span class="port-tag live">Real-Time Wire</span>
+      </div>
+
+      <div class="news-filter-bar">
+        <button class="news-filter-btn active" data-filter="all">All News</button>
+        <button class="news-filter-btn" data-filter="port">Port Updates</button>
+        <button class="news-filter-btn" data-filter="takedown">Takedowns &amp; DMCA</button>
+        <button class="news-filter-btn" data-filter="legal">Legal &amp; Warnings</button>
+        <button class="news-filter-btn" data-filter="headlines">Live RSS Headlines</button>
+      </div>
+
+      <div class="news-feed-list" id="news-feed-list"></div>
+    </section>
+
+  </main>
+
+  <div class="mobile-drawer" id="mobile-drawer">
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <img src="assets/brand/logo.png" alt="ViceCityHub" class="drawer-logo-img">
+        <button class="modal-close-btn" id="close-drawer" aria-label="Close Navigation">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <ul class="drawer-links">
+        <li><a href="index.html" class="drawer-link"><i class="fa-solid fa-house"></i> Feed</a></li>
+        <li><a href="discords.html" class="drawer-link"><i class="fa-brands fa-discord"></i> GTA VI Discords</a></li>
+        <li><a href="https://map.vicecityhub.eu" class="drawer-link"><i class="fa-solid fa-map-location-dot"></i> Map</a></li>
+        <li><a href="cheats.html" class="drawer-link"><i class="fa-solid fa-gamepad"></i> Cheats</a></li>
+        <li><a href="tutorials.html" class="drawer-link"><i class="fa-solid fa-play"></i> Tutorials &amp; Secrets</a></li>
+        <li><a href="port-status.html" class="drawer-link active"><i class="fa-solid fa-laptop-code"></i> PC Port</a></li>
+        <li><a href="login.html" class="drawer-link"><i class="fa-solid fa-user"></i> Log in / Sign in</a></li>
+      </ul>
+      <a href="post.html" class="btn-post" style="width: 100%; justify-content: center; margin-top: auto;">
+        <i class="fa-solid fa-plus"></i> New Post
+      </a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="footer-logo-row">
+          <img src="assets/brand/logo.png" alt="ViceCityHub.eu" class="footer-logo-img">
+        </div>
+        <p class="footer-desc">
+          The premier independent community hub and Discord directory dedicated to Grand Theft Auto VI in Vice City and Leonida.
+        </p>
+        <div class="footer-social-row">
+          <a href="https://discord.gg/Dtgqh9EC7F" target="_blank" rel="noopener noreferrer nofollow" class="footer-social-icon" aria-label="Official Discord">
+            <i class="fa-brands fa-discord"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-cols">
+        <div class="f-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="index.html">Community Feed</a></li>
+            <li><a href="https://discord.gg/Dtgqh9EC7F" target="_blank" rel="noopener noreferrer nofollow"><i class="fa-brands fa-discord"></i> Official Discord</a></li>
+            <li><a href="discords.html">GTA VI Discord Servers</a></li>
+            <li><a href="https://map.vicecityhub.eu" target="_blank" rel="noopener noreferrer">Interactive Map</a></li>
+            <li><a href="cheats.html">Cheat Codes</a></li>
+            <li><a href="tutorials.html">Tutorials &amp; Secrets</a></li>
+            <li><a href="port-status.html">PC Port Status</a></li>
+          </ul>
+        </div>
+
+        <div class="f-col">
+          <h4>About &amp; Help</h4>
+          <ul>
+            <li><a href="about.html">About ViceCityHub</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="report.html">Report Content / Takedown</a></li>
+            <li><a href="mailto:info@vicecityhub.eu">info@vicecityhub.eu</a></li>
+          </ul>
+        </div>
+
+        <div class="f-col">
+          <h4>Legal &amp; Policy</h4>
+          <ul>
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="cookies.html">Cookie Policy</a></li>
+            <li><a href="dsa.html">Digital Services Act (DSA)</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <p class="footer-disclaimer-text">
+        &copy; 2026 ViceCityHub.eu &bull; All rights reserved. Grand Theft Auto and GTA VI are registered trademarks of Rockstar Games &amp; Take-Two Interactive. Unofficial fan community.
+      </p>
+      <span>vicecityhub.eu</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/port-status.js?v=1.0"></script>
+</body>
+</html>
