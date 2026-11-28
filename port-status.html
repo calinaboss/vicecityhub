@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GTA 6 PC Port Status &bull; ViceCityHub</title>
-  <meta name="description" content="Live reverse-engineering &amp; recompilation tracker for Grand Theft Auto VI on PC. Monitor progress, playability status, FPS benchmarks, and news since the executable leak.">
+  <meta name="description" content="Live reverse-engineering &amp; recompilation tracker for Grand Theft Auto VI on PC. Monitor progress, active GitHub projects, and playability since the executable leak.">
   <meta name="theme-color" content="#0d1117">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="GTA 6 PC Port Status &bull; ViceCityHub">
-  <meta property="og:description" content="Live decompilation and PC porting progress tracker since the executable drop. See what works, milestone scores, and real-time community updates.">
+  <meta property="og:description" content="Live decompilation and PC porting progress tracker since the executable drop. See active community GitHub projects and verified playability.">
   <meta property="og:url" content="https://vicecityhub.eu/port-status.html">
   <meta property="og:image" content="https://vicecityhub.eu/assets/brand/og-banner.png?v=4">
   <meta property="og:site_name" content="ViceCityHub">
@@ -31,7 +31,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Teko:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="assets/css/style.css?v=5.0">
-  <link rel="stylesheet" href="assets/css/port-status.css?v=1.0">
+  <link rel="stylesheet" href="assets/css/port-status.css?v=2.0">
   <link rel="canonical" href="https://vicecityhub.eu/port-status.html">
 </head>
 <body>
@@ -68,195 +68,85 @@
 
   <main class="port-container">
 
-    <section class="port-hero">
-      <div class="port-tag-row">
-        <span class="port-tag"><i class="fa-solid fa-code-fork"></i> RECOMPILATION TRACKER</span>
-        <span class="port-tag cyan"><i class="fa-solid fa-cube"></i> EXECUTABLE DROP</span>
-        <span class="port-tag live">LIVE TRACKING</span>
+    <section class="port-hero-minimal">
+      <div class="circle-progress-wrap">
+        <svg viewBox="0 0 180 180">
+          <circle class="circle-bg" cx="90" cy="90" r="75"></circle>
+          <circle class="circle-bar" cx="90" cy="90" r="75"></circle>
+        </svg>
+        <div class="circle-inner">
+          <span class="circle-pct">90%</span>
+          <span class="circle-label">Playable</span>
+        </div>
       </div>
 
       <h1 class="port-title">GTA 6 PC Port Status</h1>
       <p class="port-desc">
-        Real-time community tracking of reverse engineering, decompilation, and native PC recompilation progress following the leaked debug executable drop.
+        Reverse engineering and native recompilation tracker following the leaked debug executable drop.
       </p>
 
-      <div class="timer-card">
-        <div class="timer-left">
-          <span class="timer-label">Time Elapsed Since Executable Drop</span>
-          <span class="timer-drop-info">Leaked on <strong>November 23, 2026 &bull; 14:36 UTC</strong> (Cyberleek build)</span>
-        </div>
-        <div class="timer-units">
-          <div class="timer-box">
-            <span class="timer-num" id="timer-days">00</span>
-            <span class="timer-text">Days</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-box">
-            <span class="timer-num" id="timer-hours">00</span>
-            <span class="timer-text">Hours</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-box">
-            <span class="timer-num" id="timer-mins">00</span>
-            <span class="timer-text">Mins</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-box">
-            <span class="timer-num" id="timer-secs">00</span>
-            <span class="timer-text">Secs</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="port-metrics-grid">
-        <div class="metric-card">
-          <span class="metric-title">Overall Playability</span>
-          <span class="metric-value highlight-pink">91%</span>
-          <span class="metric-sub">Prologue &amp; Early Missions Playable</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-title">Highest Stable FPS</span>
-          <span class="metric-value highlight-cyan">28 - 32 FPS</span>
-          <span class="metric-sub">RTX 4090 / 7800X3D (DLSS 3.7)</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-title">Tracked Efforts</span>
-          <span class="metric-value">45 Repos</span>
-          <span class="metric-sub">Leading team: VIctory-NVIDIA</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-title">Graphics Backend</span>
-          <span class="metric-value">DirectX 12</span>
-          <span class="metric-sub">Secondary: Vulkan Port</span>
-        </div>
+      <div class="port-meta-plain">
+        <span>Leaked on <strong>November 23, 2026 &bull; 14:36 UTC</strong></span>
+        <span>&bull;</span>
+        <span>Elapsed: <span class="port-meta-timer" id="port-timer-val">00d 00h 00m 00s</span></span>
       </div>
     </section>
 
     <section class="port-section">
-      <div class="section-head">
-        <div class="section-title-wrap">
-          <span class="section-icon"><i class="fa-solid fa-bars-progress"></i></span>
-          <h2 class="section-title">Milestone Breakdown</h2>
-        </div>
-        <span class="port-tag cyan">Engine Subsystems</span>
-      </div>
-
-      <div class="overall-bar-container">
-        <div class="bar-header">
-          <span class="bar-label">Community Decompilation Progress</span>
-          <span class="bar-pct">91.3%</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width: 91.3%;"></div>
-        </div>
-      </div>
-
-      <div class="tracks-grid">
-        <div class="track-item">
-          <div class="track-top">
-            <span class="track-name">Story &amp; Quests</span>
-            <span class="track-val">75%</span>
-          </div>
-          <div class="mini-track">
-            <div class="mini-fill" style="width: 75%;"></div>
-          </div>
-        </div>
-        <div class="track-item">
-          <div class="track-top">
-            <span class="track-name">Rendering &amp; Shaders</span>
-            <span class="track-val">88%</span>
-          </div>
-          <div class="mini-track">
-            <div class="mini-fill" style="width: 88%;"></div>
-          </div>
-        </div>
-        <div class="track-item">
-          <div class="track-top">
-            <span class="track-name">Performance &amp; FPS</span>
-            <span class="track-val">64%</span>
-          </div>
-          <div class="mini-track">
-            <div class="mini-fill" style="width: 64%;"></div>
-          </div>
-        </div>
-        <div class="track-item">
-          <div class="track-top">
-            <span class="track-name">Stability &amp; Memory</span>
-            <span class="track-val">82%</span>
-          </div>
-          <div class="mini-track">
-            <div class="mini-fill" style="width: 82%;"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="port-section">
-      <div class="section-head">
-        <div class="section-title-wrap">
-          <span class="section-icon cyan"><i class="fa-solid fa-list-check"></i></span>
-          <h2 class="section-title">Current State of the Port</h2>
-        </div>
-        <span class="port-tag live">Verified Tested Builds</span>
+      <div class="section-header-clean">
+        <h2 class="section-title">Current State</h2>
+        <p class="section-desc">Verified functionality across tested community builds.</p>
       </div>
 
       <div class="split-grid">
-        <div class="split-col">
-          <h3 class="split-col-title works">
-            <i class="fa-solid fa-circle-check"></i> What Works Right Now
+        <div class="status-box">
+          <h3 class="status-box-title works">
+            <i class="fa-solid fa-check"></i> What Works
           </h3>
           <ul class="status-list" id="works-list">
             <li class="status-item">
-              <i class="fa-solid fa-circle-check status-bullet success"></i>
-              <span>Executable boots directly into open world with full character control &amp; HUD</span>
+              <i class="fa-solid fa-check status-bullet success"></i>
+              <span>Executable boots directly into game with full character control and HUD</span>
             </li>
             <li class="status-item">
-              <i class="fa-solid fa-circle-check status-bullet success"></i>
-              <span>Physics engine, collision meshes, and character movement functioning</span>
+              <i class="fa-solid fa-check status-bullet success"></i>
+              <span>Physics engine, collision detection, and vehicular handling functional</span>
             </li>
             <li class="status-item">
-              <i class="fa-solid fa-circle-check status-bullet success"></i>
-              <span>DLSS and Frame Generation integration working on modern GPUs</span>
+              <i class="fa-solid fa-check status-bullet success"></i>
+              <span>DLSS and Frame Generation integration working on RTX 40/50 GPUs</span>
             </li>
             <li class="status-item">
-              <i class="fa-solid fa-circle-check status-bullet success"></i>
-              <span>In-engine audio, vehicle radio stations, and dialogue playback active</span>
+              <i class="fa-solid fa-check status-bullet success"></i>
+              <span>In-engine audio, dialogue playback, and vehicle radio stations active</span>
             </li>
             <li class="status-item">
-              <i class="fa-solid fa-circle-check status-bullet success"></i>
-              <span>Prologue and first 3 campaign missions completed successfully in tests</span>
-            </li>
-            <li class="status-item">
-              <i class="fa-solid fa-circle-check status-bullet success"></i>
-              <span>Experimental multiplayer lobby synchronization demonstrated</span>
+              <i class="fa-solid fa-check status-bullet success"></i>
+              <span>Prologue and opening story missions verified playable without crashes</span>
             </li>
           </ul>
         </div>
 
-        <div class="split-col">
-          <h3 class="split-col-title blocking">
-            <i class="fa-solid fa-triangle-exclamation"></i> What's Blocking &amp; Under Work
+        <div class="status-box">
+          <h3 class="status-box-title blocking">
+            <i class="fa-solid fa-xmark"></i> What's Blocking &amp; In Progress
           </h3>
           <ul class="status-list" id="blocking-list">
             <li class="status-item">
-              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
-              <span>Heavy shader compilation stutter on initial launch across non-NVIDIA GPUs</span>
+              <i class="fa-solid fa-xmark status-bullet warning"></i>
+              <span>Ray tracing global illumination causes severe FPS drops unless disabled</span>
             </li>
             <li class="status-item">
-              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
-              <span>Ray-tracing global illumination causes severe FPS drops in downtown areas</span>
+              <i class="fa-solid fa-xmark status-bullet warning"></i>
+              <span>Initial shader compilation stutter across non-NVIDIA GPUs</span>
             </li>
             <li class="status-item">
-              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
-              <span>VRAM memory leakage after 45+ minutes of continuous gameplay</span>
+              <i class="fa-solid fa-xmark status-bullet warning"></i>
+              <span>VRAM memory leak after 45+ minutes of continuous gameplay</span>
             </li>
             <li class="status-item">
-              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
-              <span>Take-Two &amp; Rockstar automated DMCA notices against public GitHub repos</span>
-            </li>
-            <li class="status-item">
-              <i class="fa-solid fa-triangle-exclamation status-bullet warning"></i>
-              <span>Audio desynchronization in high-density vehicular chases</span>
+              <i class="fa-solid fa-xmark status-bullet warning"></i>
+              <span>Take-Two &amp; Rockstar DMCA notices against public GitHub forks</span>
             </li>
           </ul>
         </div>
@@ -264,80 +154,138 @@
     </section>
 
     <section class="port-section">
-      <div class="section-head">
-        <div class="section-title-wrap">
-          <span class="section-icon"><i class="fa-solid fa-people-group"></i></span>
-          <h2 class="section-title">Leading Community Projects</h2>
-        </div>
-        <span class="port-tag">Open Decompilation</span>
+      <div class="section-header-clean">
+        <h2 class="section-title">Active Community Projects</h2>
+        <p class="section-desc">Public forks currently surviving and being maintained on GitHub. Click any project to open its repository.</p>
       </div>
 
-      <div class="efforts-grid" id="efforts-grid">
-        <div class="effort-card">
-          <div class="effort-header">
-            <h3 class="effort-name">VIctory-NVIDIA</h3>
-            <span class="effort-score">91.3%</span>
+      <div class="projects-list" id="projects-list">
+        <a href="https://github.com/trustno1-coder/VIctory-NVIDIA" target="_blank" rel="noopener noreferrer nofollow" class="project-item-link">
+          <div class="project-top-row">
+            <div class="project-title-area">
+              <h3 class="project-name">VIctory-NVIDIA</h3>
+              <span class="project-repo-path">trustno1-coder/VIctory-NVIDIA</span>
+            </div>
+            <div class="project-badges">
+              <span class="project-pct-badge">90.0%</span>
+              <span class="project-status-badge">Playable</span>
+            </div>
           </div>
-          <p class="effort-headline">Playable prologue, character control, in-engine cutscenes and DLSS 3.7 integration.</p>
-          <div class="effort-footer">
-            <span>Lead: <strong>DexNom / NVIDIA Devs</strong></span>
-            <span class="effort-stack">C++20 / DX12</span>
+          <p class="project-summary">An NVIDIA fork of VIctory on readmet3xt-lab's foxhound, with DLSS, frame generation and in-game settings. Verified by PortWatch at 20-30 fps without crashes.</p>
+          <div class="project-bottom-row">
+            <span class="project-stack-text">C++20 / DX12 / DLSS 3.7</span>
+            <span class="project-github-btn"><i class="fa-brands fa-github"></i> View GitHub Repo</span>
           </div>
-        </div>
-        <div class="effort-card">
-          <div class="effort-header">
-            <h3 class="effort-name">Kelvaroq Native</h3>
-            <span class="effort-score">84.0%</span>
-          </div>
-          <p class="effort-headline">Vulkan-based renderer reimplementation targeting Linux and AMD graphics hardware.</p>
-          <div class="effort-footer">
-            <span>Lead: <strong>Kelvaroq</strong></span>
-            <span class="effort-stack">Rust / Vulkan</span>
-          </div>
-        </div>
-        <div class="effort-card">
-          <div class="effort-header">
-            <h3 class="effort-name">DexNom Recomp</h3>
-            <span class="effort-score">78.5%</span>
-          </div>
-          <p class="effort-headline">Static binary recompilation targeting raw x86_64 host execution without emulation.</p>
-          <div class="effort-footer">
-            <span>Lead: <strong>DexNom</strong></span>
-            <span class="effort-stack">C++ / HLSL</span>
-          </div>
-        </div>
-        <div class="effort-card">
-          <div class="effort-header">
-            <h3 class="effort-name">Belobug Core</h3>
-            <span class="effort-score">71.2%</span>
-          </div>
-          <p class="effort-headline">Engine bootstrap, archive unbundling toolset, and asset pipeline decompressor.</p>
-          <div class="effort-footer">
-            <span>Lead: <strong>Belobug Team</strong></span>
-            <span class="effort-stack">C++ / LLVM</span>
-          </div>
-        </div>
-      </div>
-    </section>
+        </a>
 
-    <section class="port-section">
-      <div class="section-head">
-        <div class="section-title-wrap">
-          <span class="section-icon cyan"><i class="fa-solid fa-newspaper"></i></span>
-          <h2 class="section-title">Live Port News &amp; Updates</h2>
-        </div>
-        <span class="port-tag live">Real-Time Wire</span>
-      </div>
+        <a href="https://github.com/DexNom/VIctory" target="_blank" rel="noopener noreferrer nofollow" class="project-item-link">
+          <div class="project-top-row">
+            <div class="project-title-area">
+              <h3 class="project-name">DexNom</h3>
+              <span class="project-repo-path">DexNom/VIctory</span>
+            </div>
+            <div class="project-badges">
+              <span class="project-pct-badge">77.4%</span>
+              <span class="project-status-badge">Playable</span>
+            </div>
+          </div>
+          <p class="project-summary">DexNom Runtime fork for AMD Radeon (RX 7900 XTX). First build with working ray-traced lighting, translating 25,742 shaders.</p>
+          <div class="project-bottom-row">
+            <span class="project-stack-text">C++ / DXIL / AMD</span>
+            <span class="project-github-btn"><i class="fa-brands fa-github"></i> View GitHub Repo</span>
+          </div>
+        </a>
 
-      <div class="news-filter-bar">
-        <button class="news-filter-btn active" data-filter="all">All News</button>
-        <button class="news-filter-btn" data-filter="port">Port Updates</button>
-        <button class="news-filter-btn" data-filter="takedown">Takedowns &amp; DMCA</button>
-        <button class="news-filter-btn" data-filter="legal">Legal &amp; Warnings</button>
-        <button class="news-filter-btn" data-filter="headlines">Live RSS Headlines</button>
-      </div>
+        <a href="https://github.com/stellarr-studio/kelvaroq" target="_blank" rel="noopener noreferrer nofollow" class="project-item-link">
+          <div class="project-top-row">
+            <div class="project-title-area">
+              <h3 class="project-name">Kelvaroq</h3>
+              <span class="project-repo-path">stellarr-studio/kelvaroq</span>
+            </div>
+            <div class="project-badges">
+              <span class="project-pct-badge">68.8%</span>
+              <span class="project-status-badge">Playable</span>
+            </div>
+          </div>
+          <p class="project-summary">Public Rust runtime with measured submission improvements. 36-minute continuous playtest reached the first mission.</p>
+          <div class="project-bottom-row">
+            <span class="project-stack-text">Rust / Vulkan</span>
+            <span class="project-github-btn"><i class="fa-brands fa-github"></i> View GitHub Repo</span>
+          </div>
+        </a>
 
-      <div class="news-feed-list" id="news-feed-list"></div>
+        <a href="https://github.com/fxceless/victory-fork" target="_blank" rel="noopener noreferrer nofollow" class="project-item-link">
+          <div class="project-top-row">
+            <div class="project-title-area">
+              <h3 class="project-name">hyphennn</h3>
+              <span class="project-repo-path">fxceless/victory-fork</span>
+            </div>
+            <div class="project-badges">
+              <span class="project-pct-badge">59.8%</span>
+              <span class="project-status-badge">Playable</span>
+            </div>
+          </div>
+          <p class="project-summary">VIctory fork with custom rendering and speed fixes. Prologue plays with ray-traced lighting, high-res textures and hair.</p>
+          <div class="project-bottom-row">
+            <span class="project-stack-text">C++ / Vulkan</span>
+            <span class="project-github-btn"><i class="fa-brands fa-github"></i> View GitHub Repo</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/uiliannn/VItoriaBr" target="_blank" rel="noopener noreferrer nofollow" class="project-item-link">
+          <div class="project-top-row">
+            <div class="project-title-area">
+              <h3 class="project-name">Uilian (VItoriaBr)</h3>
+              <span class="project-repo-path">uiliannn/VItoriaBr</span>
+            </div>
+            <div class="project-badges">
+              <span class="project-pct-badge">59.6%</span>
+              <span class="project-status-badge">Playable</span>
+            </div>
+          </div>
+          <p class="project-summary">VItoriaBr fork reaching Jason's first mission 'Gone Fishing' on live stream with few crashes.</p>
+          <div class="project-bottom-row">
+            <span class="project-stack-text">C++ / DX12</span>
+            <span class="project-github-btn"><i class="fa-brands fa-github"></i> View GitHub Repo</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/Marvisak/VIctory" target="_blank" rel="noopener noreferrer nofollow" class="project-item-link">
+          <div class="project-top-row">
+            <div class="project-title-area">
+              <h3 class="project-name">VIctory (Marvisak)</h3>
+              <span class="project-repo-path">Marvisak/VIctory</span>
+            </div>
+            <div class="project-badges">
+              <span class="project-pct-badge">50.3%</span>
+              <span class="project-status-badge">Playable</span>
+            </div>
+          </div>
+          <p class="project-summary">Marvis's native Rust layer for GTA VI. Controlled open world gameplay reachable natively.</p>
+          <div class="project-bottom-row">
+            <span class="project-stack-text">Rust / Native</span>
+            <span class="project-github-btn"><i class="fa-brands fa-github"></i> View GitHub Repo</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/xcl-dev/xcl" target="_blank" rel="noopener noreferrer nofollow" class="project-item-link">
+          <div class="project-top-row">
+            <div class="project-title-area">
+              <h3 class="project-name">XCL</h3>
+              <span class="project-repo-path">xcl-dev/xcl</span>
+            </div>
+            <div class="project-badges">
+              <span class="project-pct-badge">35.0%</span>
+              <span class="project-status-badge">Main menu</span>
+            </div>
+          </div>
+          <p class="project-summary">Wine-style compatibility layer running Xbox Series binary code natively. Gets past menus into the world.</p>
+          <div class="project-bottom-row">
+            <span class="project-stack-text">C++ / Wine Layer</span>
+            <span class="project-github-btn"><i class="fa-brands fa-github"></i> View GitHub Repo</span>
+          </div>
+        </a>
+      </div>
     </section>
 
   </main>
@@ -425,6 +373,6 @@
     </div>
   </footer>
 
-  <script src="assets/js/port-status.js?v=1.0"></script>
+  <script src="assets/js/port-status.js?v=2.0"></script>
 </body>
 </html>
