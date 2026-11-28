@@ -2447,13 +2447,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data && data.authenticated && data.user) {
         localStorage.setItem('vicecityhub_user', JSON.stringify(data.user));
         renderNavbarAuthUser(data.user);
-      } else if (data && data.authenticated === false) {
+      } else if (data && data.logout === true) {
         localStorage.removeItem('vicecityhub_user');
-
-        const path = window.location.pathname.toLowerCase();
-        if (path.endsWith('/post.html') || path.endsWith('/submit-discord.html') || path.endsWith('/submit-tutorial.html') || path.endsWith('/post') || path.endsWith('/submit-discord') || path.endsWith('/submit-tutorial')) {
-          window.location.href = 'login.html?tab=signup';
-        }
       }
     })
     .catch(() => {});

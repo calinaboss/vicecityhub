@@ -508,14 +508,78 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const feedpostForm = document.getElementById('admin-feedpost-form');
+      const feedpostFile = document.getElementById('feedpost-file');
+      const btnBrowseFeedpostFile = document.getElementById('btn-browse-feedpost-file');
+      const feedpostFileName = document.getElementById('feedpost-file-name');
       const feedpostImg = document.getElementById('feedpost-img');
       const feedpostPreviewBox = document.getElementById('feedpost-preview-box');
       const feedpostImgPreview = document.getElementById('feedpost-img-preview');
+      const btnRemoveFeedpostPreview = document.getElementById('btn-remove-feedpost-preview');
+
+      if (btnBrowseFeedpostFile && feedpostFile) {
+        btnBrowseFeedpostFile.addEventListener('click', () => {
+          feedpostFile.click();
+        });
+      }
+
+      if (feedpostFile) {
+        feedpostFile.addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+
+          if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) {
+            showToast('Please select a valid image file (JPG, PNG, WebP, GIF)');
+            feedpostFile.value = '';
+            return;
+          }
+
+          if (feedpostFileName) {
+            feedpostFileName.textContent = file.name;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const rawUrl = ev.target.result;
+            const img = new Image();
+            img.onload = () => {
+              const maxWidth = 1600;
+              const maxHeight = 1600;
+              let w = img.width;
+              let h = img.height;
+              if (w > maxWidth || h > maxHeight) {
+                const ratio = Math.min(maxWidth / w, maxHeight / h);
+                w = Math.round(w * ratio);
+                h = Math.round(h * ratio);
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = w;
+              canvas.height = h;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, w, h);
+              const processedUrl = canvas.toDataURL('image/jpeg', 0.88);
+              if (feedpostImg) feedpostImg.value = processedUrl;
+              if (feedpostImgPreview) feedpostImgPreview.src = processedUrl;
+              if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'block';
+            };
+            img.src = rawUrl;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      if (btnRemoveFeedpostPreview) {
+        btnRemoveFeedpostPreview.addEventListener('click', () => {
+          if (feedpostFile) feedpostFile.value = '';
+          if (feedpostFileName) feedpostFileName.textContent = 'No file chosen';
+          if (feedpostImg) feedpostImg.value = '';
+          if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'none';
+        });
+      }
 
       if (feedpostImg && feedpostPreviewBox && feedpostImgPreview) {
         feedpostImg.addEventListener('input', () => {
           const url = (feedpostImg.value || '').trim();
-          if (url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/'))) {
+          if (url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/') || url.startsWith('data:image/'))) {
             feedpostImgPreview.src = url;
             feedpostPreviewBox.style.display = 'block';
           } else {
