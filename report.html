@@ -23,14 +23,31 @@
 <body>
   <header class="site-header">
     <div class="header-container">
-      <div class="brand-wrapper">
-        <a href="/" class="brand-logo" aria-label="ViceCityHub Homepage">
-          <img src="assets/brand/logo.png" alt="ViceCityHub" class="brand-logo-img">
-        </a>
-      </div>
-      <a href="/" class="btn-secondary">
-        <i class="fa-solid fa-arrow-left"></i> Back to Hub
+      <a href="index.html" class="mobile-brand-link" aria-label="ViceCityHub Homepage">
+        <img src="assets/brand/favicon-512x512.png" alt="ViceCityHub" class="mobile-brand-logo">
       </a>
+
+      <nav class="header-nav-left" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">Feed</a>
+        <a href="discords.html" class="nav-link">GTA VI Discords</a>
+        <a href="https://map.vicecityhub.eu" class="nav-link">Map</a>
+        <a href="cheats.html" class="nav-link">Cheats</a>
+        <a href="tutorials.html" class="nav-link">Tutorials &amp; Secrets</a>
+        <a href="port-status.html" class="nav-link">PC Port</a>
+      </nav>
+
+      <div class="nav-divider" aria-hidden="true"></div>
+
+      <div class="header-nav-right">
+        <a href="post.html" class="btn-post" aria-label="New Post">
+          <i class="fa-solid fa-plus"></i> New Post
+        </a>
+        <a href="login.html" class="nav-auth-link">Log in</a>
+        <a href="login.html?tab=signup" class="nav-auth-link">Sign in</a>
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Open Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
     </div>
   </header>
 
