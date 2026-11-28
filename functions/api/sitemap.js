@@ -16,6 +16,8 @@ export async function onRequest(context) {
 
   const urls = [
     { loc: 'https://vicecityhub.eu/', lastmod: today, changefreq: 'hourly', priority: '1.0' },
+    { loc: 'https://vicecityhub.eu/port-status.html', lastmod: today, changefreq: 'hourly', priority: '0.98' },
+    { loc: 'https://map.vicecityhub.eu/', lastmod: today, changefreq: 'daily', priority: '0.98' },
     { loc: 'https://vicecityhub.eu/discords.html', lastmod: today, changefreq: 'hourly', priority: '0.95' },
     { loc: 'https://vicecityhub.eu/submit-discord.html', lastmod: today, changefreq: 'daily', priority: '0.90' },
     { loc: 'https://vicecityhub.eu/cheats.html', lastmod: today, changefreq: 'daily', priority: '0.95' },
