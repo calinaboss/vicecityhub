@@ -204,11 +204,19 @@ export async function onRequest(context) {
       }
 
       if (action === 'create_feed_post') {
-        const mediaUrl = sanitizeExternalUrl(body.media_url);
+        let mediaUrl = '';
+        const rawMedia = typeof body.media_url === 'string' ? body.media_url.trim() : '';
+        if (/^\/api\/media\?id=[0-9a-fA-F-]{20,40}$/.test(rawMedia)) {
+          mediaUrl = rawMedia;
+        } else if (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(rawMedia) && rawMedia.length < 2500000) {
+          mediaUrl = rawMedia;
+        } else if (rawMedia) {
+          mediaUrl = sanitizeExternalUrl(rawMedia);
+        }
         const content = sanitizePlainText(body.content || '', 2500);
         const title = sanitizePlainText(body.title || 'Official Feed', 120);
         if (!mediaUrl || !content) {
-          return jsonResponse({ error: 'Image URL and text content are required' }, 400);
+          return jsonResponse({ error: 'Image and text content are required' }, 400);
         }
         const newId = generateUuid();
         await runTursoSql(
@@ -217,7 +225,7 @@ export async function onRequest(context) {
             id, user_id, category, category_label, pinned, author, username,
             badge, badge_class, title, content, media_url, media_type, author_avatar,
             likes_count, bookmarks_count, comments_count, status, created_at
-          ) VALUES (?, ?, 'admin_feed', 'Official Feed', 0, 'ViceCityHub', 'vicecityhub', 'Admin Feed', 'mod', ?, ?, ?, 'image', 'assets/brand/favicon-512x512.png', 0, 0, 0, 'approved', datetime('now'))`,
+          ) VALUES (?, ?, 'admin_feed', 'Official Feed', 1, 'ViceCityHub', 'vicecityhub', 'Admin Feed', 'mod', ?, ?, ?, 'image', 'assets/brand/favicon-512x512.png', 0, 0, 0, 'approved', datetime('now'))`,
           [newId, authUser ? authUser.id : 'admin', title, content, mediaUrl]
         );
         return jsonResponse({ ok: true, id: newId });

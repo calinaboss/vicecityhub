@@ -499,6 +499,9 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
             <div class="admin-row-actions">
+              <a href="index.html#post-${escapeHtml(p.id)}" target="_blank" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem; color: var(--text-main); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> View on Feed
+              </a>
               <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem; color: #fca5a5;" data-act="delete_feedpost" data-id="${escapeHtml(p.id)}" data-confirm="Permanently delete this admin feed post?">
                 <i class="fa-solid fa-trash-can"></i> Delete
               </button>
@@ -524,6 +527,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
+      let currentFeedBlob = null;
+
+      async function uploadFeedMedia(blob) {
+        const arrayBuffer = await blob.arrayBuffer();
+        const uint8 = new Uint8Array(arrayBuffer);
+        const CHUNK_BYTE_SIZE = 540 * 1024;
+        const totalBytes = uint8.byteLength;
+        const totalChunks = Math.max(1, Math.ceil(totalBytes / CHUNK_BYTE_SIZE));
+        let binary = '';
+        const firstSlice = uint8.subarray(0, Math.min(CHUNK_BYTE_SIZE, totalBytes));
+        for (let i = 0; i < firstSlice.byteLength; i++) {
+          binary += String.fromCharCode(firstSlice[i]);
+        }
+        const firstB64 = btoa(binary);
+        const initRes = await fetch('/api/media?action=init', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            mime_type: 'image/jpeg',
+            total_bytes: totalBytes,
+            total_chunks: totalChunks,
+            data_b64: firstB64
+          })
+        });
+        const initData = await initRes.json().catch(() => ({}));
+        if (!initRes.ok || !initData.media_id) {
+          throw new Error(initData.error || 'Upload failed');
+        }
+        const mediaId = initData.media_id;
+        for (let idx = 1; idx < totalChunks; idx++) {
+          const start = idx * CHUNK_BYTE_SIZE;
+          const end = Math.min(start + CHUNK_BYTE_SIZE, totalBytes);
+          const slice = uint8.subarray(start, end);
+          let sliceBin = '';
+          for (let j = 0; j < slice.byteLength; j++) {
+            sliceBin += String.fromCharCode(slice[j]);
+          }
+          const sliceB64 = btoa(sliceBin);
+          const chunkRes = await fetch('/api/media?action=chunk', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+              media_id: mediaId,
+              chunk_index: idx,
+              data_b64: sliceB64
+            })
+          });
+          if (!chunkRes.ok) throw new Error('Chunk failed');
+        }
+        return '/api/media?id=' + mediaId;
+      }
+
       if (feedpostFile) {
         feedpostFile.addEventListener('change', (e) => {
           const file = e.target.files && e.target.files[0];
@@ -532,6 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.type)) {
             showToast('Please select a valid image file (JPG, PNG, WebP, GIF)');
             feedpostFile.value = '';
+            currentFeedBlob = null;
             return;
           }
 
@@ -559,6 +617,9 @@ document.addEventListener('DOMContentLoaded', () => {
               const ctx = canvas.getContext('2d');
               ctx.drawImage(img, 0, 0, w, h);
               const processedUrl = canvas.toDataURL('image/jpeg', 0.88);
+              canvas.toBlob((b) => {
+                currentFeedBlob = b;
+              }, 'image/jpeg', 0.88);
               if (feedpostImg) feedpostImg.value = processedUrl;
               if (feedpostImgPreview) feedpostImgPreview.src = processedUrl;
               if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'block';
@@ -572,6 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (btnRemoveFeedpostPreview) {
         btnRemoveFeedpostPreview.addEventListener('click', () => {
           if (feedpostFile) feedpostFile.value = '';
+          currentFeedBlob = null;
           if (feedpostFileName) feedpostFileName.textContent = 'No file chosen';
           if (feedpostImg) feedpostImg.value = '';
           if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'none';
@@ -580,6 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (feedpostImg && feedpostPreviewBox && feedpostImgPreview) {
         feedpostImg.addEventListener('input', () => {
+          currentFeedBlob = null;
           const url = (feedpostImg.value || '').trim();
           if (url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/') || url.startsWith('data:image/'))) {
             feedpostImgPreview.src = url;
@@ -593,20 +656,58 @@ document.addEventListener('DOMContentLoaded', () => {
       if (feedpostForm) {
         feedpostForm.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const media_url = (feedpostImg?.value || '').trim();
+          let media_url = (feedpostImg?.value || '').trim();
           const content = (document.getElementById('feedpost-text')?.value || '').trim();
           if (!media_url || !content) {
-            showToast('Please provide both an image URL and text content.');
+            showToast('Please provide both an image and text content.');
             return;
           }
           const submitBtn = document.getElementById('btn-publish-feedpost');
           if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
           }
 
+          if (currentFeedBlob) {
+            try {
+              if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading image...';
+              const upResult = await uploadFeedMedia(currentFeedBlob);
+              if (upResult) media_url = upResult;
+            } catch (uErr) {}
+          }
+
+          if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publishing to feed...';
+          let publishedId = 'admin_feed_' + Date.now();
+          let serverSuccess = false;
+
+          try {
+            const res = await fetch('/api/admin', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({
+                action: 'create_feed_post',
+                media_url,
+                content,
+                title: 'ViceCityHub Feed Update'
+              })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok && data.id) {
+              publishedId = data.id;
+              serverSuccess = true;
+            } else if (!res.ok) {
+              showToast(data.error || 'Server rejected feed post');
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publish to Feed';
+              }
+              return;
+            }
+          } catch (err) {}
+
           const localPost = {
-            id: 'admin_feed_' + Date.now(),
+            id: publishedId,
             category: 'admin_feed',
             categoryLabel: 'Official Feed',
             pinned: true,
@@ -629,40 +730,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
           try {
             const existingLocal = JSON.parse(localStorage.getItem('vicecityhub_admin_feed_posts') || '[]');
-            existingLocal.unshift(localPost);
-            localStorage.setItem('vicecityhub_admin_feed_posts', JSON.stringify(existingLocal));
-          } catch (e) {}
+            const filtered = existingLocal.filter(p => p.id !== publishedId);
+            filtered.unshift(localPost);
+            localStorage.setItem('vicecityhub_admin_feed_posts', JSON.stringify(filtered.slice(0, 15)));
+          } catch (e) {
+            try {
+              const fallbackPost = { ...localPost, mediaUrl: '' };
+              const existingLocal = JSON.parse(localStorage.getItem('vicecityhub_admin_feed_posts') || '[]');
+              const filtered = existingLocal.filter(p => p.id !== publishedId);
+              filtered.unshift(fallbackPost);
+              localStorage.setItem('vicecityhub_admin_feed_posts', JSON.stringify(filtered.slice(0, 10)));
+            } catch (e2) {}
+          }
 
-          try {
-            const res = await fetch('/api/admin', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              credentials: 'same-origin',
-              body: JSON.stringify({
-                action: 'create_feed_post',
-                media_url,
-                content,
-                title: 'ViceCityHub Feed Update'
-              })
-            });
-            const data = await res.json().catch(() => ({}));
-            if (res.ok && data.id) {
-              localPost.id = data.id;
-            }
-            showToast('Admin feed post published to hub!');
-            feedpostForm.reset();
-            if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'none';
-            await loadAdminData();
-          } catch (err) {
-            showToast('Published locally to feed!');
-            feedpostForm.reset();
-            if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'none';
-            await loadAdminData();
-          } finally {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publish to Feed';
-            }
+          showToast('Admin feed post published to hub!');
+          feedpostForm.reset();
+          currentFeedBlob = null;
+          if (feedpostFileName) feedpostFileName.textContent = 'No file chosen';
+          if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'none';
+          await loadAdminData();
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publish to Feed';
           }
         });
       }

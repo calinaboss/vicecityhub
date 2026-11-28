@@ -195,6 +195,8 @@ export async function onRequest(context) {
       const rawMedia = typeof body.mediaUrl === 'string' ? body.mediaUrl.trim() : '';
       if (/^\/api\/media\?id=[0-9a-fA-F-]{20,40}$/.test(rawMedia)) {
         mediaUrl = rawMedia;
+      } else if (/^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/=]+$/.test(rawMedia) && rawMedia.length < 2500000) {
+        mediaUrl = rawMedia;
       } else if (rawMedia) {
         mediaUrl = sanitizeExternalUrl(rawMedia);
       }
