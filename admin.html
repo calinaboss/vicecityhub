@@ -119,10 +119,10 @@
           <div>
             <label class="form-label">Upload Image File</label>
             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-              <input type="file" id="feedpost-file" accept="image/jpeg,image/png,image/webp,image/gif" style="display: none;">
-              <button type="button" class="btn-secondary" id="btn-browse-feedpost-file" style="height: 40px; padding: 0 18px; border-color: var(--accent-pink); color: var(--text-main); font-weight: 600;">
+              <input type="file" id="feedpost-file" accept="image/jpeg,image/png,image/webp,image/gif" style="position: absolute; opacity: 0; width: 0.1px; height: 0.1px; overflow: hidden; pointer-events: none;">
+              <label for="feedpost-file" class="btn-secondary" id="btn-browse-feedpost-file" style="height: 40px; padding: 0 18px; border-color: var(--accent-pink); color: var(--text-main); font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
                 <i class="fa-solid fa-cloud-arrow-up" style="color: var(--accent-pink);"></i> Choose Image from Device
-              </button>
+              </label>
               <span id="feedpost-file-name" style="font-size: 0.82rem; color: var(--text-dim);">No file chosen</span>
             </div>
           </div>
@@ -273,6 +273,6 @@
     <span id="toast-text">Action completed!</span>
   </div>
 
-  <script src="assets/js/admin.js?v=4.0"></script>
+  <script src="assets/js/admin.js?v=4.6"></script>
 </body>
 </html>

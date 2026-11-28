@@ -517,8 +517,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const btnRemoveFeedpostPreview = document.getElementById('btn-remove-feedpost-preview');
 
       if (btnBrowseFeedpostFile && feedpostFile) {
-        btnBrowseFeedpostFile.addEventListener('click', () => {
-          feedpostFile.click();
+        btnBrowseFeedpostFile.addEventListener('click', (e) => {
+          if (e.target.tagName !== 'LABEL') {
+            feedpostFile.click();
+          }
         });
       }
 
