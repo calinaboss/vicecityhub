@@ -18,12 +18,13 @@ const RESERVED_NAMES = [
   'moderator', 'mod', 'root', 'support', 'official', 'rockstar'
 ];
 
-const ALLOWED_CATEGORIES = ['discussions', 'leaks', 'official'];
+const ALLOWED_CATEGORIES = ['discussions', 'leaks', 'official', 'admin_feed'];
 
 const CATEGORY_LABELS = {
   discussions: 'Discussions',
   leaks: 'Map',
-  official: 'Official News'
+  official: 'Official News',
+  admin_feed: 'Official Feed'
 };
 
 function sanitizeAuthorName(rawName, authUser) {

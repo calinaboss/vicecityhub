@@ -78,6 +78,9 @@
       <button class="filter-chip" data-admin-tab="discords">
         <i class="fa-brands fa-discord"></i> Discord Servers Approval (<span id="count-pending-discords">0</span>)
       </button>
+      <button class="filter-chip" data-admin-tab="feedpost">
+        <i class="fa-solid fa-camera"></i> Admin Feed Post (<span id="count-admin-feedposts">0</span>)
+      </button>
       <button class="filter-chip" data-admin-tab="posts">
         <i class="fa-solid fa-thumbtack"></i> Pin &amp; Manage Feed Posts (<span id="count-all-posts">0</span>)
       </button>
@@ -100,6 +103,44 @@
         <i class="fa-solid fa-clock" style="color: var(--accent-pink);"></i> Official News Waiting for Approval
       </h2>
       <div id="admin-official-list" class="admin-flat-list"></div>
+    </section>
+
+    <section id="admin-tab-feedpost" class="admin-tab-panel" style="display: none;">
+      <div class="settings-card" style="margin-bottom: 24px;">
+        <h2 class="settings-section-title" style="margin-bottom: 6px;">
+          <i class="fa-solid fa-camera" style="color: var(--accent-pink);"></i> Create Admin Feed Post
+        </h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+          Publish an official image with text underneath to the feed. Normal users can only like this post (comments disabled).
+        </p>
+
+        <form id="admin-feedpost-form" style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <label class="form-label" for="feedpost-img">Image URL</label>
+            <input type="url" id="feedpost-img" class="form-input" placeholder="https://... direct image URL" required>
+          </div>
+
+          <div id="feedpost-preview-box" style="display: none; border-radius: var(--radius-sm); overflow: hidden; max-height: 300px; background: #000; text-align: center; border: 1px solid var(--border-color);">
+            <img id="feedpost-img-preview" src="" alt="Preview" style="max-height: 300px; width: auto; max-width: 100%; object-fit: contain;">
+          </div>
+
+          <div>
+            <label class="form-label" for="feedpost-text">Post Text</label>
+            <textarea id="feedpost-text" class="form-input" rows="4" placeholder="Enter text to display underneath the image..." required maxlength="2500" style="height: auto; resize: vertical;"></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end;">
+            <button type="submit" class="btn-post-submit" id="btn-publish-feedpost" style="height: 40px; padding: 0 22px;">
+              <i class="fa-solid fa-paper-plane"></i> Publish to Feed
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <h2 class="settings-section-title" style="margin-bottom: 12px;">
+        <i class="fa-solid fa-list-check" style="color: var(--accent-cyan);"></i> Published Feed Posts (<span id="count-approved-feedposts">0</span>)
+      </h2>
+      <div id="admin-feedposts-list" class="admin-flat-list"></div>
     </section>
 
     <section id="admin-tab-discords" class="admin-tab-panel" style="display: none;">

@@ -224,10 +224,49 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         mediaHtml = `
           <div class="post-media-container" data-full-img="${escapeHtml(mUrl)}" title="Click to view full screen (drag to pan, scroll to zoom)">
-            <img src="${escapeHtml(mUrl)}" alt="${escapeHtml(post.title)}" loading="lazy">
+            <img src="${escapeHtml(mUrl)}" alt="${escapeHtml(post.title || 'Feed image')}" loading="lazy">
           </div>
         `;
       }
+    }
+
+    const isLikeOnly = post.category === 'admin_feed' || post.badge === 'Admin Feed' || post.categoryLabel === 'Official Feed';
+    if (isLikeOnly) {
+      return `
+        <article class="post-card ${isPinnedClass}" data-id="${post.id}">
+          <div class="post-header">
+            <a href="profile.html?u=${encodeURIComponent(post.username || 'vicecityhub')}" class="post-author-box">
+              <img class="post-avatar" src="${escapeHtml(post.avatar || 'assets/brand/favicon-512x512.png')}" alt="${escapeHtml(post.author || 'ViceCityHub')}">
+              <div class="post-author-info">
+                <div class="author-name-row">
+                  <span class="author-username">${escapeHtml(post.author || 'ViceCityHub')}</span>
+                  <span class="badge-pill mod"><i class="fa-solid fa-circle-check"></i> Official</span>
+                </div>
+                <span class="post-timestamp">${escapeHtml(formatTimeAgo(post.time))}</span>
+              </div>
+            </a>
+            <span class="post-category-tag">Official Feed</span>
+          </div>
+
+          ${mediaHtml}
+          <p class="post-text" style="margin-top: 14px; font-size: 0.95rem; line-height: 1.5;">${escapeHtml(post.text)}</p>
+
+          <div class="post-footer" style="display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border-light);">
+            <button class="action-btn btn-like ${post.isLiked ? 'active-like' : ''}" data-id="${post.id}" title="Like this post">
+              <i class="${post.isLiked ? 'fa-solid' : 'fa-regular'} fa-thumbs-up"></i>
+              <span>${post.likes || 0}</span>
+            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              ${isCurrentUserAdmin() ? `
+                <button class="action-btn btn-admin-delete" data-id="${post.id}" title="Delete Post">
+                  <i class="fa-solid fa-trash-can" style="color: #fca5a5;"></i>
+                </button>
+              ` : ''}
+              <span style="font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em;"><i class="fa-solid fa-heart" style="color: var(--accent-pink); font-size: 0.68rem;"></i> Likes Only</span>
+            </div>
+          </div>
+        </article>
+      `;
     }
 
     return `
@@ -643,23 +682,39 @@ document.addEventListener('DOMContentLoaded', () => {
       if (adminDelBtn) {
         const pid = adminDelBtn.dataset.id;
         if (!window.confirm('Delete this post permanently?')) return;
+        try {
+          const cur = JSON.parse(localStorage.getItem('vicecityhub_admin_feed_posts') || '[]');
+          localStorage.setItem('vicecityhub_admin_feed_posts', JSON.stringify(cur.filter(p => p.id !== pid)));
+        } catch (e) {}
+        posts = posts.filter(item => item.id !== pid);
+        renderFeed();
+        showToast('Post deleted');
         fetch('/api/admin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'same-origin',
           body: JSON.stringify({ action: 'delete_post', targetId: pid })
-        }).then(r => r.json()).then(d => {
-          if (d && d.ok) {
-            posts = posts.filter(item => item.id !== pid);
-            renderFeed();
-            showToast('Post deleted');
-          }
         }).catch(() => {});
         return;
       }
     });
 
     localStorage.removeItem('vicecityhub_custom_posts');
+    let localAdminFeed = [];
+    try {
+      localAdminFeed = JSON.parse(localStorage.getItem('vicecityhub_admin_feed_posts') || '[]');
+    } catch (e) {}
+    if (localAdminFeed.length > 0) {
+      const localLiked = getLocalLikedPosts();
+      posts = localAdminFeed.map(p => ({
+        ...p,
+        isLiked: localLiked.has(p.id),
+        likes: (p.likes || 0) + (localLiked.has(p.id) ? 1 : 0),
+        time: p.time || 'Recently',
+        avatar: p.avatar || 'assets/brand/favicon-512x512.png',
+        comments: []
+      }));
+    }
     renderFeed();
 
     fetch('/api/posts')
@@ -681,6 +736,24 @@ document.addEventListener('DOMContentLoaded', () => {
               avatar: p.avatar || 'assets/brand/favicon-192x192.png',
               comments: Array.isArray(p.comments) ? p.comments : []
             };
+          });
+
+          let localFeed = [];
+          try {
+            localFeed = JSON.parse(localStorage.getItem('vicecityhub_admin_feed_posts') || '[]');
+          } catch (e) {}
+          localFeed.forEach(lp => {
+            if (!posts.some(item => item.id === lp.id)) {
+              const isLiked = localLiked.has(lp.id);
+              posts.unshift({
+                ...lp,
+                isLiked,
+                likes: (lp.likes || 0) + (isLiked ? 1 : 0),
+                time: lp.time || 'Recently',
+                avatar: lp.avatar || 'assets/brand/favicon-512x512.png',
+                comments: []
+              });
+            }
           });
           try {
             localStorage.setItem('vch_liked_posts', JSON.stringify([...localLiked]));

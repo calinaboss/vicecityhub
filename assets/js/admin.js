@@ -445,9 +445,160 @@ document.addEventListener('DOMContentLoaded', () => {
           renderReports(data.reports || []);
           renderTickets(data.tickets || []);
           renderTutorials(data.pendingTutorials || [], data.approvedTutorials || data.tutorials || []);
+          renderAdminFeedPosts(data.adminFeedPosts || []);
         } catch (err) {
           window.location.replace('403.html');
         }
+      }
+
+      function renderAdminFeedPosts(serverPosts = []) {
+        const countFeedposts = document.getElementById('count-admin-feedposts');
+        const countApprovedFeedposts = document.getElementById('count-approved-feedposts');
+        const feedpostsList = document.getElementById('admin-feedposts-list');
+
+        let localPosts = [];
+        try {
+          localPosts = JSON.parse(localStorage.getItem('vicecityhub_admin_feed_posts') || '[]');
+        } catch (e) {}
+
+        const combined = [...localPosts];
+        serverPosts.forEach(sp => {
+          if (!combined.some(p => p.id === sp.id)) {
+            combined.push({
+              id: sp.id,
+              title: sp.title,
+              text: sp.content,
+              mediaUrl: sp.media_url,
+              likes: sp.likes_count || 0,
+              time: sp.created_at
+            });
+          }
+        });
+
+        if (countFeedposts) countFeedposts.textContent = combined.length;
+        if (countApprovedFeedposts) countApprovedFeedposts.textContent = combined.length;
+
+        if (!feedpostsList) return;
+        if (combined.length === 0) {
+          feedpostsList.innerHTML = `<div class="empty-feed-state" style="padding: 24px 0;"><p style="color: var(--text-muted); font-size: 0.85rem;">No admin feed posts published yet.</p></div>`;
+          return;
+        }
+
+        feedpostsList.innerHTML = combined.map(p => `
+          <div class="admin-row-item">
+            <div style="display: flex; gap: 14px; align-items: center; width: 100%;">
+              <div style="width: 90px; height: 60px; border-radius: 6px; overflow: hidden; background: #000; flex-shrink: 0;">
+                <img src="${escapeHtml(p.mediaUrl || '')}" alt="Post image" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='assets/brand/favicon-512x512.png'">
+              </div>
+              <div class="admin-row-info" style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span class="badge-pill mod"><i class="fa-solid fa-camera"></i> ADMIN FEED</span>
+                  <span style="font-size: 0.76rem; color: var(--text-dim);"><i class="fa-solid fa-thumbs-up"></i> ${escapeHtml(p.likes || 0)} likes &bull; Likes-Only</span>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 4px; line-height: 1.4;">${escapeHtml(p.text || '')}</p>
+              </div>
+            </div>
+            <div class="admin-row-actions">
+              <button type="button" class="btn-secondary" style="height: 34px; min-height: 34px; padding: 0 12px; font-size: 0.78rem; color: #fca5a5;" data-act="delete_feedpost" data-id="${escapeHtml(p.id)}" data-confirm="Permanently delete this admin feed post?">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const feedpostForm = document.getElementById('admin-feedpost-form');
+      const feedpostImg = document.getElementById('feedpost-img');
+      const feedpostPreviewBox = document.getElementById('feedpost-preview-box');
+      const feedpostImgPreview = document.getElementById('feedpost-img-preview');
+
+      if (feedpostImg && feedpostPreviewBox && feedpostImgPreview) {
+        feedpostImg.addEventListener('input', () => {
+          const url = (feedpostImg.value || '').trim();
+          if (url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/'))) {
+            feedpostImgPreview.src = url;
+            feedpostPreviewBox.style.display = 'block';
+          } else {
+            feedpostPreviewBox.style.display = 'none';
+          }
+        });
+      }
+
+      if (feedpostForm) {
+        feedpostForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const media_url = (feedpostImg?.value || '').trim();
+          const content = (document.getElementById('feedpost-text')?.value || '').trim();
+          if (!media_url || !content) {
+            showToast('Please provide both an image URL and text content.');
+            return;
+          }
+          const submitBtn = document.getElementById('btn-publish-feedpost');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';
+          }
+
+          const localPost = {
+            id: 'admin_feed_' + Date.now(),
+            category: 'admin_feed',
+            categoryLabel: 'Official Feed',
+            pinned: true,
+            author: 'ViceCityHub',
+            username: 'vicecityhub',
+            badge: 'Admin Feed',
+            badgeClass: 'mod',
+            title: 'ViceCityHub Feed Update',
+            text: content,
+            mediaUrl: media_url,
+            mediaType: 'image',
+            avatar: 'assets/brand/favicon-512x512.png',
+            likes: 0,
+            isLiked: false,
+            bookmarks: 0,
+            isBookmarked: false,
+            comments: [],
+            time: new Date().toISOString()
+          };
+
+          try {
+            const existingLocal = JSON.parse(localStorage.getItem('vicecityhub_admin_feed_posts') || '[]');
+            existingLocal.unshift(localPost);
+            localStorage.setItem('vicecityhub_admin_feed_posts', JSON.stringify(existingLocal));
+          } catch (e) {}
+
+          try {
+            const res = await fetch('/api/admin', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'same-origin',
+              body: JSON.stringify({
+                action: 'create_feed_post',
+                media_url,
+                content,
+                title: 'ViceCityHub Feed Update'
+              })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok && data.id) {
+              localPost.id = data.id;
+            }
+            showToast('Admin feed post published to hub!');
+            feedpostForm.reset();
+            if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'none';
+            await loadAdminData();
+          } catch (err) {
+            showToast('Published locally to feed!');
+            feedpostForm.reset();
+            if (feedpostPreviewBox) feedpostPreviewBox.style.display = 'none';
+            await loadAdminData();
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publish to Feed';
+            }
+          }
+        });
       }
 
       if (tutorialForm) {
@@ -536,6 +687,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const action = actBtn.getAttribute('data-act');
         const targetId = actBtn.getAttribute('data-id');
         const confirmMsg = actBtn.getAttribute('data-confirm') || '';
+        if (action === 'delete_feedpost') {
+          if (confirmMsg && !window.confirm(confirmMsg)) return;
+          try {
+            const cur = JSON.parse(localStorage.getItem('vicecityhub_admin_feed_posts') || '[]');
+            const updated = cur.filter(p => p.id !== targetId);
+            localStorage.setItem('vicecityhub_admin_feed_posts', JSON.stringify(updated));
+          } catch (e) {}
+          runAdminAction('delete_post', targetId);
+          return;
+        }
         if (action && targetId) {
           runAdminAction(action, targetId, confirmMsg);
         }

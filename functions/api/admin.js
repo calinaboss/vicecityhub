@@ -161,11 +161,21 @@ export async function onRequest(context) {
          LIMIT 100`
       ).catch(() => ({ rows: [] }));
 
+      const { rows: adminFeedPosts } = await runTursoSql(
+        env,
+        `SELECT id, title, content, media_url, likes_count, created_at
+         FROM community_posts
+         WHERE category = 'admin_feed'
+         ORDER BY created_at DESC
+         LIMIT 50`
+      ).catch(() => ({ rows: [] }));
+
       return jsonResponse({
         ok: true,
         admin: { id: authUser.id, username: authUser.username, email: authUser.email },
         pendingOfficialPosts: pendingOfficialPosts || [],
         allPosts: allPosts || [],
+        adminFeedPosts: adminFeedPosts || [],
         pendingDiscords: pendingDiscords || [],
         approvedDiscords: approvedDiscords || [],
         users: users || [],
@@ -189,9 +199,33 @@ export async function onRequest(context) {
       }
 
       const action = sanitizePlainText(body.action, 32);
+      if (!action) {
+        return jsonResponse({ error: 'Action is required' }, 400);
+      }
+
+      if (action === 'create_feed_post') {
+        const mediaUrl = sanitizeExternalUrl(body.media_url);
+        const content = sanitizePlainText(body.content || '', 2500);
+        const title = sanitizePlainText(body.title || 'Official Feed', 120);
+        if (!mediaUrl || !content) {
+          return jsonResponse({ error: 'Image URL and text content are required' }, 400);
+        }
+        const newId = generateUuid();
+        await runTursoSql(
+          env,
+          `INSERT INTO community_posts (
+            id, user_id, category, category_label, pinned, author, username,
+            badge, badge_class, title, content, media_url, media_type, author_avatar,
+            likes_count, bookmarks_count, comments_count, status, created_at
+          ) VALUES (?, ?, 'admin_feed', 'Official Feed', 0, 'ViceCityHub', 'vicecityhub', 'Admin Feed', 'mod', ?, ?, ?, 'image', 'assets/brand/favicon-512x512.png', 0, 0, 0, 'approved', datetime('now'))`,
+          [newId, authUser ? authUser.id : 'admin', title, content, mediaUrl]
+        );
+        return jsonResponse({ ok: true, id: newId });
+      }
+
       const targetId = sanitizePlainText(body.targetId, 64);
-      if (!action || !targetId) {
-        return jsonResponse({ error: 'Action and targetId are required' }, 400);
+      if (!targetId) {
+        return jsonResponse({ error: 'TargetId is required' }, 400);
       }
 
       if (action === 'approve_post') {
